@@ -1,0 +1,133 @@
+{
+    "door_number": 30,
+    "door_default": "0000",
+    "door_broadcast": "9999",
+    "begin": "@",
+    "end": "$0D$0A",
+    "color": "&",
+    "change": "XID",
+    "temperature": "RT0",
+    "start": "START",
+    "lockdoor": "LOCKDOOR",
+    "fail": "FAIL",
+    "rosso": "ROSSO",
+    "verde": "VERDE",
+    "BLU": "BLU",
+    "giallo": "GIALLO",
+    "azzurro": "AZZURRO",
+    "viola": "VIOLA",
+    "bianco": "BIANCO",
+    "giroverde": "GIROVERDE",
+    "off": "OFF",
+    "test": "&FF660046",
+    "flash": [
+        {
+            "type": "fisso",
+            "value": "0"
+        },
+        {
+            "type": "colore/verde",
+            "value": "2"
+        },
+        {
+            "type": "colore/spento",
+            "value": "4"
+        },
+        {
+            "type": "colore/giroverde",
+            "value": "6"
+        },
+        {
+            "type": "colore pulsante",
+            "value": "8"
+        },
+        {
+            "type": "bandiera italiana",
+            "value": "A"
+        },
+        {
+            "type": "girobandiera italiana",
+            "value": "C"
+        }
+    ],
+    "power": [
+        {
+            "type": "0 MAX",
+            "value": "0"
+        },
+        {
+            "type": "1",
+            "value": "1"
+        },
+        {
+            "type": "2",
+            "value": "2"
+        },
+        {
+            "type": "3",
+            "value": "3"
+        },
+        {
+            "type": "4",
+            "value": "4"
+        },
+        {
+            "type": "5",
+            "value": "5"
+        },
+        {
+            "type": "6",
+            "value": "6"
+        },
+        {
+            "type": "7",
+            "value": "7"
+        },
+        {
+            "type": "8",
+            "value": "8"
+        },
+        {
+            "type": "9",
+            "value": "9"
+        },
+        {
+            "type": "A",
+            "value": "A"
+        },
+        {
+            "type": "B",
+            "value": "B"
+        },
+        {
+            "type": "C",
+            "value": "C"
+        },
+        {
+            "type": "D",
+            "value": "D"
+        },
+        {
+            "type": "E",
+            "value": "E"
+        },
+        {
+            "type": "F MIN",
+            "value": "F"
+        }
+    ],
+    "handles": [
+        {
+            "type": "both",
+            "value": "0"
+        },
+        {
+            "type": "SX",
+            "value": "1"
+        },
+        {
+            "type": "DX",
+            "value": "2"
+        }
+    ]
+}

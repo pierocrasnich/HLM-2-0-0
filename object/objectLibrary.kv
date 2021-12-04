@@ -1,0 +1,73 @@
+<ObjPLCM>:
+    size_hint: None, None
+    size: 50, 50
+    color_fill: GV.OBJ_RGB_NO_DATA
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    Image:
+        source: GV.DIR_OBJ + "plcMaster.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+        color: self.parent.color_fill
+
+
+<ObjPLCZ>:
+    size_hint: None, None
+    size: 50, 50
+    color_fill: GV.OBJ_RGB_NO_DATA
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    Image:
+        source: GV.DIR_OBJ + "plcZone.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+        color: self.parent.color_fill
+
+<ObjHL>:
+    size_hint: None, None
+    size: 50, 50
+    color_fill: GV.OBJ_RGB_NO_DATA
+    angle_obj: 0
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    Image:
+        source: GV.DIR_OBJ + "hl.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+        color: self.parent.color_fill
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: self.parent.angle_obj
+                axis: 0, 0, 1
+                origin: root.center
+        canvas.after:
+            PopMatrix
+
+<ObjBntRotate>:
+    size_hint: None, None
+    size: 10, 10
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    Image:
+        source: GV.DIR_ICONS + "ObjRotate.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+
+<ObjTooltip>:
+    size_hint: None, None
+    size: self.texture_size[0] + 10, self.texture_size[1] + 10
+    font_size: 16
+    canvas.before:
+        Color:
+            rgb: GV.RGBA_INFO
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [5]
+        Triangle:
+            points:self.x + 5 ,self.y , self.x + 15, self.y, self.x + 10 ,self.y - 8

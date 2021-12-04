@@ -1,0 +1,135 @@
+###################################### Classe Main menu Button STYLE ###################################################
+<MainMenuButton>:
+    group: 'selectButton'
+    size: 200, 150
+    size_hint: None, None
+    font_size: 21
+    text_size: self.size
+    halign: 'center'
+    valign: 'bottom'
+    padding_y: 25
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255,50/255,57/255,1) if self.state=='normal' else (56/255, 60/255, 69/255, 1)
+    canvas:
+        Color:
+            rgba: (56/255, 60/255, 69/255, 1)
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+###################################### Classe service menu Button STYLE ################################################
+<ServiceMenuButton>:
+    group: 'selectButton'
+    size: 70, 70
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255,50/255,57/255,1) if self.state=='normal' else (56/255, 60/255, 69/255, 1)
+    canvas:
+        Color:
+            rgba: (56/255, 60/255, 69/255, 1)
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+###################################### Main Content STYLE ##############################################################
+<MainContent@Screen>:
+
+<MainContentSeparator@Screen>:
+    BoxLayout:
+        size: 1550, 1
+        size_hint: None, None
+        canvas:
+            Color:
+                rgba: (255/255, 255/255, 255/255, 1)
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+<LabelSetting>:
+
+<ListHeader@GridLayout>:
+    cols: 5
+    size_hint: None, None
+    size: 1100, 50
+    pos: 50, 800
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    Label:
+        id: label1
+        text: '#'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 50, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: label7
+        text: 'System'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: label2
+        text: 'PLC Reg.'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: label3
+        text: 'Name'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: label4
+        text: 'Description'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 600, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+
+<ListTable@BoxLayout>:
+    pos: 50, 50
+    size_hint: None, None
+    size: 1100, 750
+    canvas:
+        Color:
+            rgba: ( 255/255, 255/255, 255/255, 1)
+        Line:
+            width: .5
+            rectangle: self.x, self.y, self.width, self.height

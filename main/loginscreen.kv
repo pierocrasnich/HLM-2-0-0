@@ -1,0 +1,84 @@
+<LoginScreen>:
+    id: _mccm_login
+    name: 'Login'
+    LoginContainer:
+        id: _ls_container
+        mccm_login: _mccm_login
+        lsc_user: _lsc_user
+        lsc_password: _lsc_password
+        lsc_warning: _lsc_warning
+        size_hint: None, None
+        size: 500, 400
+        pos: 300, 200
+        padding: [10, 10, 10, 10]
+        canvas:
+            Color:
+                rgba: 47/255, 50/255, 57/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            text: 'Please Login to Configure'
+            size_hint: None, None
+            font_size: 26
+            size: self.texture_size
+            pos: 400, 530
+        Label:
+            text: 'Login User : '
+            font_size: 18
+            halign: 'left'
+            size_hint: None, None
+            size: self.texture_size
+            pos: 350, 440
+        TextInput:
+            id: _lsc_user
+            multiline: False
+            font_size: 18
+            size_hint: None, None
+            size: 250, 30
+            pos: 480, 440
+        Label:
+            text: 'Password : '
+            halign: 'left'
+            font_size: 18
+            size_hint: None, None
+            size: self.texture_size
+            pos: 350, 360
+        Label:
+            id: _lsc_warning
+            text: '*** Please Check the Login Information !!! ***'
+            halign: 'left'
+            font_size: 18
+            opacity: 0
+            size_hint: None, None
+            size: self.texture_size
+            color: 1, 0, 0, 1
+            pos: 360, 300
+        TextInput:
+            id: _lsc_password
+            multiline: False
+            password: True
+            font_size: 18
+            size_hint: None, None
+            size: 250, 30
+            pos: 480, 360
+        Button:
+            id: _lsc_login_btn
+            ls_container: _ls_container
+            lsc_user: _lsc_user
+            lsc_password: _lsc_password
+            text: 'Login'
+            font_size: 20
+            size_hint: None, None
+            size: 100, 50
+            pos: 690, 210
+            on_press: self.ls_container.do_login(self.lsc_user.text, self.lsc_password.text)
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+            canvas:
+                Color:
+                    rgba: (150/255, 200/255, 1, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+

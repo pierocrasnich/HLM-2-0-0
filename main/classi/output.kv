@@ -1,0 +1,141 @@
+# ----- Style for Label inside row list ------------------------------------------------------------------------------ #
+<LabelOutput>:
+    size_hint: None, None
+    color: 0, 0, 0, 1
+    font_size: 16
+    canvas.before:
+        Color:
+            rgba: self.c_er
+        Line:
+            width: 1
+            rectangle: self.x + 4, self.y + 4, self.width - 8, self.height - 8
+    canvas:
+        Color:
+            rgba: (56/255, 60/255, 69/255, 1)
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 2, self.height - 2
+
+# ----- Style Row inside list ---------------------------------------------------------------------------------------- #
+<OutputBoxRow>:
+    canvas:
+        Color:
+            rgba: ( 83/255, 88/255, 99/255, 1) if self.state == 'normal' else ( GV.RGBA_ORANGE)
+        Rectangle:
+            pos: self.x + 1, self.y + 1
+            size: self.width - 2, self.height - 1
+
+
+# ----- Style Header list -------------------------------------------------------------------------------------------- #
+<ListHeaderOutput@GridLayout>:
+    cols: 7
+    size_hint: None, None
+    size: 1100, 50
+    pos: 50, 800
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        text: '#'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 50, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Type'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Address'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'PLC'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Port'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Name'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Description'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 400, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+
+
+# ----- Spinner Class with option for PLC and Port ------------------------------------------------------------------- #
+<OutputPLCSpinner>:
+    text: '???'
+    size_hint: None, None
+    size: 200, 30
+    color: GV.RGBA_TITLE_COL
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+
+<OutputPLCSpinnerOption>:
+    color: GV.RGBA_TITLE_COL
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+
+# ----- Spinner Class page index (20 output foe page) ---------------------------------------------------------------- #

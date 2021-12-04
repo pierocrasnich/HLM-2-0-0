@@ -1,0 +1,51 @@
+<DownloadPLC>:
+    orientation: 'vertical'
+    size_hint: None, None
+    size: 500, 200
+    pos: 600, 400
+    msg_list: _msg_list
+    canvas:
+        Color:
+            rgba: GV.RGBA_INFO
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [5, ]
+    canvas.before:
+        Color:
+            rgba: GV.RGBA_BLACK50
+        RoundedRectangle:
+            size: self.size
+            pos: self.x +5, self.y -5
+            radius: [5, ]
+    ScrollView:
+        size_hint: None, None
+        size: 450, 150
+        pos: root.x + 25, root.y +25
+        bar_width: 10
+        bar_color: 150/255, 150/255, 150/255, .8
+        bar_inactive_color: 150/255, 150/255, 150/255, .1
+        scroll_type: ['bars']
+#        canvas.before:
+#            Color:
+#                rgba: (47/255,50/255,57/255,1)
+#            Rectangle:
+#                size: self.size
+#                pos: self.pos
+        GridLayout:
+            id: _msg_list
+            cols: 1
+            size_hint: 1, None
+            height: self.minimum_height
+
+
+<LabelMSG@Label>:
+    text: ''
+    size_hint: 1, None
+    height: 25
+    font_size: 14
+    text_size: self.size
+    markup: True
+    color: GV.RGBA_WHITE
+    halign: 'left'
+    valign: 'middle'

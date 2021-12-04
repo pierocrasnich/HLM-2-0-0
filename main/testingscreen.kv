@@ -1,0 +1,159 @@
+<TestingScreen>:
+    id: _mccm_test
+    ts_container: _ts_container
+    name: 'Testing'
+    TestingContainer:
+        id: _ts_container
+        tsc_output_table: _tsc_output_table
+        Label:                                          # ----- Testing Titolo ----- #
+            text: 'Testing'
+            pos: 50, 1000
+            size: 500, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:                                          # ----- Output Label ----- #
+            text: '[i]Output[/i]'
+            size: 200, 50
+            size_hint: None, None
+            font_size: 24
+            text_size: self.size
+            markup: True
+            pos: 1450, 910
+        MainContentSeparator:                           # ----- Linea di separazione ----- #
+            pos: 50, 900
+        Label:
+            text: 'This section provides to TEST OUTPUT devices.'
+            pos: 50, 950
+            size: 1600, 50
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+        TestingHeader:
+            id: _tsc_output_header
+        ScrollView:                                     # ----- Scrollview contenente gli output da testare ----- #
+            size_hint: None, None
+            size: 1250, 750
+            pos: 50, 50
+            bar_width: 10
+            bar_color: GV.RGBA_BAR_OFF
+            bar_inactive_color: GV.RGBA_BAR_ON
+            scroll_type: ['bars']
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_LIGHT
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            OutputTestingListBox:
+                id: _tsc_output_table
+                tsc_name: _tsc_name
+                tsc_address: _tsc_address
+                tsc_plc: _tsc_plc
+                tsc_com: _tsc_com
+                tsc_handles: _tsc_handles
+                tsc_start_btn: _tsc_start_btn
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+        Label:                                          # ----- Label Output Testing ----- #
+            text: 'Handles to test :'
+            pos: 1360, 700
+            font_size: 16
+            text_size: self.size
+        Label:
+            id: _tsc_name
+            text: '???'
+            pos: 1490, 700
+            font_size: 16
+            text_size: self.size
+        Label:                                      # ----- Label Handles address Testing ----- #
+            text: 'HL address :'
+            pos: 1360, 670
+            font_size: 16
+            text_size: self.size
+        Label:
+            id: _tsc_address
+            text: '???'
+            pos: 1490, 670
+            font_size: 16
+            text_size: self.size
+        Label:                                      # ----- Label PLC position Testing ----- #
+            text: 'HL on PLC :'
+            pos: 1360, 640
+            font_size: 16
+            text_size: self.size
+        Label:
+            id: _tsc_plc
+            text: '???'
+            pos: 1490, 640
+            font_size: 16
+            text_size: self.size
+        Label:                                   # ----- Label RS485 number on PLC Testing ----- #
+            text: 'HL Com on PLC :'
+            pos: 1360, 610
+            font_size: 16
+            text_size: self.size
+        Label:
+            id: _tsc_com
+            text: '???'
+            pos: 1490, 610
+            font_size: 16
+            text_size: self.size
+        Label:                                      # ----- Label Handles SX, DX, Both Testing ----- #
+            text: 'HL Position :'
+            pos: 1360, 580
+            font_size: 16
+            text_size: self.size
+        Label:
+            id: _tsc_handles
+            text: '???'
+            pos: 1490, 580
+            font_size: 16
+            text_size: self.size
+        StartTestingButton:                             # ----- Pulsante di Start Testing ----- #
+            id: _tsc_start_btn
+            tsc_output_table: _tsc_output_table
+            tsc_address: _tsc_address
+            tsc_plc: _tsc_plc
+            tsc_com: _tsc_com
+            tsc_handles: _tsc_handles
+            tsc_reset_btn: _tsc_reset_btn
+            text: 'Start Test'
+            disabled: True
+            opacity: 0
+            pos: 1360, 500
+            on_press: self.start_test()
+            size: 150, 50
+            size_hint: None, None
+            font_size: 21
+            background_down: ''
+            background_normal: ''
+            background_color: GV.RGBA_BTN_OFF if self.state=='normal' else GV.RGBA_BTN_ON
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BTN_ON
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+        Button:                                          # ----- Pulsante di reset OUTPUT ----- #
+            id: _tsc_reset_btn
+            tsc_start_btn: _tsc_start_btn
+            text: 'Reset All'
+            disabled: True
+            opacity: 0
+            pos: 1450, 50
+            on_press: output_testing_list_box.clear_list()
+            size: 150, 50
+            size_hint: None, None
+            font_size: 21
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+            canvas:
+                Color:
+                    rgba: (150/255, 200/255, 255/255, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+

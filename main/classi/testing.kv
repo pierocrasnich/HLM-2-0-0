@@ -1,0 +1,107 @@
+# ----- Definizione della classe del pulsante di START lettura MODBUS ------------------------------------------------ #
+<ModbusTestingStart>:
+    size: 150, 50
+    size_hint: None, None
+    font_size: 21
+    background_down: ''
+    background_normal: ''
+    background_color: (0/255,162/255,162/255,.2) if self.state=='normal' else (0/255,162/255,162/255,1)
+    canvas:
+        Color:
+            rgba: (0/255,162/255,162/255,1)
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+# ----- Classe di definizione dello spinner -------------------------------------------------------------------------- #
+<SpinnerOutputTest>:                                        # ----- Classe spinner OUTPUT ----- #
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BTN_ON
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<SpinnerOutputTestOption>:                                  # ----- Classe spinner Option OUTPUT ----- #
+    canvas:
+        Color:
+            rgba: GV.RGBA_BTN_ON
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Classe Header della list Output da testare ------------------------------------------------------------------- #
+<TestingHeader@GridLayout>:
+    cols: 6
+    size_hint: None, None
+    size: 1250, 50
+    pos: 50, 800
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_DARK
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    HeaderLabel:
+        text: '#'
+        size: 80, 50
+    HeaderLabel:
+        text: 'Output Name'
+        size: 150, 50
+    HeaderLabel:
+        text: 'Description'
+        size: 300, 50
+    HeaderLabel:
+        text: 'PLC'
+        size: 150, 50
+    HeaderLabel:
+        text: 'PLC Com'
+        size: 150, 50
+    HeaderLabel:
+        text: 'Handles Test'
+        size: 450, 50
+
+# ----- Classe dei pulsanti per la selezione degli OUTPUT da testare ------------------------------------------------- #
+<OutputTestLabel>:
+    size_hint: None, None
+    color: GV.RGBA_BLACK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+<OutputCheckBox>:
+    size_hint: None, None
+    size: 30, 30
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 1.2
+            points: self.x + 140, self.y, self.x, self.y, self.x, self.y + 30, self.x + 140, self.y + 30, self.x + 140, self.y
+<LabelCheckBox>:
+    size_hint: None, None
+    color: GV.RGBA_BLACK
+
+# ----- Classe della definizione della riga OUTPUT da testare -------------------------------------------------------- #
+<OutputTestingRow>:
+    canvas:
+        Color:
+            rgba: GV.RGBA_NORMAL if self.state == 'normal' else (210/255, 160/255, 0, .8)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+# ----- Label Header ------------------------------------------------------------------------------------------------- #
+<HeaderLabel@Label>:
+    font_size: 21
+    size_hint: None, None
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 1.5
+            rectangle: self.x, self.y, self.width, self.height

@@ -1,0 +1,311 @@
+<ModuleScreen>:
+    id: _mccm_module
+    name: 'Module Configuration'
+    ms_container: _ms_container
+    DashContainer:
+        id: _ms_container
+        msc_module_container: _msc_module_container
+        Button:
+            id: _msc_close_btn
+            mccm_module: _mccm_module
+            pos: 1550, 1000
+            size_hint: None, None
+            size: 32, 32
+            opacity: 1
+            background_normal: GV.DIR_ICONS + "cancel.png"
+            background_down: GV.DIR_ICONS + "cancel.png"
+            on_press: self.mccm_module.mccm.switch_to(self.mccm_module.mccm.mccm_settings)
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Line:
+                    width: 1
+                    rectangle: self.x - 5, self.y - 5, self.width + 10, self.height + 10
+        Label:          # ------------- DashBoard Title ------------------------------------- #
+            text: 'Module Config'
+            pos: 50, 1000
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:             # ------------- Module Library SubTitle ------------------------------------- #
+            text: 'Module Library'
+            pos: 50, 930
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+            color: GV.RGBA_WHITE50
+        Label: # ------------- Module Map SubTitle ------------------------------------- #
+            text: 'Module Map:'
+            pos: 390, 930
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+            color: GV.RGBA_WHITE50
+        Label: # ------------- Module Map SubTitle ------------------------------------- #
+            id: _msc_module_map_name
+            text: ''
+            pos: 540, 930
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+            color: GV.RGBA_WHITE
+        AddModuleBtn: # ----- Add Module Button --------------------------------------#
+            id: _msc_module_add_btn
+            msc_module_container: _msc_module_container
+            msc_module_map: _msc_module_map
+            mscmm_widget: _mscmm_widget
+            mscmm_image: _mscmm_image
+            mscmm_module: _mscmm_module
+            pos: 1480, 930
+            on_press: self.add_module()
+        EditModuleBtn: # ----- Edit Module Button --------------------------------------#
+            id: _msc_module_edit_btn
+            msc_module_add_btn: _msc_module_add_btn
+            msc_module_container: _msc_module_container
+            msc_module_map: _msc_module_map
+            mscmm_widget: _mscmm_widget
+            mscmm_image: _mscmm_image
+            mscmm_module: _mscmm_module
+            mscmmm_name: _mscmmm_name
+            mscmmm_system: _mscmmm_system
+            mscmmm_bit: _mscmmm_bit
+            mscmmm_save: _mscmmm_save
+            mscmmm_cancel: _mscmmm_cancel
+            mscmmm_bit_container1: _mscmmm_bit_container1
+            mscmmm_bit_container8: _mscmmm_bit_container8
+            mscmmm_bit_container16: _mscmmm_bit_container16
+            mscmmm_bit_container32: _mscmmm_bit_container32
+            pos: 1520, 930
+            disabled: True if self.mscmm_image.source == '' else False
+            on_press: self.edit_module()
+        DelModuleBtn: # ----- Del Module Button --------------------------------------#
+            id: _msc_module_del_btn
+            msc_module_edit_btn: _msc_module_edit_btn
+            msc_module_add_btn: _msc_module_add_btn
+            msc_module_container: _msc_module_container
+            msc_module_map: _msc_module_map
+            mscmm_widget: _mscmm_widget
+            mscmm_image: _mscmm_image
+            mscmm_module: _mscmm_module
+            pos: 1560, 930
+            disabled: True if self.mscmm_image.source == '' else False
+            on_press: self.del_module()
+        ModuleMapLabel: # ------------- Bit Label ------------------------------------- #
+            id: _msc_bit_label
+            text: 'BIT'
+            pos: 400, 890
+        ModuleMapLabel: # ------------- Function Label ------------------------------------- #
+            id: _msc_function_label
+            text: 'Function'
+            pos: 460, 890
+        ModuleMapLabel: # ------------- SX Label ------------------------------------- #
+            id: _msc_sx_label
+            text: 'SX'
+            pos: 920, 890
+            color: GV.RGBA_WHITE
+        ModuleMapLabel: # ------------- SX Color Label ------------------------------------- #
+            id: _msc_sx_color_label
+            text: 'Color'
+            pos: 970, 890
+        ModuleMapLabel: # ------------- SX Flash Label ------------------------------------- #
+            id: _msc_sx_flash_label
+            text: 'Flash'
+            pos: 1040, 890
+        ModuleMapLabel: # ------------- SX Power Label ------------------------------------- #
+            id: _msc_sx_power_label
+            text: 'Power'
+            pos: 1090, 890
+        ModuleMapLabel: # ------------- DX Label ------------------------------------- #
+            id: _msc_dx_label
+            text: 'DX'
+            pos: 1210, 890
+            color: GV.RGBA_WHITE
+        ModuleMapLabel: # ------------- DX Color Label ------------------------------------- #
+            id: _msc_dx_color_label
+            text: 'Color'
+            pos: 1260, 890
+        ModuleMapLabel: # ------------- DX Flash Label ------------------------------------- #
+            id: _msc_dx_flash_label
+            text: 'Flash'
+            pos: 1330, 890
+        ModuleMapLabel: # ------------- DX Power Label ------------------------------------- #
+            id: _msc_dx_power_label
+            text: 'Power'
+            pos: 1380, 890
+        ModuleMapLabel: # ------------- SX Normal Label ------------------------------------- #
+            id: _msc_sx_normal_label
+            text: 'SX'
+            pos: 560, 100
+        ModuleMapLabel: # ------------- DX Normal Label ------------------------------------- #
+            id: _msc_dx_normal_label
+            text: 'DX'
+            pos: 840, 100
+        ModuleLibraryStack: # ----- Module Library Container --------------------------------------------- #
+            id: _msc_module_container
+            msc_module_map: _msc_module_map
+            mscmm_image: _mscmm_image
+            msc_module_map_name: _msc_module_map_name
+            msc_bit_label: _msc_bit_label
+            msc_sx_label: _msc_sx_label
+            msc_dx_label: _msc_dx_label
+            msc_sx_color_label: _msc_sx_color_label
+            msc_dx_color_label: _msc_dx_color_label
+            msc_sx_flash_label: _msc_sx_flash_label
+            msc_dx_flash_label: _msc_dx_flash_label
+            msc_sx_power_label: _msc_sx_power_label
+            msc_dx_power_label: _msc_dx_power_label
+            msc_function_label: _msc_function_label
+            msc_sx_normal_label: _msc_sx_normal_label
+            msc_dx_normal_label: _msc_dx_normal_label
+            msc_module_del_btn: _msc_module_del_btn
+            msc_module_edit_btn: _msc_module_edit_btn
+            size_hint: None, None
+            size: 320, 880
+            pos: 40, 40
+            padding: 5, 5, 5, 5
+            spacing: 5, 5
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 1.5
+        ModuleMapContainer: # ----- Module Map Container --------------------------------------------------- #
+            id: _msc_module_map
+            msc_module_map_name: _msc_module_map_name
+            mscmm_widget: _mscmm_widget
+            mscmm_image: _mscmm_image
+            mscmm_module: _mscmm_module
+            msc_bit_label: _msc_bit_label
+            msc_sx_label: _msc_sx_label
+            msc_dx_label: _msc_dx_label
+            msc_sx_color_label: _msc_sx_color_label
+            msc_dx_color_label: _msc_dx_color_label
+            msc_sx_flash_label: _msc_sx_flash_label
+            msc_dx_flash_label: _msc_dx_flash_label
+            msc_sx_power_label: _msc_sx_power_label
+            msc_dx_power_label: _msc_dx_power_label
+            msc_function_label: _msc_function_label
+            msc_sx_normal_label: _msc_sx_normal_label
+            msc_dx_normal_label: _msc_dx_normal_label
+            size_hint: None, None
+            size: 1230, 880
+            pos: 190, 20
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 1.5
+            RelativeLayout: # ----- Module Image Container --------------------------------------------- #
+                size_hint: 1, 1
+                pos: self.parent.x, self.parent.y
+                Image:
+                    id: _mscmm_image
+                    source: ''
+                    size: self.texture_size
+                    allow_stretch: True
+                    pos: -150, -10
+                    opacity: 0
+            RelativeLayout: # ----- Module Description Label Container ---------------------------------- #
+                id: _mscmm_widget
+                size_hint: 1, 1
+                pos: self.parent.x, self.parent.y
+            RelativeLayout: # ----- Module Edit/Add Container ---------------------------------------- #
+                id: _mscmm_module
+                mscmmm_bit_container1: _mscmmm_bit_container1
+                size_hint: 1, 1
+                pos: self.parent.x, self.parent.y
+                disabled: True
+                opacity: 0
+                ModuleEditLabel:          # ------------- Module Name Add/Edit ------------------------------------- #
+                    text: 'Module Name:'
+                    pos: 10, 830
+                    size: 150, 50
+                ModuleEditTextInput: # ------------- Module Name Add/Edit TextInput------------------------------------- #
+                    id: _mscmmm_name
+                    mscmmm_system: _mscmmm_system
+                    mscmmm_cancel: _mscmmm_cancel
+                    text: ''
+                    pos: 170, 830
+                    size: 150, 30
+                    font_size: 16
+                    padding: 5, 5, 5, 5
+                ModuleEditLabel:          # ------------- Module System Add/Edit ------------------------------------- #
+                    text: 'Module System:'
+                    pos: 10, 790
+                ModuleEditSpinner:
+                    id: _mscmmm_system
+                    mscmmm_bit: _mscmmm_bit
+                    text: 'System...'
+                    size: 150, 30
+                    pos: 170, 790
+                    values: GV.INPUT_TYPE
+                    disabled: True
+                    on_text: self.enable_bit()
+                ModuleEditLabel:          # ------------- Module Bit Add/Edit ------------------------------------- #
+                    text: 'BIT Register:'
+                    pos: 370, 790
+                ModuleEditSpinner:
+                    id: _mscmmm_bit
+                    mscmmm_name: _mscmmm_name
+                    mscmmm_system: _mscmmm_system
+                    mscmmm_bit: _mscmmm_bit
+                    mscmmm_cancel: _mscmmm_cancel
+                    mscmmm_save: _mscmmm_save
+                    mscmmm_bit_container1: _mscmmm_bit_container1
+                    mscmmm_bit_container8: _mscmmm_bit_container8
+                    mscmmm_bit_container16: _mscmmm_bit_container16
+                    mscmmm_bit_container32: _mscmmm_bit_container32
+                    text: 'Bit...'
+                    size: 150, 30
+                    pos: 500, 790
+                    values: GV.REG_TYPE
+                    on_text: self.load_module_interface()
+                    disabled: True
+                ModuleEditSaveBtn:
+                    id: _mscmmm_save
+                    text: 'Save'
+                    mccm_module: _mccm_module
+                    mscmmm_name: _mscmmm_name
+                    mscmmm_cancel: _mscmmm_cancel
+                    mscmmm_system: _mscmmm_system
+                    mscmmm_bit: _mscmmm_bit
+                    mscmmm_bit_container1: _mscmmm_bit_container1
+                    mscmmm_bit_container8: _mscmmm_bit_container8
+                    mscmmm_bit_container16: _mscmmm_bit_container16
+                    mscmmm_bit_container32: _mscmmm_bit_container32
+                    pos: 900, 790
+                    on_press: self.save_bit()
+                ModuleEditCancelBtn:
+                    id: _mscmmm_cancel
+                    mscmmm_save: _mscmmm_save
+                    mscmmm_name: _mscmmm_name
+                    mscmmm_system: _mscmmm_system
+                    mscmmm_bit: _mscmmm_bit
+                    mscmmm_bit_container1: _mscmmm_bit_container1
+                    mscmmm_bit_container8: _mscmmm_bit_container8
+                    mscmmm_bit_container16: _mscmmm_bit_container16
+                    mscmmm_bit_container32: _mscmmm_bit_container32
+                    msc_module_container: _msc_module_container
+                    mscmm_module: _mscmm_module
+                    text: 'Cancel'
+                    pos: 1020, 790
+                    on_press: self.delete_data()
+                    disabled: True
+                ModuleEditBitContainer1:
+                    id: _mscmmm_bit_container1
+                    pos: 5, -5000
+                ModuleEditBitContainer8:
+                    id: _mscmmm_bit_container8
+                    pos: 5, -5000
+                ModuleEditBitContainer16:
+                    id: _mscmmm_bit_container16
+                    pos: 5, -5000
+                ModuleEditBitContainer32:
+                    id: _mscmmm_bit_container32
+                    pos: 5, -5000

@@ -1,0 +1,212 @@
+<OutputScreen>:                                     # ----- Output Screen ---------------------------- #
+    id: _mccm_output
+    name: 'Output List'
+    os_container: _os_container
+    osc_list_table: _osc_list_table
+    osc_edit_box: _osc_edit_box
+    OutputContainer:
+        id: _os_container
+        osc_list_table: _osc_list_table
+        osc_edit_box: _osc_edit_box
+        osc_list_errors: _osc_list_errors
+        RelativeLayout:
+            id: _osc_edit_box
+            osceb_obj_id: _osceb_obj_id
+            osceb_num: _osceb_num
+            osceb_sys: _osceb_sys
+            osceb_address: _osceb_address
+            osceb_plc: _osceb_plc
+            osceb_plc_port: _osceb_plc_port
+            osceb_name: _osceb_name
+            osceb_descr: _osceb_descr
+            pos: 1240, 280
+            size_hint: None, None
+            size: 330, 600
+            disabled: True
+            opacity: 0
+            Label:
+                text: 'Editor Area'
+                color: GV.RGBA_ORANGE
+                font_size: 18
+                pos: 10, 550
+                size_hint: None, None
+                size: self.texture_size
+            Label:
+                id: _osceb_obj_id
+                text: '???'
+                color: GV.RGBA_ORANGE
+                pos: 150, 550
+                size_hint: None, None
+                size: self.texture_size
+                opacity: 0
+            Label:
+                text: 'Number: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 500
+                color: 1, 1, 1, .5
+            Label:
+                id: _osceb_num
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 500
+            Label:
+                text: 'Type: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 450
+                color: 1, 1, 1, .5
+            Label:
+                id: _osceb_sys
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 450
+            Label:
+                text: 'Address: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 400
+                color: 1, 1, 1, .5
+            TextInput:
+                id: _osceb_address
+                text: ''
+                size_hint: None, None
+                cursor_color: 1, 1, 1, 1
+                foreground_color: 1, 1, 1, 1
+                halign: 'center'
+                size: 200, 30
+                pos: 95, 395
+                background_normal: ''
+                background_color: 83/255, 88/255, 99/255, 1
+            Label:
+                text: 'PLC: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 350
+                color: 1, 1, 1, .5
+            OutputPLCSpinner:
+                id: _osceb_plc
+                osceb_plc_port: _osceb_plc_port
+                pos: 95, 350
+                on_text: self.populate_com(self.text)
+            Label:
+                text: 'Port: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 300
+                color: 1, 1, 1, .5
+            OutputPLCSpinner:
+                id: _osceb_plc_port
+                pos: 95, 300
+            Label:
+                text: 'Name: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 250
+                color: 1, 1, 1, .5
+            TextInput:
+                id: _osceb_name
+                text: ''
+                size_hint: None, None
+                cursor_color: 1, 1, 1, 1
+                foreground_color: 1, 1, 1, 1
+                halign: 'center'
+                size: 200, 30
+                pos: 95, 245
+                background_normal: ''
+                background_color: 83/255, 88/255, 99/255, 1
+            Label:
+                text: 'Description: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 200
+                color: 1, 1, 1, .5
+            TextInput:
+                id: _osceb_descr
+                text: ''
+                size_hint: None, None
+                pos: 10, 100
+                size: 310, 90
+                cursor_color: 1, 1, 1, 1
+                foreground_color: 1, 1, 1, 1
+                background_normal: ''
+                background_color: 83/255, 88/255, 99/255, 1
+            Button:
+                os_container: _os_container
+                text: 'Save'
+                size_hint: None, None
+                size: 100, 50
+                pos: 100, 0
+                color: 102/255, 179/255, 46/255, 1
+                on_press: self.os_container.update_name()
+                background_normal: ''
+                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+            Button:
+                os_container: _os_container
+                text: 'Cancel'
+                size_hint: None, None
+                size: 100, 50
+                pos: 220, 0
+                color: 229/255, 36/255, 33/255, 1
+                on_press: self.os_container.cancel_update()
+                background_normal: ''
+                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+        Label:
+            text: 'Output List'
+            pos: 50, 1000
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:
+            text: 'You can setting the Name and Description of Output Registers by ROW selection and modify in the EDITOR AREA. '
+            color: 255/255, 255/255, 255/255, .5
+            pos: 50, 900
+            size: 1650, 50
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+        ListHeaderOutput:
+            id: _osc_list_header
+        ScrollView:
+            pos: 50, 200
+            size_hint: None, None
+            size: 1100, 600
+            bar_width: 10
+            bar_color: GV.RGBA_ORANGE
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            canvas:
+                Color:
+                    rgba: (56/255, 60/255, 69/255, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            ListOutput:
+                id: _osc_list_table
+                osc_edit_box: _osc_edit_box
+                osc_list_errors: _osc_list_errors
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+#                canvas:
+#                    Color:
+#                        rgba: (56/255, 60/255, 69/255, 1)
+#                    Rectangle:
+#                        pos: self.x + 1, self.y + 1
+#                        size: self.width - 1, self.height - 1
+        Label:
+            id: _osc_list_errors
+            text:'Number of Errors:'
+            color: 255/255, 255/255, 255/255, .5
+            pos: 50, 10
+            size: 1650, 30
+            size_hint: None, None
+            font_size: 16
+            text_size: self.size
+
+

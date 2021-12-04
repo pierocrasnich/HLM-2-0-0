@@ -1,0 +1,20 @@
+{
+"DBConfig": 
+    [
+    {"server": "127.0.0.1", "port": "27017"},
+    {"server": "127.0.0.1", "port": "27018"}
+    ],
+"DBName": "HLM",
+"DBCheckTime": 20,
+"DBCollection": 
+    {
+    "inputConfig": "inputConfig", 
+    "moduleConfig": "moduleConfig", 
+    "plcZoneConfig": "plcZoneConfig", 
+    "inputList": "inputList", 
+    "outputList": "outputList",
+    "connectionList": "connectionList",
+    "objectList": "objectList",
+    "logger": "logger"
+    }
+}

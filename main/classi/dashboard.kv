@@ -1,0 +1,101 @@
+<DeckMenu>:
+    cols: 1
+    size_hint: None, None
+    height: self.minimum_height
+    width: 130
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    canvas.after:
+        Color:
+            rgba: 47/255,50/255,57/255,1
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+<DeckMenuSelect>
+    size_hint: None, None
+    size: 130, 30
+    text_size: self.size
+    padding: 10, 0
+    size: 130, 30
+    font_size: 16
+    text: '???'
+    color: GV.RGBA_ORANGE
+    halign: 'left'
+    valign: 'center'
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    on_press: self.deck_set()
+
+<FaultListHeader@GridLayout>:
+    cols: 2
+    size_hint: None, None
+    size: 1580, 50
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        text: 'Data '
+        font_size: 18
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        padding: 20, 0
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 300, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Fault device '
+        font_size: 18
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        padding: 20, 0
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 1280, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+
+<FaultListRow>:
+    size_hint: 1, None
+    height: 30
+    canvas:
+        Color:
+            rgba: ( 83/255, 88/255, 99/255, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<FaultListLabel>:
+    size_hint: None, None
+    font_size: 16
+    text_size: self.size
+    halign: 'left'
+    valign: 'middle'
+    color: GV.RGBA_WHITE50
+    padding: 20, 0
+    canvas:
+        Color:
+            rgba: (56/255, 60/255, 69/255, 1)
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 2, self.height - 2

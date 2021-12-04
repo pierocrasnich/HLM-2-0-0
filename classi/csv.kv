@@ -1,0 +1,154 @@
+###################################### Import/Export file CSV ##########################################################
+<ExportPdfButton>:
+    size: 50, 50
+    size_hint: None, None
+    font_size: 12
+    Image:
+        source: GV.DIR_ICONS + 'pdfIcon.png'
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+
+
+<ExportConnectButton>:
+    size: 50, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<ImportConnectButton>:
+    size: 100, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<ImportDialog>:
+    id: _dialog
+    size_hint: None, None
+    size: 700,510
+    auto_dismiss: False
+    file: _file
+    background_normal: ''
+    background_color: 1, 1, 1, 1
+    BoxLayout:
+        size_hint: None, None
+        size: 650, 500
+        pos: self.pos
+        orientation: 'vertical'
+        BoxLayout:
+            pos: 0,0
+            size: 650, 50
+            size_hint: None, None
+            padding: 0, 0, 0, 5
+            Label:
+                size: 150, 50
+                size_hint: None, None
+                font_size: 21
+                text_size: self.size
+                text: 'Select File'
+                valign: "middle"
+        BoxLayout:
+            size: 650, 1
+            size_hint: None, None
+            pos: 50,50
+            canvas:
+                Color:
+                    rgba: (255/255, 255/255, 255/255, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+        FileChooserListView:
+            id: _file
+            size_hint: None, None
+            size: 630,330
+            dirselect: True
+            multiselect: False
+            path: root.folder_path
+            on_selection: _selectLabel.text = _file.selection[0] if len(_file.selection) >= 1 else ''
+        BoxLayout:
+            size: 650, 1
+            size_hint: None, None
+            canvas:
+                Color:
+                    rgba: (255/255, 255/255, 255/255, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+        BoxLayout:
+            size_hint_y: .1
+            height: 30
+            spacing: 20
+            padding: 330, 0, 0, 0
+            ImportConnectButton:
+                text: 'Load'
+                on_press: root.import_collection_csv( _file.path , _file.selection)
+                on_release: _dialog.dismiss()
+                disabled: True if _file.selection == [] or _file.path == '' else False
+                background_down: ''
+                background_normal: ''
+                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+                canvas:
+                    Color:
+                        rgba: (150/255, 200/255, 1, 1)
+                    Line:
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
+            ImportConnectButton:
+                text: 'Cancel'
+                on_press: _dialog.dismiss()
+                background_down: ''
+                background_normal: ''
+                background_color: (47/255,50/255,57/255,1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+                canvas:
+                    Color:
+                        rgba: (150/255, 200/255, 1, 1)
+                    Line:
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
+        BoxLayout:
+            size: 500, 50
+            size_hint: None, None
+            padding: 0, 0, 0, 10
+            Label:
+                size: 500, 50
+                size_hint: None, None
+                font_size: 12
+                text_size: self.size
+                id: _selectLabel
+                text: ''
+                halign: 'left'
+###################################### Print Commissioning documentation################################################
+<ComDocButton>:
+    size: 80, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+
+
+
+
+########################################################################################################################

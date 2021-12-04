@@ -1,0 +1,111 @@
+<ConnectListBoxRow>:
+    cols: 6
+    size_hint: 1, None
+    height: self.minimum_height
+    group: 'connection'
+    padding: 0, 10,
+    canvas.before:
+        Color:
+            rgba: self.set_color
+        Rectangle:
+            pos: self.x + 1 , self.y
+            size: self.width - 2, self.height
+
+<LabelConnect>:
+    size_hint: None, None
+    text_size: self.size
+    halign: 'center'
+    valign: 'top'
+    color: GV.RGBA_WHITE50
+    padding_x: 10
+    font_size: 16
+
+<DelConnectButton>:
+    size_hint: None, None
+    text_size: self.size
+    size: 100, 50
+    text: 'Delete'
+    color: GV.RGBA_ERROR
+    halign: 'center'
+    valign: 'middle'
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+
+# ----- Input List Header -------------------------------------------------------------------------------------------- #
+<ConnectListHeader@GridLayout>:
+    cols: 5
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        id: _system
+        text: 'System'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 200, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _register
+        text: 'Register'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 250, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Input'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 250, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'module'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 250, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Output'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 600, 50
+        halign: 'left'
+        valign: 'middle'
+        padding: 20, 0
+        text_size: self.size
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+
+

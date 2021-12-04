@@ -1,0 +1,31 @@
+<UsbFind>:
+    orientation: 'vertical'
+    size_hint: None, None
+    size: 500, 200
+    pos: 600, 400
+    usb_msg_label: _usb_msg_label
+    canvas:
+        Color:
+            rgba: root.color_bk
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [5, ]
+    canvas.before:
+        Color:
+            rgba: GV.RGBA_BLACK50
+        RoundedRectangle:
+            size: self.size
+            pos: self.x +5, self.y -5
+            radius: [5, ]
+    Label:
+        id: _usb_msg_label
+        text: ''
+        size_hint: 1, 1
+        pos: self.pos
+        text_size : self.size
+        font_size: 18
+        color: GV.RGBA_BLACK50
+        halign: 'center'
+        valign: 'middle'
+        padding: 10, 0

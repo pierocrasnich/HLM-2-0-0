@@ -1,0 +1,136 @@
+# ------------------------ Input Label style ------------------------------------------------------------------------- #
+<LabelInput>:
+    size_hint: None, None
+    color: 0, 0, 0, 1
+    font_size: 16
+    canvas:
+        Color:
+            rgba: (56/255, 60/255, 69/255, 1)
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 2, self.height - 2
+
+# ---------------------- Input Row Style ----------------------------------------------------------------------------- #
+<InputBoxRow>:
+    canvas:
+        Color:
+            rgba: ( 83/255, 88/255, 99/255, 1) if self.state == 'normal' else ( GV.RGBA_ORANGE)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+# --------------------- Select Widget Style -------------------------------------------------------------------------- #
+<SelectSystemSpinnerOption>:
+    color: GV.RGBA_TITLE_COL
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 3
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ------------------- Select Widget ---------------------------------------------------------------------------------- #
+<SelectSystemSpinner>:
+    size_hint: 1, 1
+    pos_hint: {'x': 0, 'y': 0}
+    text: 'System'
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    color: GV.RGBA_TITLE_COL
+    on_text: self.selected_text(self.text)
+
+# ----- Input List Header -------------------------------------------------------------------------------------------- #
+<InputListHeader@GridLayout>:
+    cols: 6
+    size_hint: None, None
+    size: 1100, 50
+    pos: 50, 800
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    Label:
+        id: _num
+        text: '#'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 50, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _register
+        text: 'Register'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _bit
+        text: 'Bit'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 50, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _system
+        text: 'System'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _name
+        text: 'Name'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        id: _description
+        text: 'Description'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 600, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height

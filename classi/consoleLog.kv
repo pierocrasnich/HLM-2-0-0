@@ -1,0 +1,201 @@
+###################################### Classe Logger Console STYLE #####################################################
+<LoggerConsole>:
+    orientation: "vertical"
+    padding: 10, 10
+    size_hint: None, None
+    size: root.sizeW, root.sizeH
+    pos: -5000, 50
+    do_scroll_x: False
+    opacity: 0
+    scroll_type: ['bars', 'content']
+    scroll_wheel_distance: dp(114)
+    bar_width: dp(10)
+    drag_rectangle: self.x, self.y + self.height - 30 , self.width, 30
+    drag_timeout: 10000000
+    drag_distance: 20
+#    canvas.before:
+#        Color:
+#            rgba: GV.RGBA_BLACK
+#        RoundedRectangle:
+#            size: self.size
+#            pos: self.x +5, self.y -5
+#            radius: [5, ]
+    canvas:
+        Color:
+            rgba: GV.RGBA_BLACK
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [5, ]
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: None, None
+        size: root.width , 30
+        pos: root.x , root.y + root.height - 30
+        canvas:
+            Color:
+                rgba: GV.RGBA_BG_DARK
+            RoundedRectangle:
+                size: self.width, self.height
+                pos: self.x, self.y
+                radius: [5, 5, 0, 0]
+        Label:
+            text: 'Logger'
+            size_hint: None, None
+            size: root.width - 30, 30
+            text_size : self.size
+            font_size: 16
+            color: 1, 1, 1, .5
+            halign: 'left'
+            valign: 'middle'
+            padding: 10, 0
+        AnchorLayout:
+            anchor_x: 'right'
+            anchor_y: 'top'
+            size_hint: None, None
+            size: 30, 30
+            Button:
+                text:''
+                size_hint: None, None
+                size: 30, 30
+                pos: self.pos
+                on_press: root.close_console()
+                background_normal: ''
+                background_color: 1, 1, 1, 0
+                canvas:
+                    Color:
+                        rgba: GV.RGBA_BLUE
+                    RoundedRectangle:
+                        size: self.width - 14, self.height - 14
+                        pos: self.x , self.y + 7
+                        radius: [10, ]
+    RecycleView:
+        id: console_list
+        size_hint: None, None
+        size: root.width , root.height - 60
+        pos: root.x , root.y + 30
+        do_scroll_x: False
+        scroll_type: ['bars', 'content']
+        scroll_wheel_distance: dp(114)
+        bar_width: dp(10)
+        viewclass: 'LoggerConsoleLayout'
+        RecycleBoxLayout:
+            default_size: None, dp(21)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
+            spacing: dp(2)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: None, None
+        size: root.width , 30
+        pos: root.x , root.y
+        canvas:
+            Color:
+                rgba: GV.RGBA_BG_DARK
+            RoundedRectangle:
+                size: self.width, self.height
+                pos: self.x, self.y
+                radius: [0, 0, 5, 5]
+        Button:
+            text:''
+            size_hint: None, None
+            size: 30, 30
+            pos:self.pos
+            on_press: root.clear_console()
+            background_color: [1, 1, 1, 0]
+            Image:
+                source: GV.DIR_ICONS + "eraser.png"
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                allow_stretch: False
+        Button:
+            text:''
+            size_hint: None, None
+            size: 30, 30
+            pos:self.pos
+            on_press: root.save_console()
+            background_color: [1, 1, 1, 0]
+            Image:
+                source: GV.DIR_ICONS + "save.png"
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                allow_stretch: False
+        AnchorLayout:
+            anchor_x: 'right'
+            padding: [0, 0, 10, 0]
+            GridLayout:
+                cols: 3
+                rows: 1
+                size_hint: None, None
+                size: 110, 30
+                spacing: 10
+                Button:
+                    text:''
+                    size_hint: None, None
+                    size: 30, 30
+                    pos:self.pos
+                    on_press: root.minimize_console()
+                    background_color: [1, 1, 1, 0]
+                    Image:
+                        source: GV.DIR_ICONS + "minimizeView.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                        allow_stretch: False
+                Button:
+                    text:''
+                    size_hint: None, None
+                    size: 30, 30
+                    pos:self.pos
+                    on_press: root.normal_console()
+                    background_color: [1, 1, 1, 0]
+                    Image:
+                        source: GV.DIR_ICONS + "normalView.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                        allow_stretch: False
+                Button:
+                    text:''
+                    size_hint: None, None
+                    size: 30, 30
+                    pos:self.pos
+                    on_press: root.full_console()
+                    background_color: [1, 1, 1, 0]
+                    Image:
+                        source: GV.DIR_ICONS + "fullView.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                        allow_stretch: False
+
+<LoggerConsoleLayout>:
+    orientation: 'horizontal'
+    color_row: [1, 1, 1, 1]
+    data_time: ''
+    event: ''
+    message: ''
+    Label:
+        size_hint: .3, 1
+        text_size : self.size
+        text: root.data_time
+        halign: 'left'
+        valign: 'middle'
+        color: root.color_row
+        font_size: 14
+        padding: 10, 0
+    Label:
+        size_hint: .2, 1
+        text_size : self.size
+        text: root.event
+        halign: 'left'
+        valign: 'middle'
+        color: root.color_row
+        font_size: 14
+    Label:
+        size_hint: .4, 1
+        text_size : self.size
+        text: root.message
+        halign: 'left'
+        valign: 'middle'
+        color: root.color_row
+        font_size: 14

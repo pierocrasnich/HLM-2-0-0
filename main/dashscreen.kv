@@ -1,0 +1,180 @@
+<DashScreen>:
+    id: _mccm_dash
+    name: 'Dashboard'
+    ds_container: _ds_container
+    dsc_list_fault: _dsc_list_fault
+    dsc_deck_scatter: _dsc_deck_scatter
+    dsc_dk_label: _dsc_dk_label
+    dsc_database_check: _dsc_database_check
+    DashContainer:
+        id: _ds_container
+        Label:
+            text: 'Dashboard'
+            pos: 50, 1000
+            size: 500, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        BoxLayout:
+            orientation: 'horizontal'
+            size: 1570, 30
+            size_hint: None, None
+            pos: 40, 940
+            spacing: 10
+#            canvas:
+#                Color:
+#                    rgba: GV.RGBA_ERROR
+#                Line:
+#                    width: 1
+#                    rectangle: self.x, self.y, self.width, self.height
+            AnchorLayout:
+                anchor_x: 'right'
+                Button:
+                    dsc_deck_scatter: _dsc_deck_scatter
+                    id: _dsc_dk_label
+                    size_hint: None, None
+                    text_size: self.size
+                    padding: 10, 0
+                    size: 130, 30
+                    text: '???'
+                    color: GV.RGBA_ORANGE
+                    halign: 'left'
+                    valign: 'center'
+                    background_down: ''
+                    background_normal: ''
+                    background_color: (0, 0, 0, 0)
+                    on_press: self.dsc_deck_scatter.deck_select(self)
+                    canvas.before:
+                        Color:
+                            rgba: 47/255,50/255,57/255,1
+                        Rectangle:
+                            pos: self.x, self.y
+                            size: self.width, self.height
+
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                size_hint: None, None
+                size: 30, 30
+                background_down: ''
+                background_normal: ''
+                background_color: (0, 0, 0, 0) if self.state=='normal' else (47/255, 50/255, 57/255, .5)
+                on_press: self.dsc_deck_scatter.deck_up()
+                Image:
+                    source: GV.DIR_ICONS + "DeckUp.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                size_hint: None, None
+                size: 30, 30
+                background_down: ''
+                background_normal: ''
+                background_color: (0, 0, 0, 0) if self.state=='normal' else (47/255, 50/255, 57/255, .5)
+                on_press: self.dsc_deck_scatter.deck_down()
+                Image:
+                    source: GV.DIR_ICONS + "DeckDown.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+        RelativeLayout:
+            id: _ds_ga
+            pos: 40, 478
+            size: 1570, 450
+            size_hint: None, None
+            DeckStencilView:
+                id: _dsc_stencil_view
+                size_hint: None, None
+                size: 1570, 450
+                canvas.before:
+                    Color:
+                        rgba: 47/255, 50/255, 57/255, 1
+                    Rectangle:
+                        pos: self.x, self.y
+                        size: self.width, self.height
+                canvas.after:
+                    Color:
+                        rgba: 83/255, 88/255, 99/255, 1
+                    Line:
+                        width: 1.5
+                        rectangle: self.x, self.y, self.width, self.height
+                DeckScatter:
+                    mccm_dash: _mccm_dash
+                    dsc_dk_label: _dsc_dk_label
+                    id: _dsc_deck_scatter
+                    auto_bring_to_front: False
+                    do_rotation: False
+                    size: 4500, 1200
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint : None, None
+            size: 1570, 30
+            pos: 40, 440
+            Label:
+                size_hint: None, 1
+                width: 80
+                text: 'Database'
+                color: GV.RGBA_WHITE50
+                text_size: self.size
+                font_size: 16
+                halign: 'left'
+                valign: 'center'
+            BoxLayout:
+                color_fill: GV.RGBA_SUCCESS
+                id: _dsc_database_check
+                orientation: 'horizontal'
+                size_hint: None, None
+                size: 30, 30
+                Image:
+                    source: GV.DIR_ICONS + "Database.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    color: self.parent.color_fill
+            AnchorLayout:
+                anchor_x: 'right'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, 1
+                    width: 70
+                    spacing: 10
+                    Button:
+                        dsc_deck_scatter: _dsc_deck_scatter
+                        size_hint: None, None
+                        size: 30, 30
+                        background_normal: ''
+                        background_down: ''
+                        background_color: 0, 0, 0, 0
+                        on_press: self.dsc_deck_scatter.default_zoom(self)
+                        Image:
+                            source: GV.DIR_ICONS + "DefaultZoom.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Button:
+                        dsc_deck_scatter: _dsc_deck_scatter
+                        color_fill: GV.RGBA_BORDER
+                        size_hint: None, None
+                        size: 30, 30
+                        background_normal: ''
+                        background_down: ''
+                        background_color: 0, 0, 0, 0
+                        on_press: self.dsc_deck_scatter.obj_modify(self)
+                        Image:
+                            source: GV.DIR_ICONS + "ModifyObj.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                            color: self.parent.color_fill
+        FaultListHeader:                        # -------------- List Header ----------------------------------------- #
+            pos: 35, 380
+        ScrollView:                             # -------------- List Container -------------------------------------- #
+            pos: 37, 45
+            size_hint: None, None
+            size: 1577, 330
+            bar_width: 10
+            bar_color: GV.RGBA_ORANGE
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            ListFault:                              # ----------------- List Body ---------------------------------------- #
+                dsc_deck_scatter: _dsc_deck_scatter
+                mccm_dash: _mccm_dash
+                id: _dsc_list_fault
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: self.minimum_height

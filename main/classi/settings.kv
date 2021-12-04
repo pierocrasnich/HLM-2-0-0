@@ -1,0 +1,222 @@
+# ----- Classe grafica pulsanti di modifica dei file JSON ----- #
+<EditJsonButton>:
+    size: 200, 50
+    size_hint: None, None
+    font_size: 21
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+
+# ----- Classe grafica pulsanti di creazione Collection nel DB ----- #
+<CreateListButton>:
+    size: 100, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Classe grafica pulsanti di creazione Collection nel DB ----- #
+<EditSettingsBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'edit.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+<AddSettingsBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'add.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+<DelSettingsBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'del.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+
+# ----- Classe grafica pulsante LOGGER ----- #
+<ObjectModifyButton>:
+    size: 100, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+
+# ----- Classe grafica pulsante LOGGER ----- #
+<LoggerButton>:
+    size: 50, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Classe grafica pulsante LOGGER ----- #
+<ExportDeviceButton>:
+    size: 80, 28
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, 1
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Classe grafica Label settings ----- #
+<TitleLabel@Label>:
+    size_hint: None, None
+    size: 200, 50
+    font_size: 20
+    text_size: self.size
+    markup: True
+
+<VoiceLabel@Label>:
+    size_hint: None, None
+    size: 450, 30
+    font_size: 18
+    text_size: self.size
+    markup: True
+    text: ''
+
+<PLCLabel>:
+    size_hint: None, None
+    size: 260, 16
+    font_size: 12
+    text_size: self.size
+    markup: True
+    text: ''
+
+<InputLabelSettings>:
+    size_hint: None, None
+    size: 750, 20
+    font_size: 14
+    text_size: self.size
+    markup: True
+    text: ''
+
+<VoiceTextInput@TextInput>:
+    opacity: 0
+    size_hint: None, None
+    size: 450, 28
+    font_size: 14
+    text: ''
+    multiline: False
+    disabled: True
+    background_normal: ''
+    background_color: GV.RGBA_WHITE
+
+
+# ----- Status Object ------------------------------------------------------------------------------------------------ #
+<StatusObject>:
+    size_hint: None, None
+    size: 10, 10
+    canvas:
+        Color:
+            rgba: GV.RGBA_ERROR if self.running == False else GV.RGBA_SUCCESS
+        Ellipse:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: GV.RGBA_BLACK
+        Line:
+            width: 1
+            circle: self.x + 5, self.y + 5, 6
+
+# ----- Voice Spinner and Spinner Option ----------------------------------------------------------------------------- #
+<VoiceSpinner>:
+    size_hint: None, None
+    size: 150, 28
+    background_normal: ''
+    background_color: GV.RGBA_BG_LIGHT
+    disabled: True
+    opacity: 0
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_DARK
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+
+<VoiceSpinnerOption>:
+    size_hint: None, None
+    size: 150, 28
+    background_normal: ''
+    background_color: GV.RGBA_BG_LIGHT
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_DARK
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1.2

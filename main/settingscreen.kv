@@ -1,0 +1,607 @@
+<SettingsScreen>:
+    id: _mccm_settings
+    ss_container: _ss_container
+    name: 'Setting'
+    SettingsContainer:
+        id: _ss_container
+        mccm_settings: _mccm_settings
+        ssc_db_list_check: _ssc_db_list_check
+        ssc_project: _ssc_project
+        ssc_engineer: _ssc_engineer
+        ssc_version: _ssc_version
+        ssc_data: _ssc_data
+        ssc_project_ti: _ssc_project_ti
+        ssc_engineer_ti: _ssc_engineer_ti
+        ssc_version_ti: _ssc_version_ti
+        ssc_data_ti: _ssc_data_ti
+        ssc_db_config_master: _ssc_db_config_master
+        ssc_db_config_replica: _ssc_db_config_replica
+        ssc_db_config_master_port: _ssc_db_config_master_port
+        ssc_db_config_replica_port: _ssc_db_config_replica_port
+        ssc_db_config_name: _ssc_db_config_name
+        ssc_db_config_alive: _ssc_db_config_alive
+#        ssc_db_config_ip_ti: _ssc_db_config_ip_ti
+#        ssc_db_config_port_ti: _ssc_db_config_port_ti
+#        ssc_db_config_name_ti: _ssc_db_config_name_ti
+#        ssc_db_config_time_ti: _ssc_db_config_time_ti
+        ssc_plc_master: _ssc_plc_master
+        ssc_plc_master_ti: _ssc_plc_master_ti
+        ssc_plc_alive_ti: _ssc_plc_alive_ti
+        ssc_plc_container: _ssc_plc_container
+        ssc_input_container: _ssc_input_container
+        ssc_handles_num: _ssc_handles_num
+        ssc_handles_num_ti: _ssc_handles_num_ti
+# ----- Title Screen ------------------------------------------------------------------------------------------------- #
+        Label:
+            text: 'Settings'
+            pos: 710, 1020
+            size: 500, 100
+            size_hint: None, None
+            font_size: 40
+            text_size: self.size
+            color: GV.RGBA_BLUE
+# ----- EXIT from app button ----------------------------------------------------------------------------------------- #
+        Button:
+            text: 'Exit'
+            size: 100, 28
+            size_hint: None, None
+            font_size: 14
+            pos: 1500, 1020
+            on_release: root.exit()
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+            canvas:
+                Color:
+                    rgba: 150/255, 200/255, 255/255, 1
+                Line:
+                    width: 1
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+
+# ----- Information Project ------------------------------------------------------------------------------------------ #
+        TitleLabel:
+            text: '[i]Information[/i]'
+            pos: 20, 980
+        EditSettingsBtn:
+            mccm_settings: _mccm_settings
+            ss_container: _ss_container
+            ssc_project_ti: _ssc_project_ti
+            ssc_project: _ssc_project
+            ssc_version_ti: _ssc_version_ti
+            ssc_version: _ssc_version
+            ssc_data_ti: _ssc_data_ti
+            ssc_data: _ssc_data
+            ssc_engineer_ti: _ssc_engineer_ti
+            ssc_engineer: _ssc_engineer
+            pos: 200, 980
+            on_press: self.edit_info()
+        VoiceLabel:
+            text: 'Project Number : '
+            pos: 20, 950
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_project
+            ss_container: _ss_container
+            pos: 200, 950
+        VoiceTextInput:
+            id: _ssc_project_ti
+            pos: 200, 950
+        VoiceLabel:
+            text: 'Version : '
+            pos: 20, 920
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_version
+            ss_container: _ss_container
+            pos: 200, 920
+        VoiceTextInput:
+            id: _ssc_version_ti
+            pos: 200, 920
+        VoiceLabel:
+            text: 'Date : '
+            pos: 20, 890
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_data
+            pos: 200, 890
+        VoiceTextInput:
+            id: _ssc_data_ti
+            pos: 200, 890
+        VoiceLabel:
+            text: 'Engineer : '
+            pos: 20, 860
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_engineer
+            pos: 200, 860
+        VoiceTextInput:
+            id: _ssc_engineer_ti
+            pos: 200, 860
+# ----- Database Space ----------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]DataBase[/i]'
+            pos: 20, 810
+#        EditSettingsBtn:
+#            ss_container: _ss_container
+#            ssc_db_config: _ssc_db_config
+#            ssc_db_config_ip_ti: _ssc_db_config_ip_ti
+#            ssc_db_config_port_ti: _ssc_db_config_port_ti
+#            ssc_db_config_name_ti: _ssc_db_config_name_ti
+#            ssc_db_config_time_ti: _ssc_db_config_time_ti
+#            pos: 200, 810
+#            on_press: self.edit_db()
+        VoiceLabel:
+            text: 'Configuration:'
+            pos: 20, 780
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'IP:'
+            pos: 100, 750
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_master
+            text: ''
+            pos: 200, 750
+        VoiceLabel:
+            text: 'Port:'
+            pos: 350, 750
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_master_port
+            text: ''
+            pos: 400, 750
+        VoiceLabel:
+            text: 'IP:'
+            pos: 100, 720
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_replica
+            text: ''
+            pos: 200, 720
+        VoiceLabel:
+            text: 'Port:'
+            pos: 350, 720
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_replica_port
+            text: ''
+            pos: 400, 720
+        DBStatusObject:
+            id: _ssc_db_status
+            pos: 175, 785
+        VoiceLabel:
+            text: 'Database Name:'
+            pos: 20, 690
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_name
+            text: ''
+            pos: 200, 690
+        VoiceLabel:
+            text: 'Alive CheckTime:'
+            pos: 20, 660
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            id: _ssc_db_config_alive
+            text: ''
+            pos: 200, 660
+        VoiceLabel:
+            text: 'Input Collection:'
+            pos: 20, 630
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Door Card Collection:'
+            pos: 20, 600
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Module Collection:'
+            pos: 20, 570
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Connection List Collection:'
+            pos: 20, 540
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Objects Collection:'
+            pos: 20, 510
+            color: GV.RGBA_WHITE50
+        InputCollectionStatus:
+            id: _ssc_db_input_check
+            pos: 250, 635
+        OutputCollectionStatus:
+            id: _ssc_db_output_check
+            pos: 250, 605
+        ModuleCollectionStatus:
+            id: _ssc_db_module_check
+            pos: 250, 575
+        ListConnectionStatus:
+            id: _ssc_db_list_check
+            pos: 250, 545
+        ListObjectStatus:
+            id: _ssc_db_obj_check
+            pos: 250, 515
+        VoiceLabel:
+            text: 'Export:'
+            pos: 485, 570
+            color: GV.RGBA_WHITE50
+        ExportConnectButton:                        # ------------- Export PDF Button ------------------------------------ #
+            exportList: 'modules'
+            text: 'PDF'
+            pos: 605, 570
+            on_press: self.export_pdf()
+
+        VoiceLabel:
+            text: 'Export file device:'
+            pos: 20, 480
+            color: GV.RGBA_WHITE50
+        ExportDeviceButton:
+            mccm_settings: _mccm_settings
+            text: GV.EXPORT_DEVICE
+            pos: 370, 475
+            on_press: self.select_device()
+        VoiceLabel:
+            text: 'Export:'
+            pos: 485, 540
+            color: GV.RGBA_WHITE50
+        ExportConnectButton:                        # ------------- Export PDF Button ------------------------------------ #
+            exportList: 'connections'
+            text: 'PDF'
+            pos: 605, 535
+            on_press: self.export_pdf()
+            disabled: True
+        CreateListButton:
+            ssc_db_input_check: _ssc_db_input_check
+            ssc_db_output_check: _ssc_db_output_check
+            ssc_db_module_check: _ssc_db_module_check
+            ssc_db_list_check: _ssc_db_list_check
+            text: 'Reset'
+            pos: 370, 630
+            on_press: self.create_collection(GV.DB_INPUTLIST)
+        VoiceLabel:
+            text: 'Export:'
+            pos: 485, 630
+            color: GV.RGBA_WHITE50
+        ExportConnectButton:                        # ------------- Export CSV Button ------------------------------------ #
+            exportList: 'input'
+            text: 'CSV'
+            pos: 550, 630
+            on_press: self.export_csv()
+        ExportConnectButton:                        # ------------- Export PDF Button ------------------------------------ #
+            exportList: 'input'
+            text: 'PDF'
+            pos: 605, 630
+            on_press: self.export_pdf()
+        ImportConnectButton:                        # ------------- Import Button ------------------------------------ #
+            importList: 'input'
+            text: 'Import Input'
+            pos: 675, 630
+            on_press: self.import_csv()
+        CreateListButton:
+            ssc_db_input_check: _ssc_db_input_check
+            ssc_db_output_check: _ssc_db_output_check
+            ssc_db_module_check: _ssc_db_module_check
+            ssc_db_list_check: _ssc_db_list_check
+            text: 'Reset'
+            pos: 370, 600
+            on_press: self.create_collection(GV.DB_OUTPUTLIST)
+        VoiceLabel:
+            text: 'Export:'
+            pos: 485, 600
+            color: GV.RGBA_WHITE50
+        ExportConnectButton:                        # ------------- Export CVV Button -------------------------------- #
+            exportList: 'output'
+            text: 'CSV'
+            pos: 550, 600
+            on_press: self.export_csv()
+        ExportConnectButton:                        # ------------- Export PDF Button -------------------------------- #
+            exportList: 'output'
+            text: 'PDF'
+            pos: 605, 600
+            on_press: self.export_pdf()
+        ImportConnectButton:                        # ------------- Inport Button ------------------------------------ #
+            importList: 'output'
+            text: 'Import Output'
+            pos: 675, 600
+            on_press: self.import_csv()
+        CreateListButton:
+            ssc_db_input_check: _ssc_db_input_check
+            ssc_db_output_check: _ssc_db_output_check
+            ssc_db_module_check: _ssc_db_module_check
+            ssc_db_list_check: _ssc_db_list_check
+            text: 'Reset'
+            pos: 370, 540
+            on_press: self.create_collection(GV.DB_CONNECTIONLIST)
+        CreateListButton:
+            ssc_db_obj_check: _ssc_db_obj_check
+            text: 'Reset'
+            pos: 370, 510
+            on_press: self.create_collection(GV.DB_OBJECTLIST)
+# ----- PLC Area ----------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]PLC[/i]'
+            pos: 20, 420
+        EditSettingsBtn:
+            mccm_settings: _mccm_settings
+            ss_container: _ss_container
+            ssc_plc_master: _ssc_plc_master
+            ssc_plc_master_ti: _ssc_plc_master_ti
+            ssc_plc_alive_ti: _ssc_plc_alive_ti
+            pos: 200, 420
+            on_press: self.edit_plc_master()
+        VoiceLabel:
+            text: 'PLC Master'
+            pos: 20, 390
+            color: GV.RGBA_WHITE50
+        PLCMasterStatusObject:
+            id: ssc_plc_master_status
+            pos: 175, 395
+        VoiceLabel:
+            id: _ssc_plc_master
+            text: ''
+            pos: 200, 390
+        VoiceTextInput:
+            id: _ssc_plc_master_ti
+            text: ''
+            pos: 200, 390
+            width: 200
+        VoiceTextInput:
+            id: _ssc_plc_alive_ti
+            text: ''
+            pos: 400, 390
+            width: 75
+# ----- PLC Zone ----------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]PLC Zone[/i]'
+            pos: 840, 580
+        PLCStackLayout:
+            id: _ssc_plc_container
+            ss_container: _ss_container
+            ssc_plc_zona_ti: _ssc_plc_zona_ti
+            ssc_plc_zona_ip_ti: _ssc_plc_zona_ip_ti
+            ssc_plc_zona_com_ti: _ssc_plc_zona_com_ti
+            ssc_plc_zona_id_ti: _ssc_plc_zona_id_ti
+            ssc_plc_zona_add_btn: _ssc_plc_zona_add_btn
+            ssc_plc_zona_del_btn: _ssc_plc_zona_del_btn
+            ssc_plc_zona_edit_btn: _ssc_plc_zona_edit_btn
+            ssc_plc_zona_info_ti: _ssc_plc_zona_info_ti
+            size_hint: None, None
+            size: 815, 570
+            pos: 830, 5
+            spacing: 5, 5
+            padding: 10, 10, 10, 10
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Line:
+                    rectangle: 830, 5, 815, 570
+                    width: 1.5
+        VoiceLabel:
+            text: "Name: "
+            pos: 840 , 40
+            font_size: 14
+            color: GV.RGBA_WHITE50
+        VoiceTextInput:
+            id: _ssc_plc_zona_ti
+            opacity: 1
+            text: ''
+            pos: 910, 40
+            width: 150
+        VoiceTextInput:
+            id: _ssc_plc_zona_id_ti
+            text: ''
+            pos: 1070, 40
+            width: 50
+        VoiceLabel:
+            text: "IP Address: "
+            pos: 1130 , 40
+            font_size: 14
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: GV.PLC_MASTER[:-3]
+            pos: 1210 , 40
+            font_size: 14
+            color: GV.RGBA_WHITE50
+        VoiceTextInput:
+            id: _ssc_plc_zona_ip_ti
+            opacity: 1
+            text: ''
+            pos: 1280, 40
+            width: 75
+        VoiceLabel:
+            text: "Port Com: "
+            pos: 1410 , 40
+            font_size: 14
+            color: GV.RGBA_WHITE50
+        VoiceTextInput:
+            id: _ssc_plc_zona_com_ti
+            opacity: 1
+            text: ''
+            pos: 1480, 40
+            width: 50
+        VoiceLabel:
+            text: "Description: "
+            pos: 840, 10
+            font_size: 14
+            color: GV.RGBA_WHITE50
+        VoiceTextInput:
+            id: _ssc_plc_zona_info_ti
+            opacity: 1
+            text: ''
+            pos: 960, 10
+            width: 500
+        AddSettingsBtn:
+            id: _ssc_plc_zona_add_btn
+            mccm_settings: _mccm_settings
+            ssc_plc_container: _ssc_plc_container
+            ssc_plc_zona_del_btn: _ssc_plc_zona_del_btn
+            ssc_plc_zona_edit_btn: _ssc_plc_zona_edit_btn
+            ssc_plc_zona_ti: _ssc_plc_zona_ti
+            ssc_plc_zona_ip_ti: _ssc_plc_zona_ip_ti
+            ssc_plc_zona_com_ti: _ssc_plc_zona_com_ti
+            ssc_plc_zona_info_ti: _ssc_plc_zona_info_ti
+            ss_container: _ss_container
+            pos: 1555, 40
+            on_press: self.add_plc_zona()
+        EditSettingsBtn:
+            id: _ssc_plc_zona_edit_btn
+            mccm_settings: _mccm_settings
+            ssc_plc_container: _ssc_plc_container
+            ssc_plc_zona_add_btn: _ssc_plc_zona_add_btn
+            ssc_plc_zona_del_btn: _ssc_plc_zona_del_btn
+            ssc_plc_zona_ti: _ssc_plc_zona_ti
+            ssc_plc_zona_ip_ti: _ssc_plc_zona_ip_ti
+            ssc_plc_zona_com_ti: _ssc_plc_zona_com_ti
+            ssc_plc_zona_id_ti: _ssc_plc_zona_id_ti
+            ssc_plc_zona_info_ti: _ssc_plc_zona_info_ti
+            ss_container: _ss_container
+            disabled: True if self.ssc_plc_zona_ti.text == '' else False
+            pos: 1585, 40
+            on_press: self.edit_plc_zona()
+        DelSettingsBtn:
+            id: _ssc_plc_zona_del_btn
+            mccm_settings: _mccm_settings
+            ssc_plc_container: _ssc_plc_container
+            ssc_plc_zona_add_btn: _ssc_plc_zona_add_btn
+            ssc_plc_zona_edit_btn: _ssc_plc_zona_edit_btn
+            ssc_plc_zona_ti: _ssc_plc_zona_ti
+            ssc_plc_zona_ip_ti: _ssc_plc_zona_ip_ti
+            ssc_plc_zona_com_ti: _ssc_plc_zona_com_ti
+            ssc_plc_zona_id_ti: _ssc_plc_zona_id_ti
+            ss_container: _ss_container
+            disabled: True if self.ssc_plc_zona_ip_ti.text == '' else False
+            pos: 1615, 40
+            on_press: self.del_plc_zona()
+# ----- Input Area --------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]Input Config[/i]'
+            pos: 840, 980
+        VoiceLabel:
+            text: 'System'
+            pos: 840, 950
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Start Register'
+            pos: 1010, 950
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Quantity'
+            pos: 1180, 950
+            color: GV.RGBA_WHITE50
+        VoiceLabel:
+            text: 'Register Bit'
+            pos: 1350, 950
+            color: GV.RGBA_WHITE50
+        InputContainerSettings:
+            id: _ssc_input_container
+            ss_container: _ss_container
+            ssc_input_system: _ssc_input_system
+            ssc_input_reg_start: _ssc_input_reg_start
+            ssc_input_reg_quantity: _ssc_input_reg_quantity
+            ssc_input_reg_type: _ssc_input_reg_type
+            ssc_input_add_btn: _ssc_input_add_btn
+            mccm_settings: _mccm_settings
+            orientation: 'tb-lr'
+            padding: 10, 10, 10, 10
+            spacing: 5
+            size_hint: None, None
+            size: 815, 320
+            pos: 830, 620
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 1.5
+        VoiceSpinner:
+            id: _ssc_input_system
+            text: 'System...'
+            values: GV.INPUT_TYPE
+            pos: 840, 625
+        VoiceTextInput:
+            id: _ssc_input_reg_start
+            pos: 1000, 625
+            size: 150, 28
+        VoiceTextInput:
+            id: _ssc_input_reg_quantity
+            pos: 1160, 625
+            size: 150, 28
+        VoiceSpinner:
+            id: _ssc_input_reg_type
+            text: 'Reg Bit...'
+            values: GV.REG_TYPE
+            pos: 1320, 625
+        AddSettingsBtn:
+            id: _ssc_input_add_btn
+            mccm_settings: _mccm_settings
+            ssc_input_system: _ssc_input_system
+            ssc_input_reg_start: _ssc_input_reg_start
+            ssc_input_reg_quantity: _ssc_input_reg_quantity
+            ssc_input_reg_type: _ssc_input_reg_type
+            ssc_input_container: _ssc_input_container
+            pos: 1600, 625
+            on_press: self.add_input()
+# ----- Handles Area -------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]Handles Config[/i]'
+            pos: 20, 350
+        EditSettingsBtn:
+            mccm_settings: _mccm_settings
+            pos: 200, 350
+            on_press: self.edit_handles()
+            ssc_handles_num_ti: _ssc_handles_num_ti
+            ssc_handles_num: _ssc_handles_num
+        VoiceLabel:
+            text: "Handles Number: "
+            pos: 20 , 320
+            color: GV.RGBA_WHITE50
+        VoiceTextInput:
+            id: _ssc_handles_num_ti
+            text: str(GV.DOOR_NUMBER)
+            pos: 200, 320
+            width: 150
+        VoiceLabel:
+            id: _ssc_handles_num
+            text: str(GV.DOOR_NUMBER)
+            pos: 200 , 320
+            color: GV.RGBA_WHITE
+# ----- Module Area -------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]Module Config[/i]'
+            pos: 20, 280
+        EditSettingsBtn:
+            mccm_settings: _mccm_settings
+            pos: 200, 280
+            on_press: self.go_to_modulescreen()
+# ----- Object Area -------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]Object Config[/i]'
+            pos: 20, 240
+        EditSettingsBtn:
+            mccm_settings: _mccm_settings
+            pos: 200, 240
+            on_press: self.go_to_objectscreen()
+# ----- Logger Area -------------------------------------------------------------------------------------------------- #
+        TitleLabel:
+            text: '[i]Logger[/i]'
+            pos: 20, 200
+        LoggerButton:
+            mccm_settings: _mccm_settings
+            text: 'ON' if str(GV.LOGGER_ACTIVE) == True else 'OFF'
+            pos: 200, 200
+            on_press: self.logger_active()
+        LoggerButton:
+            mccm_settings: _mccm_settings
+            text: 'Clear'
+            pos: 270, 200
+            on_press: self.logger_clear()
+# ------------- Print DOC -------------------------------- #
+        VoiceLabel:
+            text: '[i]Commissioning documentation[/i]'
+            pos: 20, 160
+        ComDocButton:
+            mccm_settings: _mccm_settings
+            text: 'Export'
+            pos: 320, 155
+            on_press: self.export_doc()
+            disabled: True

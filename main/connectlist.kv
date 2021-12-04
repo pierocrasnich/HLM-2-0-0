@@ -1,0 +1,66 @@
+<ConnectListScreen>:
+    id: _mccm_list
+    name: 'ConnectList'
+    cl_container: _cl_container
+    ConnectListContainer:
+        id: _cl_container
+        clc_list: _clc_list
+        Label:
+            text: 'Connected I/M/O List'
+            pos: 50, 1000
+            size: 500, 100
+            size_hint: None, None
+            font_size: 40
+            text_size: self.size
+        Button:
+            id: _clc_close_btn
+            mccm_list: _mccm_list
+            pos: 1375, 980
+            size_hint: None, None
+            size: 150, 50
+            opacity: 1
+            text: 'Close'
+            font_size: 16
+            color: GV.RGBA_INFO
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+            on_press: self.mccm_list.mccm.switch_to(self.mccm_list.mccm.mccm_connect)
+        Button:
+            clc_list: _clc_list
+            text: 'PDF'
+            pos: 1550, 980
+            on_press:  self.clc_list.export_pdf_connections()
+            opacity: 1
+            size: 50, 50
+            size_hint: None, None
+            font_size: 12
+            Image:
+                source: GV.DIR_ICONS + 'pdfIcon.png'
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+        ConnectListHeader:
+            size_hint: None, None
+            size: 1550, 50
+            pos: 50, 900
+        ScrollView:
+            pos: 50, 140
+            size_hint: None, None
+            size: 1550, 755
+            bar_width: 10
+            bar_color: 240/255, 149/255, 61/255, .8
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+#            canvas:
+#                Color:
+#                    rgba: ( 47/255, 50/255, 57/255, 1)
+#                Line:
+#                    width: 1
+#                    rectangle: self.x + 1, self.y + 1, self.width - 2, self.height - 2
+            ConnectionList:
+                cl_container: _cl_container
+                id: _clc_list
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+

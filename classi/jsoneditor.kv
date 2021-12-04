@@ -1,0 +1,67 @@
+<JsonEditorPopup>:
+    id: js_editor
+    size_hint: None, None
+    size: 1000, 900
+    auto_dismiss: False
+    title_size: 24
+    title: 'JSON File Editor'
+    separator_color: 255/255, 255/255, 255/255, 1
+    GridLayout:
+        rows: 2
+        RelativeLayout:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: 975, 750
+            BoxLayout:
+                TextInput:
+                    id: editor_js_file_text
+                    text: js_editor.json_file_read
+                    foreground_color: (102/255, 255/255, 102/255, 1)
+                    font_size: 21
+                    hint_text: ''
+                    size_hint: 1, 0.98
+                    pos: self.pos
+                    background_color: (0,0,0,1)
+                    cursor_color: (102/255, 255/255, 102/255, 1)
+        RelativeLayout:
+            Label:
+                id: path_json_file
+                text: 'file: ' + js_editor.filename
+                font_size: 18
+                size_hint: None, None
+                size: 300, 50
+                pos: -20, 10
+            BoxLayout:
+                pos: 700, 10
+                Button:
+                    size: 100, 50
+                    size_hint: None, None
+                    font_size: 21
+                    text: 'Save'
+                    background_down: ''
+                    background_normal: ''
+                    background_color: (47/255, 50/255,57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .4)
+                    canvas:
+                        Color:
+                            rgba: (150/255, 200/255, 255/255, 1)
+                        Line:
+                            width: 1
+                            rectangle: self.x, self.y, self.width, self.height
+                    on_press: js_editor.save(editor_js_file_text.text)
+            BoxLayout:
+                pos: 850, 10
+                Button:
+                    size: 100, 50
+                    size_hint: None, None
+                    font_size: 21
+                    text: 'Close'
+                    background_down: ''
+                    background_normal: ''
+                    background_color: (47/255, 50/255,57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .4)
+                    canvas:
+                        Color:
+                            rgba: (150/255, 200/255, 255/255, 1)
+                        Line:
+                            width: 1
+                            rectangle: self.x, self.y, self.width, self.height
+                    on_press: js_editor.dismiss()

@@ -1,0 +1,1728 @@
+# ----- Label Module per library ------------------------------------------------------------------------------------- #
+<ModuleLabel>:
+    size_hint: None, None
+    size: 100, 100
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: GV.RGBA_BG_DARK
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: GV.RGBA_MODULE
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1.2
+
+# ----- Classe grafica pulsanti di creazione Module ----- #
+<EditModuleBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'edit.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+<AddModuleBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'add.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+<DelModuleBtn>:
+    size: 24, 24
+    size_hint: None, None
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .1)
+    canvas:
+        Color:
+            rgba: 150/255, 200/255, 255/255, .3
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+    Image:
+        source: GV.DIR_ICONS + 'del.png'
+        allow_stretch: True
+        size_hint: None, None
+        size: 16, 16
+        pos: self.parent.x + 4, self.parent.y + 4
+
+# --------------------- Select Widget Style -------------------------------------------------------------------------- #
+<ModuleSystemSpinnerOption>:
+    color: GV.RGBA_TITLE_COL
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 3
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ------------------- Select Widget ---------------------------------------------------------------------------------- #
+<ModuleSystemSpinner>:
+    size_hint: 1, 1
+    pos_hint: {'x': 0, 'y': 0}
+    text: 'System'
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    color: GV.RGBA_TITLE_COL
+    on_text: self.selected_text(self.text)
+
+# ----- Module Label ------------------------------------------------------------------------------------------------- #
+<ModuleMapLabel>:
+    size_hint: None, None
+    size: self.texture_size
+    font_size: 16
+    color: GV.RGBA_WHITE50
+    opacity: 0
+
+# ----- Color Widget ------------------------------------------------------------------------------------------------- #
+<ColorWidget>:
+    size_hint: None, None
+    size: 15, 15
+    canvas:
+        Color:
+            rgb: self.color_bk
+        Rectangle:
+            size: self.size
+
+# ----- Bit Label Object --------------------------------------------------------------------------------------------- #
+<BitLabel>:
+    size_hint: None, None
+    size: self.texture_size
+
+# ----- Add/Edit Label ----------------------------------------------------------------------------------------------- #
+<ModuleEditLabel>:
+    size_hint: None, None
+    size: self.texture_size
+    color: GV.RGBA_WHITE50
+
+# ----- Add/Edit TextInput ------------------------------------------------------------------------------------------- #
+<ModuleEditTextInput>:
+    size_hint: None, None
+    multiline: False
+    font_size: 14
+    size: 60, 22
+    padding: 3, 3, 3, 3
+
+<FunctionTextInput>:
+    size_hint: None, None
+    multiline: False
+    font_size: 14
+    size: 60, 22
+    padding: 3, 3, 3, 3
+
+<ColorTextInput>:
+    size_hint: None, None
+    multiline: False
+    font_size: 14
+    size: 60, 22
+    padding: 3, 3, 3, 3
+
+# ----- Add/Edit Spinner --------------------------------------------------------------------------------------------- #
+<ModuleEditSpinner>:
+    size_hint: None, None
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+
+<ModuleEditSpinnerOption>:
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 3
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Add/Edit Spinner --------------------------------------------------------------------------------------------- #
+<ModuleEditBitSpinner>:
+    size_hint: None, None
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    size: 100, 20
+    font_size: 10
+
+<ModuleEditBitSpinnerOption>:
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    size: 100, 20
+    font_size: 10
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+# ----- Cancel/Save Button Module interface -------------------------------------------------------------------------- #
+<ModuleEditSaveBtn>:
+    size_hint: None, None
+    size: 90, 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK if self.state == 'normal' else GV.RGBA_BG_LIGHT
+    disabled: True
+    opacity: 0
+    canvas:
+        Color:
+            rgba: GV.RGBA_SUCCESS
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+
+<ModuleEditCancelBtn>:
+    size_hint: None, None
+    size: 90, 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK if self.state == 'normal' else GV.RGBA_BG_LIGHT
+    canvas:
+        Color:
+            rgba: GV.RGBA_ERROR
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+
+# ----- 1 BIT Register ----------------------------------------------------------------------------------------------- #
+<ModuleEditBitContainer1>:
+    id: _mscmmm_bit_container1
+    sx_normal: _sx_normal
+    sx_flash: _sx_flash
+    sx_power: _sx_power
+    dx_normal: _dx_normal
+    dx_flash: _dx_flash
+    dx_power: _dx_power
+    function0: _function0
+    sx_color0: _sx_color0
+    sx_flash0: _sx_flash0
+    sx_power0: _sx_power0
+    dx_color0: _dx_color0
+    dx_flash0: _dx_flash0
+    dx_power0: _dx_power0
+    size_hint: None, None
+    size: 1210, 770
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_DARK
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+        Line:
+            points: 250, 15, 250, 760
+            width: 1
+        Line:
+            points: 725, 15, 725, 760
+            width: 1
+    ModuleEditLabel:
+        text: 'Bit'
+        pos: 25, 720
+    ModuleEditLabel:
+        text: 'Function'
+        pos: 120, 720
+    ModuleEditLabel:
+        text: 'Normal'
+        pos: 260, 720
+    ModuleEditLabel:
+        text: 'Normal'
+        pos: 735, 720
+    ModuleEditLabel:
+        text: 'SX'
+        pos: 260, 745
+        color: GV.RGBA_WHITE
+    ModuleEditLabel:
+        text: 'Color'
+        pos: 360, 745
+    ModuleEditLabel:
+        text: 'Flash'
+        pos: 510, 745
+    ModuleEditLabel:
+        text: 'Power'
+        pos: 610, 745
+    ModuleEditLabel:
+        text: 'DX'
+        pos: 735, 745
+        color: GV.RGBA_WHITE
+    ModuleEditLabel:
+        text: 'Color'
+        pos: 835, 745
+    ModuleEditLabel:
+        text: 'Flash'
+        pos: 985, 745
+    ModuleEditLabel:
+        text: 'Power'
+        pos: 1085, 745
+    ColorTextInput:
+        id: _sx_normal
+        text: ''
+        pos: 350, 720
+    ColorTextInput:
+        id: _dx_normal
+        text: ''
+        pos: 825, 720
+    ModuleEditBitSpinner:
+        id: _sx_flash
+        text: '...'
+        pos: 475, 720
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_flash
+        text: '...'
+        pos: 950, 720
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power
+        text: '...'
+        pos: 595, 720
+        values: self.parent.power
+    ModuleEditBitSpinner:
+        id: _dx_power
+        text: '...'
+        pos: 1070, 720
+        values: self.parent.power
+# ----- BIT 0 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '0'
+        pos: 25, 695
+    FunctionTextInput:
+        id: _function0
+        text: ''
+        pos: 100, 695
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color0
+        text: ''
+        pos: 350, 695
+    ModuleEditBitSpinner:
+        id: _sx_flash0
+        text: '...'
+        pos: 475, 695
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power0
+        text: '...'
+        pos: 595, 695
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color0
+        text: ''
+        pos: 825, 695
+    ModuleEditBitSpinner:
+        id: _dx_flash0
+        text: '...'
+        pos: 950, 695
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power0
+        text: '...'
+        pos: 1070, 695
+        values: self.parent.power
+
+# ----- 8 BIT Register ----------------------------------------------------------------------------------------------- #
+<ModuleEditBitContainer8>:
+    id: _mscmmm_bit_container8
+    function1: _function1
+    sx_color1: _sx_color1
+    sx_flash1: _sx_flash1
+    sx_power1: _sx_power1
+    dx_color1: _dx_color1
+    dx_flash1: _dx_flash1
+    dx_power1: _dx_power1
+    function2: _function2
+    sx_color2: _sx_color2
+    sx_flash2: _sx_flash2
+    sx_power2: _sx_power2
+    dx_color2: _dx_color2
+    dx_flash2: _dx_flash2
+    dx_power2: _dx_power2
+    function3: _function3
+    sx_color3: _sx_color3
+    sx_flash3: _sx_flash3
+    sx_power3: _sx_power3
+    dx_color3: _dx_color3
+    dx_flash3: _dx_flash3
+    dx_power3: _dx_power3
+    function4: _function4
+    sx_color4: _sx_color4
+    sx_flash4: _sx_flash4
+    sx_power4: _sx_power4
+    dx_color4: _dx_color4
+    dx_flash4: _dx_flash4
+    dx_power4: _dx_power4
+    function5: _function5
+    sx_color5: _sx_color5
+    sx_flash5: _sx_flash5
+    sx_power5: _sx_power5
+    dx_color5: _dx_color5
+    dx_flash5: _dx_flash5
+    dx_power5: _dx_power5
+    function6: _function6
+    sx_color6: _sx_color6
+    sx_flash6: _sx_flash6
+    sx_power6: _sx_power6
+    dx_color6: _dx_color6
+    dx_flash6: _dx_flash6
+    dx_power6: _dx_power6
+    function7: _function7
+    sx_color7: _sx_color7
+    sx_flash7: _sx_flash7
+    sx_power7: _sx_power7
+    dx_color7: _dx_color7
+    dx_flash7: _dx_flash7
+    dx_power7: _dx_power7
+    size_hint: None, None
+    size: 1210, 770
+# ----- BIT 1 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '1'
+        pos: 25, 673
+    FunctionTextInput:
+        id: _function1
+        text: ''
+        pos: 100, 673
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color1
+        text: ''
+        pos: 350, 673
+    ModuleEditBitSpinner:
+        id: _sx_flash1
+        text: '...'
+        pos: 475, 673
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power1
+        text: '...'
+        pos: 595, 673
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color1
+        text: ''
+        pos: 825, 673
+    ModuleEditBitSpinner:
+        id: _dx_flash1
+        text: '...'
+        pos: 950, 673
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power1
+        text: '...'
+        pos: 1070, 673
+        values: self.parent.power
+# ----- BIT 2 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '2'
+        pos: 25, 651
+    FunctionTextInput:
+        id: _function2
+        text: ''
+        pos: 100, 651
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color2
+        text: ''
+        pos: 350, 651
+    ModuleEditBitSpinner:
+        id: _sx_flash2
+        text: '...'
+        pos: 475, 651
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power2
+        text: '...'
+        pos: 595, 651
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color2
+        text: ''
+        pos: 825, 651
+    ModuleEditBitSpinner:
+        id: _dx_flash2
+        text: '...'
+        pos: 950, 651
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power2
+        text: '...'
+        pos: 1070, 651
+        values: self.parent.power
+# ----- BIT 3 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '3'
+        pos: 25, 629
+    FunctionTextInput:
+        id: _function3
+        text: ''
+        pos: 100, 629
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color3
+        text: ''
+        pos: 350, 629
+    ModuleEditBitSpinner:
+        id: _sx_flash3
+        text: '...'
+        pos: 475, 629
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power3
+        text: '...'
+        pos: 595, 629
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color3
+        text: ''
+        pos: 825, 629
+    ModuleEditBitSpinner:
+        id: _dx_flash3
+        text: '...'
+        pos: 950, 629
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power3
+        text: '...'
+        pos: 1070, 629
+        values: self.parent.power
+# ----- BIT 4 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '4'
+        pos: 25, 607
+    FunctionTextInput:
+        id: _function4
+        text: ''
+        pos: 100, 607
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color4
+        text: ''
+        pos: 350, 607
+    ModuleEditBitSpinner:
+        id: _sx_flash4
+        text: '...'
+        pos: 475, 607
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power4
+        text: '...'
+        pos: 595, 607
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color4
+        text: ''
+        pos: 825, 607
+    ModuleEditBitSpinner:
+        id: _dx_flash4
+        text: '...'
+        pos: 950, 607
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power4
+        text: '...'
+        pos: 1070, 607
+        values: self.parent.power
+# ----- BIT 5 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '5'
+        pos: 25, 585
+    FunctionTextInput:
+        id: _function5
+        text: ''
+        pos: 100, 585
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color5
+        text: ''
+        pos: 350, 585
+    ModuleEditBitSpinner:
+        id: _sx_flash5
+        text: '...'
+        pos: 475, 585
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power5
+        text: '...'
+        pos: 595, 585
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color5
+        text: ''
+        pos: 825, 585
+    ModuleEditBitSpinner:
+        id: _dx_flash5
+        text: '...'
+        pos: 950, 585
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power5
+        text: '...'
+        pos: 1070, 585
+        values: self.parent.power
+# ----- BIT 6 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '6'
+        pos: 25, 563
+    FunctionTextInput:
+        id: _function6
+        text: ''
+        pos: 100, 563
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color6
+        text: ''
+        pos: 350, 563
+    ModuleEditBitSpinner:
+        id: _sx_flash6
+        text: '...'
+        pos: 475, 563
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power6
+        text: '...'
+        pos: 595, 563
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color6
+        text: ''
+        pos: 825, 563
+    ModuleEditBitSpinner:
+        id: _dx_flash6
+        text: '...'
+        pos: 950, 563
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power6
+        text: '...'
+        pos: 1070, 563
+        values: self.parent.power
+# ----- BIT 7 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '7'
+        pos: 25, 541
+    FunctionTextInput:
+        id: _function7
+        text: ''
+        pos: 100, 541
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color7
+        text: ''
+        pos: 350, 541
+    ModuleEditBitSpinner:
+        id: _sx_flash7
+        text: '...'
+        pos: 475, 541
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power7
+        text: '...'
+        pos: 595, 541
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color7
+        text: ''
+        pos: 825, 541
+    ModuleEditBitSpinner:
+        id: _dx_flash7
+        text: '...'
+        pos: 950, 541
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power7
+        text: '...'
+        pos: 1070, 541
+        values: self.parent.power
+
+# ----- 16 BIT Register ---------------------------------------------------------------------------------------------- #
+<ModuleEditBitContainer16>:
+    id: _mscmmm_bit_container16
+    function8: _function8
+    sx_color8: _sx_color8
+    sx_flash8: _sx_flash8
+    sx_power8: _sx_power8
+    dx_color8: _dx_color8
+    dx_flash8: _dx_flash8
+    dx_power8: _dx_power8
+    function9: _function9
+    sx_color9: _sx_color9
+    sx_flash9: _sx_flash9
+    sx_power9: _sx_power9
+    dx_color9: _dx_color9
+    dx_flash9: _dx_flash9
+    dx_power9: _dx_power9
+    function10: _function10
+    sx_color10: _sx_color10
+    sx_flash10: _sx_flash10
+    sx_power10: _sx_power10
+    dx_color10: _dx_color10
+    dx_flash10: _dx_flash10
+    dx_power10: _dx_power10
+    function11: _function11
+    sx_color11: _sx_color11
+    sx_flash11: _sx_flash11
+    sx_power11: _sx_power11
+    dx_color11: _dx_color11
+    dx_flash11: _dx_flash11
+    dx_power11: _dx_power11
+    function12: _function12
+    sx_color12: _sx_color12
+    sx_flash12: _sx_flash12
+    sx_power12: _sx_power12
+    dx_color12: _dx_color12
+    dx_flash12: _dx_flash12
+    dx_power12: _dx_power12
+    function13: _function13
+    sx_color13: _sx_color13
+    sx_flash13: _sx_flash13
+    sx_power13: _sx_power13
+    dx_color13: _dx_color13
+    dx_flash13: _dx_flash13
+    dx_power13: _dx_power13
+    function14: _function14
+    sx_color14: _sx_color14
+    sx_flash14: _sx_flash14
+    sx_power14: _sx_power14
+    dx_color14: _dx_color14
+    dx_flash14: _dx_flash14
+    dx_power14: _dx_power14
+    function15: _function15
+    sx_color15: _sx_color15
+    sx_flash15: _sx_flash15
+    sx_power15: _sx_power15
+    dx_color15: _dx_color15
+    dx_flash15: _dx_flash15
+    dx_power15: _dx_power15
+    size_hint: None, None
+    size: 1210, 770
+# ----- BIT 8 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '8'
+        pos: 25, 519
+    FunctionTextInput:
+        id: _function8
+        text: ''
+        pos: 100, 519
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color8
+        text: ''
+        pos: 350, 519
+    ModuleEditBitSpinner:
+        id: _sx_flash8
+        text: '...'
+        pos: 475, 519
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power8
+        text: '...'
+        pos: 595, 519
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color8
+        text: ''
+        pos: 825, 519
+    ModuleEditBitSpinner:
+        id: _dx_flash8
+        text: '...'
+        pos: 950, 519
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power8
+        text: '...'
+        pos: 1070, 519
+        values: self.parent.power
+# ----- BIT 9 -------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '9'
+        pos: 25, 497
+    FunctionTextInput:
+        id: _function9
+        text: ''
+        pos: 100, 497
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color9
+        text: ''
+        pos: 350, 497
+    ModuleEditBitSpinner:
+        id: _sx_flash9
+        text: '...'
+        pos: 475, 497
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power9
+        text: '...'
+        pos: 595, 497
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color9
+        text: ''
+        pos: 825, 497
+    ModuleEditBitSpinner:
+        id: _dx_flash9
+        text: '...'
+        pos: 950, 497
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power9
+        text: '...'
+        pos: 1070, 497
+        values: self.parent.power
+# ----- BIT 10 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '10'
+        pos: 25, 475
+    FunctionTextInput:
+        id: _function10
+        text: ''
+        pos: 100, 475
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color10
+        text: ''
+        pos: 350, 475
+    ModuleEditBitSpinner:
+        id: _sx_flash10
+        text: '...'
+        pos: 475, 475
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power10
+        text: '...'
+        pos: 595, 475
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color10
+        text: ''
+        pos: 825, 475
+    ModuleEditBitSpinner:
+        id: _dx_flash10
+        text: '...'
+        pos: 950, 475
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power10
+        text: '...'
+        pos: 1070, 475
+        values: self.parent.power
+# ----- BIT 11 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '11'
+        pos: 25, 453
+    FunctionTextInput:
+        id: _function11
+        text: ''
+        pos: 100, 453
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color11
+        text: ''
+        pos: 350, 453
+    ModuleEditBitSpinner:
+        id: _sx_flash11
+        text: '...'
+        pos: 475, 453
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power11
+        text: '...'
+        pos: 595, 453
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color11
+        text: ''
+        pos: 825, 453
+    ModuleEditBitSpinner:
+        id: _dx_flash11
+        text: '...'
+        pos: 950, 453
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power11
+        text: '...'
+        pos: 1070, 453
+        values: self.parent.power
+# ----- BIT 12 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '12'
+        pos: 25, 431
+    FunctionTextInput:
+        id: _function12
+        text: ''
+        pos: 100, 431
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color12
+        text: ''
+        pos: 350, 431
+    ModuleEditBitSpinner:
+        id: _sx_flash12
+        text: '...'
+        pos: 475, 431
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power12
+        text: '...'
+        pos: 595, 431
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color12
+        text: ''
+        pos: 825, 431
+    ModuleEditBitSpinner:
+        id: _dx_flash12
+        text: '...'
+        pos: 950, 431
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power12
+        text: '...'
+        pos: 1070, 431
+        values: self.parent.power
+# ----- BIT 13 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '13'
+        pos: 25, 409
+    FunctionTextInput:
+        id: _function13
+        text: ''
+        pos: 100, 409
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color13
+        text: ''
+        pos: 350, 409
+    ModuleEditBitSpinner:
+        id: _sx_flash13
+        text: '...'
+        pos: 475, 409
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power13
+        text: '...'
+        pos: 595, 409
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color13
+        text: ''
+        pos: 825, 409
+    ModuleEditBitSpinner:
+        id: _dx_flash13
+        text: '...'
+        pos: 950, 409
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power13
+        text: '...'
+        pos: 1070, 409
+        values: self.parent.power
+# ----- BIT 14 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '14'
+        pos: 25, 387
+    FunctionTextInput:
+        id: _function14
+        text: ''
+        pos: 100, 387
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color14
+        text: ''
+        pos: 350, 387
+    ModuleEditBitSpinner:
+        id: _sx_flash14
+        text: '...'
+        pos: 475, 387
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power14
+        text: '...'
+        pos: 595, 387
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color14
+        text: ''
+        pos: 825, 387
+    ModuleEditBitSpinner:
+        id: _dx_flash14
+        text: '...'
+        pos: 950, 387
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power14
+        text: '...'
+        pos: 1070, 387
+        values: self.parent.power
+# ----- BIT 15 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '15'
+        pos: 25, 365
+    FunctionTextInput:
+        id: _function15
+        text: ''
+        pos: 100, 365
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color15
+        text: ''
+        pos: 350, 365
+    ModuleEditBitSpinner:
+        id: _sx_flash15
+        text: '...'
+        pos: 475, 365
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power15
+        text: '...'
+        pos: 595, 365
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color15
+        text: ''
+        pos: 825, 365
+    ModuleEditBitSpinner:
+        id: _dx_flash15
+        text: '...'
+        pos: 950, 365
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power15
+        text: '...'
+        pos: 1070, 365
+        values: self.parent.power
+
+# ----- 32 BIT Register ---------------------------------------------------------------------------------------------- #
+<ModuleEditBitContainer32>:
+    id: _mscmmm_bit_container32
+    function16: _function16
+    sx_color16: _sx_color16
+    sx_flash16: _sx_flash16
+    sx_power16: _sx_power16
+    dx_color16: _dx_color16
+    dx_flash16: _dx_flash16
+    dx_power16: _dx_power16
+    function17: _function17
+    sx_color17: _sx_color17
+    sx_flash17: _sx_flash17
+    sx_power17: _sx_power17
+    dx_color17: _dx_color17
+    dx_flash17: _dx_flash17
+    dx_power17: _dx_power17
+    function18: _function18
+    sx_color18: _sx_color18
+    sx_flash18: _sx_flash18
+    sx_power18: _sx_power18
+    dx_color18: _dx_color18
+    dx_flash18: _dx_flash18
+    dx_power18: _dx_power18
+    function19: _function19
+    sx_color19: _sx_color19
+    sx_flash19: _sx_flash19
+    sx_power19: _sx_power19
+    dx_color19: _dx_color19
+    dx_flash19: _dx_flash19
+    dx_power19: _dx_power19
+    function20: _function20
+    sx_color20: _sx_color20
+    sx_flash20: _sx_flash20
+    sx_power20: _sx_power20
+    dx_color20: _dx_color20
+    dx_flash20: _dx_flash20
+    dx_power20: _dx_power20
+    function21: _function21
+    sx_color21: _sx_color21
+    sx_flash21: _sx_flash21
+    sx_power21: _sx_power21
+    dx_color21: _dx_color21
+    dx_flash21: _dx_flash21
+    dx_power21: _dx_power21
+    function22: _function22
+    sx_color22: _sx_color22
+    sx_flash22: _sx_flash22
+    sx_power22: _sx_power22
+    dx_color22: _dx_color22
+    dx_flash22: _dx_flash22
+    dx_power22: _dx_power22
+    function23: _function23
+    sx_color23: _sx_color23
+    sx_flash23: _sx_flash23
+    sx_power23: _sx_power23
+    dx_color23: _dx_color23
+    dx_flash23: _dx_flash23
+    dx_power23: _dx_power23
+    function24: _function24
+    sx_color24: _sx_color24
+    sx_flash24: _sx_flash24
+    sx_power24: _sx_power24
+    dx_color24: _dx_color24
+    dx_flash24: _dx_flash24
+    dx_power24: _dx_power24
+    function25: _function25
+    sx_color25: _sx_color25
+    sx_flash25: _sx_flash25
+    sx_power25: _sx_power25
+    dx_color25: _dx_color25
+    dx_flash25: _dx_flash25
+    dx_power25: _dx_power25
+    function26: _function26
+    sx_color26: _sx_color26
+    sx_flash26: _sx_flash26
+    sx_power26: _sx_power26
+    dx_color26: _dx_color26
+    dx_flash26: _dx_flash26
+    dx_power26: _dx_power26
+    function27: _function27
+    sx_color27: _sx_color27
+    sx_flash27: _sx_flash27
+    sx_power27: _sx_power27
+    dx_color27: _dx_color27
+    dx_flash27: _dx_flash27
+    dx_power27: _dx_power27
+    function28: _function28
+    sx_color28: _sx_color28
+    sx_flash28: _sx_flash28
+    sx_power28: _sx_power28
+    dx_color28: _dx_color28
+    dx_flash28: _dx_flash28
+    dx_power28: _dx_power28
+    function29: _function29
+    sx_color29: _sx_color29
+    sx_flash29: _sx_flash29
+    sx_power29: _sx_power29
+    dx_color29: _dx_color29
+    dx_flash29: _dx_flash29
+    dx_power29: _dx_power29
+    function30: _function30
+    sx_color30: _sx_color30
+    sx_flash30: _sx_flash30
+    sx_power30: _sx_power30
+    dx_color30: _dx_color30
+    dx_flash30: _dx_flash30
+    dx_power30: _dx_power30
+    function31: _function31
+    sx_color31: _sx_color31
+    sx_flash31: _sx_flash31
+    sx_power31: _sx_power31
+    dx_color31: _dx_color31
+    dx_flash31: _dx_flash31
+    dx_power31: _dx_power31
+    size_hint: None, None
+    size: 1210, 770
+# ----- BIT 16 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '16'
+        pos: 25, 343
+    FunctionTextInput:
+        id: _function16
+        text: ''
+        pos: 100, 343
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color16
+        text: ''
+        pos: 350, 343
+    ModuleEditBitSpinner:
+        id: _sx_flash16
+        text: '...'
+        pos: 475, 343
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power16
+        text: '...'
+        pos: 595, 343
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color16
+        text: ''
+        pos: 825, 343
+    ModuleEditBitSpinner:
+        id: _dx_flash16
+        text: '...'
+        pos: 950, 343
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power16
+        text: '...'
+        pos: 1070, 343
+        values: self.parent.power
+# ----- BIT 17 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '17'
+        pos: 25, 321
+    FunctionTextInput:
+        id: _function17
+        text: ''
+        pos: 100, 321
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color17
+        text: ''
+        pos: 350, 321
+    ModuleEditBitSpinner:
+        id: _sx_flash17
+        text: '...'
+        pos: 475, 321
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power17
+        text: '...'
+        pos: 595, 321
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color17
+        text: ''
+        pos: 825, 321
+    ModuleEditBitSpinner:
+        id: _dx_flash17
+        text: '...'
+        pos: 950, 321
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power17
+        text: '...'
+        pos: 1070, 321
+        values: self.parent.power
+# ----- BIT 18 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '18'
+        pos: 25, 299
+    FunctionTextInput:
+        id: _function18
+        text: ''
+        pos: 100, 299
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color18
+        text: ''
+        pos: 350, 299
+    ModuleEditBitSpinner:
+        id: _sx_flash18
+        text: '...'
+        pos: 475, 299
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power18
+        text: '...'
+        pos: 595, 299
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color18
+        text: ''
+        pos: 825, 299
+    ModuleEditBitSpinner:
+        id: _dx_flash18
+        text: '...'
+        pos: 950, 299
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power18
+        text: '...'
+        pos: 1070, 299
+        values: self.parent.power
+# ----- BIT 19 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '19'
+        pos: 25, 277
+    FunctionTextInput:
+        id: _function19
+        text: ''
+        pos: 100, 277
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color19
+        text: ''
+        pos: 350, 277
+    ModuleEditBitSpinner:
+        id: _sx_flash19
+        text: '...'
+        pos: 475, 277
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power19
+        text: '...'
+        pos: 595, 277
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color19
+        text: ''
+        pos: 825, 277
+    ModuleEditBitSpinner:
+        id: _dx_flash19
+        text: '...'
+        pos: 950, 277
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power19
+        text: '...'
+        pos: 1070, 277
+        values: self.parent.power
+# ----- BIT 20 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '20'
+        pos: 25, 255
+    FunctionTextInput:
+        id: _function20
+        text: ''
+        pos: 100, 255
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color20
+        text: ''
+        pos: 350, 255
+    ModuleEditBitSpinner:
+        id: _sx_flash20
+        text: '...'
+        pos: 475, 255
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power20
+        text: '...'
+        pos: 595, 255
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color20
+        text: ''
+        pos: 825, 255
+    ModuleEditBitSpinner:
+        id: _dx_flash20
+        text: '...'
+        pos: 950, 255
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power20
+        text: '...'
+        pos: 1070, 255
+        values: self.parent.power
+# ----- BIT 21 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '21'
+        pos: 25, 233
+    FunctionTextInput:
+        id: _function21
+        text: ''
+        pos: 100, 233
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color21
+        text: ''
+        pos: 350, 233
+    ModuleEditBitSpinner:
+        id: _sx_flash21
+        text: '...'
+        pos: 475, 233
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power21
+        text: '...'
+        pos: 595, 233
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color21
+        text: ''
+        pos: 825, 233
+    ModuleEditBitSpinner:
+        id: _dx_flash21
+        text: '...'
+        pos: 950, 233
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power21
+        text: '...'
+        pos: 1070, 233
+        values: self.parent.power
+# ----- BIT 22 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '22'
+        pos: 25, 211
+    FunctionTextInput:
+        id: _function22
+        text: ''
+        pos: 100, 211
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color22
+        text: ''
+        pos: 350, 211
+    ModuleEditBitSpinner:
+        id: _sx_flash22
+        text: '...'
+        pos: 475, 211
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power22
+        text: '...'
+        pos: 595, 211
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color22
+        text: ''
+        pos: 825, 211
+    ModuleEditBitSpinner:
+        id: _dx_flash22
+        text: '...'
+        pos: 950, 211
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power22
+        text: '...'
+        pos: 1070, 211
+        values: self.parent.power
+# ----- BIT 23 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '23'
+        pos: 25, 189
+    FunctionTextInput:
+        id: _function23
+        text: ''
+        pos: 100, 189
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color23
+        text: ''
+        pos: 350, 189
+    ModuleEditBitSpinner:
+        id: _sx_flash23
+        text: '...'
+        pos: 475, 189
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power23
+        text: '...'
+        pos: 595, 189
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color23
+        text: ''
+        pos: 825, 189
+    ModuleEditBitSpinner:
+        id: _dx_flash23
+        text: '...'
+        pos: 950, 189
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power23
+        text: '...'
+        pos: 1070, 189
+        values: self.parent.power
+# ----- BIT 24 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '24'
+        pos: 25, 167
+    FunctionTextInput:
+        id: _function24
+        text: ''
+        pos: 100, 167
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color24
+        text: ''
+        pos: 350, 167
+    ModuleEditBitSpinner:
+        id: _sx_flash24
+        text: '...'
+        pos: 475, 167
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power24
+        text: '...'
+        pos: 595, 167
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color24
+        text: ''
+        pos: 825, 167
+    ModuleEditBitSpinner:
+        id: _dx_flash24
+        text: '...'
+        pos: 950, 167
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power24
+        text: '...'
+        pos: 1070, 167
+        values: self.parent.power
+# ----- BIT 25 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '21'
+        pos: 25, 145
+    FunctionTextInput:
+        id: _function25
+        text: ''
+        pos: 100, 145
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color25
+        text: ''
+        pos: 350, 145
+    ModuleEditBitSpinner:
+        id: _sx_flash25
+        text: '...'
+        pos: 475, 145
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power25
+        text: '...'
+        pos: 595, 145
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color25
+        text: ''
+        pos: 825, 145
+    ModuleEditBitSpinner:
+        id: _dx_flash25
+        text: '...'
+        pos: 950, 145
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power25
+        text: '...'
+        pos: 1070, 145
+        values: self.parent.power
+# ----- BIT 26 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '26'
+        pos: 25, 123
+    FunctionTextInput:
+        id: _function26
+        text: ''
+        pos: 100, 123
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color26
+        text: ''
+        pos: 350, 123
+    ModuleEditBitSpinner:
+        id: _sx_flash26
+        text: '...'
+        pos: 475, 123
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power26
+        text: '...'
+        pos: 595, 123
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color26
+        text: ''
+        pos: 825, 123
+    ModuleEditBitSpinner:
+        id: _dx_flash26
+        text: '...'
+        pos: 950, 123
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power26
+        text: '...'
+        pos: 1070, 123
+        values: self.parent.power
+# ----- BIT 27 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '27'
+        pos: 25, 101
+    FunctionTextInput:
+        id: _function27
+        text: ''
+        pos: 100, 101
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color27
+        text: ''
+        pos: 350, 101
+    ModuleEditBitSpinner:
+        id: _sx_flash27
+        text: '...'
+        pos: 475, 101
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power27
+        text: '...'
+        pos: 595, 101
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color27
+        text: ''
+        pos: 825, 101
+    ModuleEditBitSpinner:
+        id: _dx_flash27
+        text: '...'
+        pos: 950, 101
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power27
+        text: '...'
+        pos: 1070, 101
+        values: self.parent.power
+# ----- BIT 28 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '28'
+        pos: 25, 79
+    FunctionTextInput:
+        id: _function28
+        text: ''
+        pos: 100, 79
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color28
+        text: ''
+        pos: 350, 79
+    ModuleEditBitSpinner:
+        id: _sx_flash28
+        text: '...'
+        pos: 475, 79
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power28
+        text: '...'
+        pos: 595, 79
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color28
+        text: ''
+        pos: 825, 79
+    ModuleEditBitSpinner:
+        id: _dx_flash28
+        text: '...'
+        pos: 950, 79
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power28
+        text: '...'
+        pos: 1070, 79
+        values: self.parent.power
+# ----- BIT 29 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '29'
+        pos: 25, 57
+    FunctionTextInput:
+        id: _function29
+        text: ''
+        pos: 100, 57
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color29
+        text: ''
+        pos: 350, 57
+    ModuleEditBitSpinner:
+        id: _sx_flash29
+        text: '...'
+        pos: 475, 57
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power29
+        text: '...'
+        pos: 595, 57
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color29
+        text: ''
+        pos: 825, 57
+    ModuleEditBitSpinner:
+        id: _dx_flash29
+        text: '...'
+        pos: 950, 57
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power29
+        text: '...'
+        pos: 1070, 57
+        values: self.parent.power
+# ----- BIT 30 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '30'
+        pos: 25, 35
+    FunctionTextInput:
+        id: _function30
+        text: ''
+        pos: 100, 35
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color30
+        text: ''
+        pos: 350, 35
+    ModuleEditBitSpinner:
+        id: _sx_flash30
+        text: '...'
+        pos: 475, 35
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power30
+        text: '...'
+        pos: 595, 35
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color30
+        text: ''
+        pos: 825, 35
+    ModuleEditBitSpinner:
+        id: _dx_flash30
+        text: '...'
+        pos: 950, 35
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power30
+        text: '...'
+        pos: 1070, 35
+        values: self.parent.power
+# ----- BIT 31 ------------------------------------------------------------------------------------------------------- #
+    ModuleEditLabel:
+        text: '31'
+        pos: 25, 13
+    FunctionTextInput:
+        id: _function31
+        text: ''
+        pos: 100, 13
+        size: 140, 22
+    ColorTextInput: # ----- SX ---------------------------------------------------------------------------------- #
+        id: _sx_color31
+        text: ''
+        pos: 350, 13
+    ModuleEditBitSpinner:
+        id: _sx_flash31
+        text: '...'
+        pos: 475, 13
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _sx_power31
+        text: '...'
+        pos: 595, 13
+        values: self.parent.power
+    ColorTextInput: # ----- DX ---------------------------------------------------------------------------------- #
+        id: _dx_color31
+        text: ''
+        pos: 825, 13
+    ModuleEditBitSpinner:
+        id: _dx_flash31
+        text: '...'
+        pos: 950, 13
+        values: self.parent.flash
+    ModuleEditBitSpinner:
+        id: _dx_power31
+        text: '...'
+        pos: 1070, 13
+        values: self.parent.power

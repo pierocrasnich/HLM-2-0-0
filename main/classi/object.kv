@@ -1,0 +1,266 @@
+# ----- Style Header list -------------------------------------------------------------------------------------------- #
+<ListHeaderObject@GridLayout>:
+    cols: 8
+    size_hint: None, None
+    size: 950, 50
+    pos: 50, 800
+    canvas:
+        Color:
+            rgba: (47/255, 50/255, 57/255, 1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        text: '#'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 50, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'System'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Name'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Address'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 150, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Deck'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 200, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Pos X'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Pos Y'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+    Label:
+        text: 'Rotate'
+        font_size: 18
+        color: GV.RGBA_ORANGE
+        size_hint: None, None
+        size: 100, 50
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Line:
+                width: 1.5
+                rectangle: self.x, self.y, self.width, self.height
+
+# ----- Style Row inside list ---------------------------------------------------------------------------------------- #
+<ObjectBoxRow>:
+    obsc_row_count: _obsc_row_count
+    obsc_row_system: _obsc_row_system
+    obsc_row_name: _obsc_row_name
+    obsc_row_address: _obsc_row_address
+    obsc_row_deck: _obsc_row_deck
+    obsc_row_deck_dropdown: _obsc_row_deck_dropdown
+    obsc_row_posx: _obsc_row_posx
+    obsc_row_posy: _obsc_row_posy
+    obsc_row_rotate: _obsc_row_rotate
+    orientation: 'horizontal'
+    size_hint: 1, None
+    height: 40
+    Label:
+        id: _obsc_row_count
+        size_hint: None, 1
+        width: 50
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Label:
+        id: _obsc_row_system
+        size_hint: None, 1
+        width: 100
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Label:
+        id: _obsc_row_name
+        size_hint: None, 1
+        width: 150
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Label:
+        id: _obsc_row_address
+        size_hint: None, 1
+        width: 150
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Button:
+        id: _obsc_row_deck
+        size_hint: None, 1
+        width: 200
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        background_color: 0, 0, 0, 0
+        on_release: _obsc_row_deck_dropdown.open(self)
+        on_parent:  _obsc_row_deck_dropdown.dismiss()
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    DropDown:
+        obsc_row_deck: _obsc_row_deck
+        id: _obsc_row_deck_dropdown
+        on_select: self.obsc_row_deck.text = '{}'.format(args[1])
+        canvas.before:
+            Color:
+                rgba: GV.RGBA_BG_DARK
+            Rectangle:
+                pos: self.x + 1, self.y + 1
+                size: self.width - 2, self.height - 2
+    Label:
+        id: _obsc_row_posx
+        size_hint: None, 1
+        width: 100
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Label:
+        id: _obsc_row_posy
+        size_hint: None, 1
+        width: 100
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+    Label:
+        id: _obsc_row_rotate
+        size_hint: None, 1
+        width: 100
+        color: GV.RGBA_WHITE50
+        font_size: 16
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        padding: 0, 0
+        canvas.before:
+            Color:
+                rgba: ( 83/255, 88/255, 99/255, 1)
+            Rectangle:
+                pos: self.x + 4, self.y + 4
+                size: self.width - 8, self.height - 8
+
+

@@ -1,0 +1,220 @@
+#:import NoTransition kivy.uix.screenmanager.FadeTransition
+#:import GV utility.gvar
+# ---------------------------------------- Screen Manager ------------------------------------------------------------ #
+<MainScreenManager>:
+    id: _main_screenmanager
+# ---------------------------------------- Splash Screen ------------------------------------------------------------- #
+<SplashScreen>:
+    id: _ms_splash
+    mss_load: _mss_load
+    canvas:
+        Color:
+            rgba: (47/255,50/255,57/255,1)
+        Rectangle:
+            size: self.size
+    Label:
+        text: 'HLM'
+        font_size: 60
+        pos_hint: {'center_x': .5, 'center_y': .7}
+    Label:
+        text: 'Handles Light Manager'
+        font_size: 20
+        pos_hint: { 'center_x': .5, 'center_y': .65 }
+    LoadProgressBar:
+        id: _mss_load
+        ms_splash: _ms_splash
+        value: 0
+        min: 0
+        max: 1
+        pos_hint: {'center_x': .5, 'center_y': .6}
+        size_hint: None, None
+        size: 300, 10
+    Label:
+        text: 'version 2.0.0'
+        font_size: 14
+        color: GV.RGBA_WHITE50
+        pos_hint: { 'center_x': .5, 'center_y': .57 }
+    Label:
+        text: 'HI-System 2021©copyright'
+        font_size: 14
+        color: GV.RGBA_WHITE50
+        pos_hint: { 'center_x': .5, 'center_y': .05 }
+
+# ------------------------------------------- Main Screen ------------------------------------------------------------ #
+<MainScreen>:
+    id: _ms_main
+    mm_notification: _mm_notification
+    mm_logger: _mm_logger
+    RelativeLayout:
+        id: _msm_main
+        mm_notification: _mm_notification
+        mm_logger: _mm_logger
+        orientation: 'vertical'
+        canvas:
+            Color:
+                rgba: (56/255, 60/255, 69/255, 1)
+            Rectangle:
+                size: 1920, 1080
+                pos: self.pos
+        GridLayout:
+            cols: 3
+            # ------------------------ Main Menu --------------------------------------------------------------------- #
+            RelativeLayout:
+                size_hint: None, None
+                size: 200, 1080
+                canvas:
+                    Color:
+                        rgba: (47/255,50/255,57/255,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                MainMenuButton:                                  # ----- Pulsante Dash Screen ------------------------ #
+                    id: _mm_dash_btn
+                    mcc_manager: _mcc_manager
+                    text: 'Dashboard'
+                    state: 'down'
+                    pos: 0, 930
+                    on_press: self.open_dash_screen()
+                    Image:
+                        source: "image/icons/text.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y + 20
+                MainMenuButton:                                 # ----- Pulsante Input Screen ------------------------ #
+                    id: _mm_input_btn
+                    mcc_manager: _mcc_manager
+                    text: 'Input List'
+                    pos: 0, 780
+                    on_press: self.open_input_screen()
+                    Image:
+                        source: "image/icons/InputList.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y + 20
+                MainMenuButton:                                 # ----- Pulsante Output Screen ----------------------- #
+                    id: output_list
+                    mcc_manager: _mcc_manager
+                    text: 'Output List'
+                    pos: 0, 630
+                    on_press: self.open_output_screen()
+                    Image:
+                        source: "image/icons/OutputList.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y + 20
+                MainMenuButton:                                 # ----- Pulsante Connect Screen ---------------------- #
+                    id: connect
+                    mcc_manager: _mcc_manager
+                    text: 'Connect'
+                    pos: 0, 480
+                    on_press: self.open_connect_screen()
+                    Image:
+                        source: "image/icons/Connect.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y + 20
+                ClockWidget:                                    # ----- Widget orologio e data ----------------------- #
+                    id: clock
+                    size: 200, 50
+                    size_hint: None, None
+                    font_size: 18
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'center'
+                    text: ''
+                    pos: 0, 80
+                    canvas.before:
+                        Color:
+                            rgba: (47/255,50/255,57/255,1)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: (47/255,50/255,57/255,1)
+                        Line:
+                            rectangle: self.x, self.y, self.width, self.height
+                NotificationMSG:                                # ----- Label per le notifiche ----------------------- #
+                    id: _mm_notification
+                    text: ''
+                    color: GV.RGBA_WHITE
+                    font_size: 12
+                    size_hint: None, None
+                    size: 190,40
+                    pos: 5, 45
+                    halign: 'center'
+                    padding_x: 10
+                    text_size: self.width, None
+                    canvas.before:
+                        Color:
+                            rgba: GV.RGBA_BG_LIGHT
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                LoggerStatus:                                   # ----- Logger and Console Widget -------------------- #
+                    id: _mm_logger
+                    ms_main: _ms_main
+                    text: ''
+                    color: GV.RGBA_WHITE
+                    font_size: 14
+                    size_hint: None, None
+                    size: 190, 15
+                    pos: 5, 20
+                    halign: 'center'
+                    text_size: self.width, None
+                    background_color: 1, 1, 1, 0
+                    background_normal: ''
+                    background_down: ''
+                    on_release: self.open_console()
+
+            # ------------------------ Content Screen ---------------------------------------------------------------- #
+            RelativeLayout:
+                id: _main_content
+                size_hint: None, None
+                size: 1650, 1080
+                MainContent:
+                    id: _mc_container
+                    name: 'Main Content'
+                    ContentScreenManager:                          # ----- Content Screen Manager -------------------- #
+                        id: _mcc_manager
+                        mm_notification: _mm_notification
+                        mm_logger: _mm_logger
+            # ------------------------ Service Menu ------------------------------------------------------------------ #
+            RelativeLayout:
+                id: _main_service
+                size_hint: None, None
+                size: 70, 1080
+                canvas:
+                    Color:
+                        rgba: (47/255,50/255,57/255,1)
+                    Rectangle:
+                        size: self.size
+                BoxLayout:                                          # ----- Logo Box --------------------------------- #
+                    pos: 0, 875
+                    size_hint: None, None
+                    size: 70, 200
+                    Image:
+                        source: "image/icons/Logo.png"
+                        allow_stretch: False
+                ServiceMenuButton:                                  # ----- Pulsante Login Screen -------------------- #
+                    id: _ms_login_btn
+                    mcc_manager: _mcc_manager
+                    pos: 0, 0
+                    on_press: self.change_screen(self.mcc_manager.mccm_login)
+                    Image:
+                        source: "image/icons/Setting.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                ServiceMenuButton:                                  # ----- Pulsante Testing Screen ------------------ #
+                    id: _ms_test_btn
+                    mcc_manager: _mcc_manager
+                    pos: 0, 70
+                    on_press: self.change_screen(self.mcc_manager.mccm_test)
+                    Image:
+                        source: "image/icons/Test.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                ServiceMenuButton:                                  # ----- Pulsante Information Screen -------------- #
+                    id: _ms_info_btn
+                    mcc_manager: _mcc_manager
+                    pos: 0, 140
+                    on_press: self.change_screen(self.mcc_manager.mccm_project)
+                    Image:
+                        source: "image/icons/Info.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y

@@ -1,0 +1,54 @@
+<ObjectScreen>:
+    id: _mccm_object
+    name: 'Object Configuration'
+    obs_container: _obs_container
+    obsc_list_table: _obsc_list_table
+    ObjectContainer:
+        id: _obs_container
+        obsc_list_table: _obsc_list_table
+        Button:
+            id: _obsc_close_btn
+            mccm_object: _mccm_object
+            pos: 1550, 1000
+            size_hint: None, None
+            size: 32, 32
+            opacity: 1
+            background_normal: GV.DIR_ICONS + "cancel.png"
+            background_down: GV.DIR_ICONS + "cancel.png"
+            on_press: self.mccm_object.mccm.switch_to(self.mccm_object.mccm.mccm_settings)
+        Label:          # ------------- DashBoard Title ------------------------------------- #
+            text: 'Object Config'
+            pos: 50, 1000
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:
+            text: 'Objects List'
+            pos: 50, 930
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+            color: GV.RGBA_WHITE50
+        ListHeaderObject:
+            pos: 50, 860
+        ScrollView:
+            pos: 50, 60
+            size_hint: None, None
+            size: 950, 800
+            bar_width: 10
+            bar_color: GV.RGBA_ORANGE
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            GridLayout:
+                id: _obsc_list_table
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+#                canvas:
+#                    Color:
+#                        rgba: (56/255, 60/255, 69/255, 1)
+#                    Rectangle:
+#                        pos: self.x + 1, self.y + 1
+#                        size: self.width - 1, self.height - 1

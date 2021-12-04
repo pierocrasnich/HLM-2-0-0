@@ -1,0 +1,195 @@
+<ProjectScreen>:
+    id: _mccm_info
+    name: 'Information'
+    ps_container: _ps_container
+    ProjectContainer:
+        id: _ps_container
+        Label:
+            text: 'Information'
+            pos: 50, 1000
+            size: 500, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:
+            text: '[i]Project[/i]'
+            size: 200, 50
+            size_hint: None, None
+            font_size: 24
+            text_size: self.size
+            markup: True
+            pos: 1450, 910
+        MainContentSeparator:
+            pos: 50, 900
+        Label:
+            text: _ps_container.information_project
+            pos: 50, 850
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: _ps_container.information_version
+            pos: 50, 800
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: _ps_container.information_date
+            pos: 50, 750
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: _ps_container.information_eng
+            pos: 50, 700
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: '[i]Contacts[/i]'
+            size: 200, 50
+            size_hint: None, None
+            font_size: 24
+            text_size: self.size
+            markup: True
+            pos: 1450, 660
+        MainContentSeparator:
+            pos: 50, 650
+        Image:
+            size_hint: None, None
+            size: 300, 50
+            pos: 50, 550
+            source: './image/logo_hi.png'
+            size: self.texture_size
+
+        Label:
+            text: 'HI-Tehnologija d.o.o.'
+            pos: 50, 500
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: 'Mednarodni prehod, 6'
+            pos: 50, 450
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: '5290 Šempeter pri Gorici'
+            pos: 50, 400
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: 'SLOVENIA'
+            pos: 50, 350
+            size_hint: None, None
+            size: 450, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: 'for any further information contact: '
+            pos: 50, 250
+            size_hint: None, None
+            size: 650, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_WHITE50
+        Label:
+            text: '[b]support@hi-tehnologija.com[/b]'
+            pos: 400, 250
+            size_hint: None, None
+            size: 350, 30
+            font_size: 21
+            text_size: self.size
+            markup: True
+            color: GV.RGBA_ORANGE
+#        Label:
+#            text: '+39 347 3201470'
+#            pos: 50, 200
+#            size_hint: None, None
+#            size: 450, 30
+#            font_size: 21
+#            text_size: self.size
+#            markup: True
+#            color: GV.RGBA_WHITE50
+        Button:
+            text: 'Report'
+            pos: 1050, 230
+            size: 150, 50
+            size_hint: None, None
+            font_size: 18
+            color: GV.RGBA_BLUE
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+            on_press: self.parent.create_report()
+        BoxLayout:
+            orientation: 'vertical'
+            pos: 1030, 218
+            size_hint: None, None
+            size: 430, 75
+            padding: 20, 0
+            canvas:
+                Color:
+                    rgba: GV.RGBA_ORANGE
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+            Label:
+                text: '[i]In case to contact support[/i]'
+                size_hint: 1, None
+                height: 25
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                text: '[i]press REPORT then connect USB [/i]'
+                size_hint: 1, None
+                height: 25
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                text: '[i]send us compressed file in USB[/i]'
+                size_hint: 1, None
+                height: 25
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'right'
+                valign: 'middle'
+
+
+
+

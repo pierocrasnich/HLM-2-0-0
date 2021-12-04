@@ -1,0 +1,257 @@
+###################################### Connect Content STYLE ##############################################################
+
+<AddButton>:
+    size: 100, 50
+    size_hint: None, None
+    font_size: 18
+    color: 102/255, 179/255, 46/255, 1
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+#    canvas:
+#        Color:
+#            rgba: (150/255, 200/255, 1, 1)
+#        Line:
+#            width: 1
+#            rectangle: self.x, self.y, self.width, self.height
+
+<DelButton>:
+    size: 100, 50
+    size_hint: None, None
+    font_size: 18
+    color: 229/255, 36/255, 33/255, 1
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+#    canvas:
+#        Color:
+#            rgba: (150/255, 200/255, 1, 1)
+#        Line:
+#            width: 1
+#            rectangle: self.x, self.y, self.width, self.height
+
+
+<ModuleLibraryButton>:
+    nameModule: ''
+    multiline: True
+    size: 90, 90
+    size_hint: None, None
+    font_size: 14
+    background_down: ''
+    background_normal: ''
+    background_color:  self.color_normal if self.state=='normal' else self.color_down
+    canvas:
+        Color:
+            rgba: self.color_border
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+<MapMarker>:
+    size: 35, 35
+    size_hint: None, None
+    canvas:
+        Color:
+            rgba: self.color_bk
+        Rectangle:
+            size: self.width - 12, self.height - 12
+            pos: self.x + 6, self.y + 6
+
+<LabelMarker>:
+    text: ''
+    size_hint: 1, None
+    height: 35
+    text_size: self.size
+    halign: 'left'
+    valign: 'middle'
+    font_size: 14
+    padding: 2, 0
+
+<InputButton>:
+    group: 'connected'
+    size_hint: 1, None
+    size: 500, 30
+    color: GV.RGBA_BLACK
+    background_color: GV.RGBA_NORMAL if self.state == 'normal' else GV.RGBA_DOWN
+    background_normal: ''
+    canvas:
+        Color:
+            rgba: GV.RGBA_BORDER
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<OutputButton>:
+    size_hint: 1, None
+    size: 325, 30
+    color: GV.RGBA_BLACK
+    background_color: GV.RGBA_NORMAL if self.state == 'normal' else GV.RGBA_DOWN
+    background_normal: ''
+    canvas:
+        Color:
+            rgba: GV.RGBA_BORDER
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<OutputPopupButton>:
+    size_hint: 1, None
+    size: 325, 30
+    background_color: GV.RGBA_BTN_OFF if self.state=='normal' else  GV.RGBA_DOWN
+    background_normal: ''
+    canvas:
+        Color:
+            rgba: GV.RGBA_BORDER
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<ModuleButton>:
+    size_hint: 1, None
+    size: 325, 30
+    group: 'mod'
+    background_normal: ''
+    background_color: GV.RGBA_BTN_OFF if self.state=='normal' else GV.RGBA_DOWN
+    canvas:
+        Color:
+            rgba: GV.RGBA_BORDER
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<ModulePopupButton>:
+    size_hint: None, None
+    size: 100, 75
+    background_color: GV.RGBA_BTN_OFF if self.state=='normal' else GV.RGBA_BTN_ON
+    background_normal: ''
+    canvas:
+        Color:
+            rgba: GV.RGBA_BORDER
+        Line:
+            width: 1
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<ModulePopup>:
+    id: OutputButton
+    module_list: module_list
+    add_module_btn: add_module_btn
+    size_hint: None, None
+    size: 600, 500
+    background_normal: ''
+    background_color: GV.RGBA_BLACK50
+    auto_dismiss: False
+    title: 'Add Module'
+    separator_color: GV.RGBA_WHITE
+    BoxLayout:
+        id: container
+        padding: 0, 10, 0, 0
+        size_hint: 1, 1
+        orientation: 'vertical'
+        StackLayout:
+            orientation: 'lr-tb'
+            spacing: 10
+            id: module_list
+            add_module_btn: add_module_btn
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            height: 50
+            spacing: 10
+            PopupButton:
+                id: add_module_btn
+                text: 'Add Module'
+                disabled: True
+                on_press: root.adding_module_to_list()
+                on_release: root.dismiss()
+            PopupButton:
+                text: 'Close'
+                on_press: root.dismiss()
+
+<OutputPopup>:
+    id: output_popup
+    output_list: output_list
+    add_output_btn: add_output_btn
+    size_hint: None, None
+    size: 600, 500
+    auto_dismiss: False
+    title: 'Add Output'
+    separator_color: GV.RGBA_WHITE
+    background_normal: ''
+    background_color: GV.RGBA_BLACK50
+    BoxLayout:
+        id: container
+        padding: 0, 10, 0, 0
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, None
+            height: 370
+            ScrollView:
+                size_hint: 1, 1
+                bar_width: 10
+                bar_color: GV.RGBA_BAR_ON
+                bar_inactive_color: GV.RGBA_BAR_OFF
+                scroll_type: ['bars']
+                GridLayout:
+                    id: output_list
+                    add_output_btn: add_output_btn
+                    cols: 1
+                    size_hint: 1, None
+                    height: self.minimum_height
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            height: 10
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            height: 50
+            spacing: 10
+            PopupButton:
+                id: add_output_btn
+                text: 'Add Output'
+                disabled: True
+                on_press: root.adding_output_to_list()
+                on_release: root.dismiss()
+            PopupButton:
+                text: 'Close'
+                on_press: root.dismiss()
+
+<PopupButton@Button>:
+    background_color: GV.RGBA_BG_DARK if self.state=='normal' else GV.RGBA_BTN_ON
+    background_normal: ''
+#    canvas:
+#        Color:
+#            rgba: 150/255, 200/255, 255/255, 1
+#        Line:
+#            width: 1
+#            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<SelectSystemInputOption>:
+    color: GV.RGBA_TITLE_COL
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Line:
+            width: 3
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+<SelectSystemInput>:
+    text: 'ALL'
+    values: GV.INPUT_TYPE
+    color: GV.RGBA_TITLE_COL
+    font_size: 18
+    background_normal: ''
+    background_color: GV.RGBA_BG_DARK
+    on_text: self.selected_system(self.text)
+#    canvas:
+#        Color:
+#            rgba: 150/255, 200/255, 255/255, 1
+#        Line:
+#            width: 1
+#            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1

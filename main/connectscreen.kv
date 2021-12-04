@@ -1,0 +1,419 @@
+<ConnectScreen>:
+    id: _mccm_connect
+    name: 'Connect'
+    cs_container: _cs_container
+    ConnectContainer:
+        id: _cs_container
+        csc_module_library: _csc_module_library
+        csc_input_select_box: _csc_input_select_box
+        csc_input_list: _csc_input_list
+        csc_module_list: _csc_module_list
+        csc_output_list: _csc_output_list
+        csc_module_preview : _csc_module_preview
+        csc_module_export: _csc_module_export
+        cscisb_system: _cscisb_system
+        Label:
+            text: 'Connect'
+            pos: 50, 1000
+            size: 500, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:
+            text: 'This section provides for the management of OUTPUT activation, be they Digital or Handler Light.'
+            color: 255/255, 255/255, 255/255, .5
+            pos: 50, 950
+            size: 1600, 50
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+        BoxLayout:                                              # ----- Box contenete i Moduli ----- #
+            size_hint: None, None
+            size: 900, 250
+            pos: 50, 600
+            canvas:
+                Color:
+                    rgba: (47/255,50/255,57/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            ModuleLibraryContainer:
+                id: _csc_module_library
+                csc_module_preview: _csc_module_preview
+                csc_module_export: _csc_module_export
+                size_hint: 1, None
+                size: 900, 250
+                pos: self.pos
+                orientation: 'lr-tb'
+                spacing: 10
+                padding: 10,10,10,10
+        Label:
+            text: 'Module Library'
+            pos: 50, 870
+            size: 500, 100
+            size_hint: None, None
+            font_size: 31
+            text_size: self.size
+            color: 0/255,162/255,162/255, 1
+        BoxLayout:
+            size_hint: None, None
+            size: 500, 400
+            pos: 1050, 600
+            canvas:
+                Color:
+                    rgba: (47/255,50/255,57/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+        RelativeLayout:
+            id: _csc_module_preview
+            cscmp_name: _cscmp_name
+            cscmp_system: _cscmp_system
+            cscmp_bit: _cscmp_bit
+            cscmp_map_func: _cscmp_map_func
+            cscmp_map_out_sx: _cscmp_map_out_sx
+            cscmp_map_out_dx: _cscmp_map_out_dx
+            size_hint: None, None
+            size: 500, 530
+            pos: 1050, 530
+            opacity: 0
+            GridLayout:
+                rows: 4
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, None
+                    size: 500, 50
+                    Label:
+                        size_hint: None, None
+                        size: 500, 50
+                        text_size: self.size
+                        text: 'Preview Module  '
+                        font_size: 31
+                        halign: 'left'
+                        color: 0/255,162/255,162/255, 1
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, None
+                    size: 500, 50
+                    padding: 10, 0
+                    Label:
+                        id: _cscmp_name
+                        size_hint: None, None
+                        size: 230, 50
+                        text: ''
+                        font_size: 18
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        color:  0/255,162/255,162/255, 1
+                    Label:
+                        id: _cscmp_system
+                        text: ''
+                        font_size: 18
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        color: 0/255,162/255,162/255, 1
+                    Label:
+                        id: _cscmp_bit
+                        text: ''
+                        font_size: 18
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        color:  0/255,162/255,162/255, 1
+                GridLayout:
+                    cols: 4
+                    size_hint: None, None
+                    size: 500, 350
+                    GridLayout:
+                        id: _cscmp_map_func
+                        size_hint: None, None
+                        size: 200, 350
+                        cols: 1
+                        padding: 10, 0
+                    GridLayout:
+                        id: _cscmp_map_out_sx
+                        size_hint: None, None
+                        size: 100, 350
+                        cols: 1
+                        padding: 35, 0
+                    Image:
+                        source: GV.DIR_IMAGES + 'door_map.png'
+                        size: 100, 350
+                    GridLayout:
+                        id: _cscmp_map_out_dx
+                        size_hint: None, None
+                        size: 100, 350
+                        cols: 1
+                        padding: 35, 0
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, None
+                    size: 500, 80
+                    AnchorLayout:
+                        anchor_x: 'right'
+                        anchor_y: 'bottom'
+                        GridLayout:
+                            size: 170, 50
+                            size_hint: None, None
+                            spacing: 20
+                            cols:2
+                            Button:
+                                size: 100, 50
+                                size_hint: None, None
+                                font_size: 16
+                                text: 'Close'
+                                color: GV.RGBA_ERROR
+                                background_down: ''
+                                background_normal: ''
+                                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+                                on_press: root.cs_container.close_module_preview()
+                            ExportPdfButton:
+                                mccm_connect: _mccm_connect
+                                id: _csc_module_export
+                                module_select: 'module'
+                                on_press: self.export_pdf_module()
+        Label:
+            text: 'Input'
+            pos: 50, 520
+            size: 500, 100
+            size_hint: None, None
+            font_size: 31
+            text_size: self.size
+            color: 240/255, 149/255, 61/255, 1
+        BoxLayout:
+            id: _csc_input_select_box
+            size_hint: None, None
+            size: 200, 50
+            pos: 350, 510
+            canvas:
+                Color:
+                    rgba: (47/255,50/255,57/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            SelectSystemInput:
+                id: _cscisb_system
+                csc_input_list: _csc_input_list
+                csc_module_list: _csc_module_list
+                csc_output_list: _csc_output_list
+        ScrollView:
+            size_hint: None, None
+            size: 500, 390
+            pos: 50, 110
+            bar_width: 10
+            bar_color: 240/255, 149/255, 61/255, .8
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            canvas.before:
+                Color:
+                    rgba: (47/255,50/255,57/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            InputListBox:
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+                id: _csc_input_list
+                csc_input_select_box: _csc_input_select_box
+                cscisb_system: _cscisb_system
+                csc_add_module_btn: _csc_add_module_btn
+                csc_del_module_btn: _csc_del_module_btn
+                csc_add_output_btn: _csc_add_output_btn
+                csc_del_output_btn: _csc_del_output_btn
+                csc_module_list: _csc_module_list
+                csc_output_list: _csc_output_list
+                csc_connections_count: _csc_connections_count
+        Label:
+            text: 'Module'
+            pos: 650, 520
+            size: 500, 100
+            size_hint: None, None
+            font_size: 31
+            text_size: self.size
+            color: GV.RGBA_TITLE_COL
+        ScrollView:
+            size_hint: None, None
+            size: 325, 390
+            pos: 650, 110
+            bar_width: 10
+            bar_color: GV.RGBA_BAR_ON
+            bar_inactive_color: GV.RGBA_BAR_OFF
+            scroll_type: ['bars']
+            canvas.before:
+                Color:
+                    rgba: GV.RGBA_BG_DARK
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            ModuleListBox:
+                id: _csc_module_list
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+                csc_input_list: _csc_input_list
+                csc_add_module_btn: _csc_add_module_btn
+                csc_del_module_btn: _csc_del_module_btn
+                csc_add_output_btn: _csc_add_output_btn
+                csc_output_list: _csc_output_list
+                csc_input_select_box: _csc_input_select_box
+        AddButton:
+            id: _csc_add_module_btn
+            csc_module_list: _csc_module_list
+            csc_input_list: _csc_input_list
+            text: 'Add'
+            pos: 750, 30
+            disabled: True
+            opacity: 0
+            on_press: self.csc_module_list.add_module()
+        DelButton:
+            id: _csc_del_module_btn
+            csc_module_list: _csc_module_list
+            csc_input_list: _csc_input_list
+            text: 'Del'
+            pos: 875, 30
+            disabled: True
+            opacity: 0
+            on_press: self.delete_module()
+        Label:
+            text: 'Output'
+            pos: 1050, 520
+            size: 500, 100
+            size_hint: None, None
+            font_size: 31
+            text_size: self.size
+            color: 240/255, 149/255, 61/255, 1
+        ScrollView:
+            size_hint: None, None
+            size: 325, 390
+            pos: 1075, 110
+            bar_width: 10
+            bar_color: 240/255, 149/255, 61/255, .8
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            canvas.before:
+                Color:
+                    rgba: (47/255,50/255,57/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            OutputListBox:
+                id: _csc_output_list
+                csc_input_select_box: _csc_input_select_box
+                cscisb_system: _cscisb_system
+                csc_input_list: _csc_input_list
+                csc_del_output_btn: _csc_del_output_btn
+                csc_add_output_btn: _csc_add_output_btn
+                csc_module_list: _csc_module_list
+                csc_output_list: _csc_output_list
+                cs_container: _cs_container
+                mccm_connect: _mccm_connect
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+        AddButton:
+            id: _csc_add_output_btn
+            csc_output_list: _csc_output_list
+            text: 'Add'
+            pos: 1175, 30
+            disabled: True
+            opacity: 0
+            on_press: self.csc_output_list.add_output()
+        DelButton:
+            id: _csc_del_output_btn
+            csc_output_list: _csc_output_list
+            csc_module_list: _csc_module_list
+            csc_input_list: _csc_input_list
+            text: 'Del'
+            pos: 1300, 30
+            disabled: True
+            opacity: 0
+            on_press: self.delete_output()
+        ExportPdfButton:
+            id: _csc_export_btn
+            text: 'PDF'
+            pos: 1500, 100
+            on_press: self.export_pdf_connections()
+            disabled: True
+            opacity: 0
+        Label:
+            id: _csc_connections_count
+            text:'Connect 0/100 of ALL system'
+            color: 255/255, 255/255, 255/255, .5
+            halign: 'right'
+            valign: 'middle'
+            pos: 50, 60
+            size: 500, 50
+            size_hint: None, None
+            font_size: 16
+            text_size: self.size
+        Button:
+            mccm_connect: _mccm_connect
+            pos: 1450, 110
+            size_hint: None, None
+            size: 150, 50
+            opacity: 1
+            text: 'SHOW LIST'
+            font_size: 16
+            color: GV.RGBA_INFO
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+            on_press: self.mccm_connect.mccm.switch_to(self.mccm_connect.mccm.mccm_list)
+        Button:
+            cs_container: _cs_container
+            pos: 1450, 425
+            size_hint: None, None
+            size: 150, 50
+            opacity: 1
+            text: 'DOWNLOAD'
+            font_size: 16
+            color: GV.RGBA_SUCCESS
+            background_down: ''
+            background_normal: ''
+            background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 255/255, .5)
+            on_press: self.cs_container.download_btn()
+        BoxLayout:
+            orientation: 'vertical'
+            pos: 1425, 310
+            size_hint: None, None
+            size: 200, 190
+            padding: 20, 0
+            canvas:
+                Color:
+                    rgba: GV.RGBA_ORANGE
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+            Label:
+                text: '[i]Before DOWNLOAD[/i]'
+                size_hint: 1, None
+                height: 40
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'center'
+                valign: 'middle'
+            Label:
+                text: '[i]check PLC status [/i]'
+                size_hint: 1, None
+                height: 25
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'center'
+                valign: 'middle'
+            Label:
+                text: '[i]check LIST[/i]'
+                size_hint: 1, None
+                height: 40
+                font_size: 14
+                text_size: self.size
+                markup: True
+                color: GV.RGBA_ORANGE
+                halign: 'center'
+                valign: 'middle'

@@ -1,0 +1,194 @@
+<InputScreen>:
+    id: _mccm_input
+    name: 'Input List'
+    is_container: _is_container
+    InputContainer:
+        id: _is_container
+        mccm_input: _mccm_input
+        isc_list_table: _isc_list_table
+        isc_edit_box: _isc_edit_box
+        iscc_system_spn: _iscc_system_spn
+        SelectInputContainer:                # ----------- Input System Select -------------------------------------------- #
+            id: _isc_select_system_container
+            isc_list_table: _isc_list_table
+            iscc_system_spn: _iscc_system_spn
+            pos: 1240, 800
+            size_hint: None, None
+            size: 200, 50
+            SelectSystemSpinner:
+                id: _iscc_system_spn
+                isc_list_table: _isc_list_table
+        RelativeLayout:                     # ----------- Edit Box Container --------------------------------------------- #
+            id: _isc_edit_box
+            isceb_obj_id: _isceb_obj_id
+            isceb_num: _isceb_num
+            isceb_sys: _isceb_sys
+            isceb_bit: _isceb_bit
+            isceb_plc: _isceb_plc
+            isceb_name: _isceb_name
+            isceb_descr: _isceb_descr
+            pos: 1240, 150
+            size_hint: None, None
+            size: 330, 500
+            disabled: True
+            opacity: 0
+            Label:                          # -------------- Titolo ------------------------------------------------------ #
+                text: 'Editor Area'
+                color: GV.RGBA_ORANGE
+                font_size: 18
+                bold: True
+                pos: 10, 450
+                size_hint: None, None
+                size: self.texture_size
+            Label:                          # -------------- Oggetto selezionato ----------------------------------------- #
+                id: _isceb_obj_id
+                text: '???'
+                color: GV.RGBA_ORANGE
+                pos: 150, 450
+                size_hint: None, None
+                size: self.texture_size
+                opacity: 0
+            Label:                          # -------------- Numero oggetto ---------------------------------------------- #
+                text: 'Number: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 400
+                color: 1, 1, 1, .5
+            Label:
+                id: _isceb_num
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 400
+            Label:                           # ------------- Systema ----------------------------------------------------- #
+                text: 'System: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 350
+                color: 1, 1, 1, .5
+            Label:
+                id: _isceb_sys
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 350
+            Label:                          # --------------- Registro del PLC ------------------------------------------- #
+                text: 'Register: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 300
+                color: 1, 1, 1, .5
+            Label:
+                id: _isceb_plc
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 300
+            Label: # --------------- Registro del PLC ------------------------------------------- #
+                text: 'Register Bit: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 250
+                color: 1, 1, 1, .5
+            Label:
+                id: _isceb_bit
+                text: '???'
+                color: GV.RGBA_ORANGE
+                size_hint: None, None
+                size: self.texture_size
+                pos: 150, 250
+            Label:                          # -------------- Nome -------------------------------------------------------- #
+                text: 'Name: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 200
+                color: 1, 1, 1, .5
+            TextInput:
+                id: _isceb_name
+                text: ''
+                size_hint: None, None
+                cursor_color: 1, 1, 1, 1
+                foreground_color: 1, 1, 1, 1
+                halign: 'center'
+                size: 220, 30
+                pos: 75, 195
+                multiline: False
+                background_normal: ''
+                background_color: 83/255, 88/255, 99/255, 1
+            Label:                          # --------------- Descrizione ------------------------------------------------ #
+                text: 'Description: '
+                size_hint: None, None
+                size: self.texture_size
+                pos: 10, 150
+                color: 1, 1, 1, .5512
+            TextInput:
+                id: _isceb_descr
+                text: ''
+                size_hint: None, None
+                pos: 10, 50
+                size: 310, 90
+                cursor_color: 1, 1, 1, 1
+                foreground_color: 1, 1, 1, 1
+                background_normal: ''
+                background_color: 83/255, 88/255, 99/255, 1
+            Button:                             # -------------- SAVE Button --------------------------------------------- #
+                is_container: _is_container
+                text: 'Save'
+                size_hint: None, None
+                size: 100, 50
+                pos: 100,  -40
+                color: 102/255, 179/255, 46/255, 1
+                on_press: self.is_container.update_name()
+                background_normal: ''
+                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+            Button:                             # --------------- CANCEL Button ------------------------------------------ #
+                is_container: _is_container
+                text: 'Cancel'
+                size_hint: None, None
+                size: 100, 50
+                pos: 220, -40
+                color: 229/255, 36/255, 33/255, 1
+                on_press: self.is_container.cancel_update()
+                background_normal: ''
+                background_color: (47/255, 50/255, 57/255, 1) if self.state=='normal' else (150/255, 200/255, 1, .5)
+        Label:                                      # ------------- Input List Title ------------------------------------- #
+            text: 'Input List'
+            pos: 50, 1000
+            size: 1050, 100
+            size_hint: None, None
+            font_size: 50
+            text_size: self.size
+        Label:
+            text: 'You can setting the Name and Description of Input Registers by ROW selection and modify in the EDITOR AREA. '
+            color: 255/255, 255/255, 255/255, .5
+            pos: 50, 900
+            size: 1650, 50
+            size_hint: None, None
+            font_size: 21
+            text_size: self.size
+        InputListHeader:                                 # -------------- List Header ----------------------------------------- #
+            id: _isc_list_header
+        ScrollView:                                 # -------------- List Container -------------------------------------- #
+            pos: 50, 200
+            size_hint: None, None
+            size: 1100, 600
+            bar_width: 10
+            bar_color: GV.RGBA_ORANGE
+            bar_inactive_color: 240/255, 149/255, 61/255, .1
+            scroll_type: ['bars']
+            canvas:
+                Color:
+                    rgba: (56/255, 60/255, 69/255, 1)
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            ListInput:                              # ----------------- List Body ---------------------------------------- #
+                id: _isc_list_table
+                isc_edit_box: _isc_edit_box
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+
