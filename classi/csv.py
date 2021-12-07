@@ -7,6 +7,7 @@ from kivy.storage.jsonstore import JsonStore
 
 import os
 import csv
+from bson import ObjectId
 from fpdf import FPDF
 from fpdf.html import hex2dec
 from sys import platform as _platform, exc_info
@@ -396,25 +397,19 @@ class ImportDialog(ModalView):
             self.folder_path = './'
         elif _platform == "darwin":
             self.folder_path = '/Volumes'
+        self.collection_target = []
 
     def import_collection_csv(self, *args):
         file = args[1][0]
         name_file = datetime.now().strftime("%Y%m%d_%H%M") + '_' + self.importList + 'List'
         if self.importList == 'input':
-            result = GV.DB_INPUTLIST
+            self.collection_target = GV.DB_INPUTLIST
         elif self.importList == 'output':
-            result = GV.DB_OUTPUTLIST
+            self.collection_target = GV.DB_OUTPUTLIST
         try:
             f = open(file, 'r')
             file_reader = csv.DictReader(f)
-            collection_target = result
-            collection_target.drop()
-            headers = file_reader.fieldnames
-            for each in file_reader:
-                row = {}
-                for field in headers:
-                    row[field] = each[field]
-                collection_target.insert_one(row)
+            self.populate_DB(file_reader)
             msg_color = 'success'
             msg_text = 'import ' + self.importList + ' list'
             logger_class = 'info'
@@ -429,6 +424,31 @@ class ImportDialog(ModalView):
         finally:
             self.notification.notification_msg(msg_color, msg_text)
             os.system('rm ' + GV.DIR_BACKUP + str(name_file))
+
+    def populate_DB(self,  file_reader):
+        self.collection_target.drop()
+        headers = file_reader.fieldnames
+        if self.importList == 'output':
+            GV.DB_OBJECTLIST.delete_many({'system': 'HL'})
+            for each in file_reader:
+                row = {}
+                for field in headers:
+                    row[field] = each[field]
+                self.collection_target.insert_one(row)
+                GV.DB_OBJECTLIST.insert_one({'system': 'HL',
+                                             'address': each['address'],
+                                             'name': each['name'],
+                                             'deck': GV.OBJ_DEFAULT_DK,
+                                             'posX': 0,
+                                             'posY': 0,
+                                             'rotate': 0,
+                                             'status': ''})
+        else:
+            for each in file_reader:
+                row = {}
+                for field in headers:
+                    row[field] = each[field]
+                self.collection_target.insert_one(row)
 
 
 # ########################################### PRINT COMM DOC  BUTTON ################################################# #

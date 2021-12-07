@@ -50,6 +50,8 @@ class DashScreen(Screen):
         elif status == "1":
             color_fill = GV.OBJ_RGB_FAULT
             # print('fault')
+        else:
+            color_fill = GV.OBJ_RGB_NO_DATA
         return color_fill
 
     def change_status(self):
