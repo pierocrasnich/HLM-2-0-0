@@ -16,6 +16,7 @@ import utility.gvar as GV
 
 class ObjPLCM(Button):
     scatter_obj = ObjectProperty(None)
+    obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
     angle_obj = NumericProperty(0)
@@ -24,12 +25,12 @@ class ObjPLCM(Button):
     def __init__(self, **kwargs):
         super(ObjPLCM, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
+        Clock.unschedule(self.close_tooltip)
 
     def on_press(self):
         self.scatter_obj.do_translation = (False, False)
         if not self.tooltip_show:
             self.display_tooltip()
-            self.tooltip_show = True
 
     def on_touch_move(self, touch):
         if GV.OBJ_MODIFY:
@@ -61,18 +62,20 @@ class ObjPLCM(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'rotate': self.angle_obj}})
 
     def close_tooltip(self, *args):
-        self.scatter_obj.remove_widget(self.tooltip)
+        self.obj_widget.remove_widget(self.tooltip)
         self.tooltip_show = False
 
     def display_tooltip(self, *args):
+        self.tooltip_show = True
         self.tooltip.pos = (self.x + 7, self.y + 55)
         self.tooltip.text = self.obj_data['name']
-        self.scatter_obj.add_widget(self.tooltip)
+        self.obj_widget.add_widget(self.tooltip)
         Clock.schedule_once(self.close_tooltip, 3)
 
 
 class ObjPLCZ(Button):
     scatter_obj = ObjectProperty(None)
+    obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
     angle_obj = NumericProperty(0)
@@ -81,12 +84,12 @@ class ObjPLCZ(Button):
     def __init__(self, **kwargs):
         super(ObjPLCZ, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
+        Clock.unschedule(self.close_tooltip)
 
     def on_press(self):
         self.scatter_obj.do_translation = (False, False)
         if not self.tooltip_show:
             self.display_tooltip()
-            self.tooltip_show = True
 
     def on_touch_move(self, touch):
         if GV.OBJ_MODIFY:
@@ -118,18 +121,21 @@ class ObjPLCZ(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'rotate': self.angle_obj}})
 
     def close_tooltip(self, *args):
-        self.scatter_obj.remove_widget(self.tooltip)
+        self.obj_widget.remove_widget(self.tooltip)
         self.tooltip_show = False
+        Clock.unschedule(self.close_tooltip)
 
     def display_tooltip(self, *args):
+        self.tooltip_show = True
         self.tooltip.pos = (self.x + 7, self.y + 55)
         self.tooltip.text = self.obj_data['name']
-        self.scatter_obj.add_widget(self.tooltip)
+        self.obj_widget.add_widget(self.tooltip)
         Clock.schedule_once(self.close_tooltip, 3)
 
 
 class ObjHL(Button):
     scatter_obj = ObjectProperty(None)
+    obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
     angle_obj = NumericProperty(0)
@@ -138,12 +144,12 @@ class ObjHL(Button):
     def __init__(self, **kwargs):
         super(ObjHL, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
+        Clock.unschedule(self.close_tooltip)
 
     def on_press(self):
         self.scatter_obj.do_translation = (False, False)
         if not self.tooltip_show:
             self.display_tooltip()
-            self.tooltip_show = True
 
     def on_touch_move(self, touch):
         if GV.OBJ_MODIFY:
@@ -175,13 +181,15 @@ class ObjHL(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'rotate': self.angle_obj}})
 
     def close_tooltip(self, *args):
-        self.scatter_obj.remove_widget(self.tooltip)
+        self.obj_widget.remove_widget(self.tooltip)
         self.tooltip_show = False
+        Clock.unschedule(self.close_tooltip)
 
     def display_tooltip(self, *args):
+        self.scatter_obj.remove_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
         self.tooltip.text = self.obj_data['name']
-        self.scatter_obj.add_widget(self.tooltip)
+        self.obj_widget.add_widget(self.tooltip)
         Clock.schedule_once(self.close_tooltip, 3)
 
 

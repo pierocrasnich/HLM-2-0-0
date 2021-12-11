@@ -6,7 +6,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.lang import Builder
-from kivy.properties import  ObjectProperty, NumericProperty
+from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.button import Button
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.uix.stencilview import StencilView
@@ -14,7 +14,9 @@ from kivy.uix.scatter import Scatter
 from kivy.uix.image import Image
 from kivy.clock import Clock
 
+from bson import ObjectId
 from datetime import datetime
+from pymongo import ASCENDING
 from pymongo.errors import PyMongoError
 import threading
 
@@ -31,11 +33,15 @@ Builder.load_file('object/objectLibrary.kv')
 class DashScreen(Screen):
     mccm = ObjectProperty(None)
 
-    def on_enter(self, *args):
-        self.dsc_deck_scatter.init_deck()
+    def __init__(self, **kwargs):
+        super(DashScreen, self).__init__(**kwargs)
         Clock.schedule_interval(self.db_status, GV.PLC_ALIVE)
         thread_change_status = threading.Timer(5, self.change_status)
         thread_change_status.start()
+
+    def on_enter(self, *args):
+        self.dsc_deck_scatter.init_deck()
+        Clock.schedule_once(self.dsc_obj_search.init)
 
     def on_leave(self, *args):
         pass
@@ -58,7 +64,7 @@ class DashScreen(Screen):
         pipeline = [
             {'$match': {
                 'operationType': 'replace',
-                # 'updateDescription.updatedFields.status': True
+
             }},
         ]
         try:
@@ -143,8 +149,9 @@ class DeckScatter(Scatter):
                         obj = ObjPLCZ()
                     else:
                         obj = ObjHL()
-                    obj.id = str(obj_data['_id'])
+                    obj.id = 'OBJ_' + str(obj_data['_id'])
                     obj.scatter_obj = self
+                    obj.obj_widget =  self.obj_widget
                     obj.rotate_btn = rotate_btn
                     obj.obj_data = obj_data
                     obj.angle_obj = obj_data['rotate']
@@ -158,6 +165,10 @@ class DeckScatter(Scatter):
                             x_row_count = 0
                         posY = obj_data['posY'] + (self.delta_y * 2) + 10 + (50 * y_row_count)
                         obj.pos = (posX, posY)
+                        # Save Default position
+                        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(obj_data['_id'])},
+                                                    {'$set': {'posX': posX, 'posY': posY}})
+
                     else:
                         posX = obj_data['posX']
                         posY = obj_data['posY']
@@ -219,6 +230,77 @@ class DeckScatter(Scatter):
         self.pos = (0 - self.delta_x, 0 - self.delta_y)
 
 
+# Search OBJECT button
+class SearchSelectMenu(GridLayout):
+    pass
+
+
+class SearchSelectBtn(Button):
+    container = ObjectProperty(None)
+    search_btn = ObjectProperty(None)
+
+    def updateTextInput(self, instance):
+        instance.search_btn.dsc_obj_search_text.text = instance.text
+        self.container.clear_widgets()
+
+
+class BtnSearch(GridLayout):
+
+    def __init__(self, **kwargs):
+        super(BtnSearch, self).__init__(**kwargs)
+        self.list_data = []
+        self.new_list_search = []
+        self.search_menu = SearchSelectMenu()
+        self.search_menu.pos = (self.x, self.y - 270)
+
+    def init(self, instance):
+        collection_value = GV.DB_OBJECTLIST.find().sort("name", ASCENDING)
+        for dataRow in collection_value:
+            self.list_data.append(dataRow)
+        self.new_list_search = list(map(lambda x: x['name'], self.list_data))
+
+    def search(self):
+        if self.dsc_obj_search_text.text != '':
+            obj = GV.DB_OBJECTLIST.find_one({'name': self.dsc_obj_search_text.text})
+            self.dsc_deck_scatter.deck_show = int(obj['deck'])
+            self.dsc_deck_scatter.scale = 1
+            self.dsc_deck_scatter.pos = (785 - obj['posX'], 225 - obj['posY'])
+            self.dsc_deck_scatter.init_deck()
+            self.dsc_deck_scatter.init_obj(None)
+            for child in self.dsc_deck_scatter.obj_widget.children:
+                if child.id == 'OBJ_' + str(obj['_id']):
+                    child.display_tooltip()
+                    break
+
+            self.dsc_obj_search_text.text = ''
+        else:
+            return
+
+    def searchInput(self):
+        self.search_menu.dsc_obj_search_list.clear_widgets()
+        self.ds_container.remove_widget(self.search_menu)
+        text_search = self.dsc_obj_search_text.text
+        name_result = []
+
+        for word in self.new_list_search:
+            name_find = word.find(text_search)
+            if name_find == 0:
+                name_result.append(word)
+        name_result = list(dict.fromkeys(name_result))
+
+        if len(name_result) != 0 and text_search != '':
+            for name_value in name_result:
+                search_select = SearchSelectBtn()
+                search_select.text = name_value
+                search_select.size = 250, 30
+                search_select.search_btn = self
+                search_select.container = self.search_menu.dsc_obj_search_list
+                self.search_menu.dsc_obj_search_list.add_widget(search_select)
+
+        self.search_menu.pos = (self.x + 10, self.y - 290)
+        self.ds_container.add_widget(self.search_menu)
+
+
 # Deck menu select
 class DeckMenu(GridLayout):
     scatter_obj = ObjectProperty(None)
@@ -265,7 +347,15 @@ class FaultListRow(ToggleButtonBehavior, BoxLayout):
     scatter_obj = ObjectProperty(None)
 
     def on_press(self):
-        print('set deck, pos, zoom and tooltip', self.row_data)
+        self.scatter_obj.deck_show = int(self.row_data['deck'])
+        self.scatter_obj.scale = 1
+        self.scatter_obj.pos = (785 - self.row_data['posX'], 225 - self.row_data['posY'])
+        self.scatter_obj.init_deck()
+        self.scatter_obj.init_obj(None)
+        for child in self.scatter_obj.obj_widget.children:
+            if child.id == 'OBJ_' + str(self.row_data['_id']):
+                child.display_tooltip()
+                break
 
 
 class ListFault(BoxLayout):
@@ -274,6 +364,7 @@ class ListFault(BoxLayout):
         super(ListFault, self).__init__(**kwargs)
         self.fault_value = '1'
         self.normal_value = '0'
+
         Clock.schedule_once(self.init)
 
     def init(self, instance):
@@ -283,10 +374,11 @@ class ListFault(BoxLayout):
             msg_color = 'error'
             msg_text = 'Device ' + row_data['name'] + ' in FAULT'
             self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
-        if len(self.children) <= 11:
+        if len(self.children) <= 10:
             self.parent.do_scroll_y = False
         else:
             self.parent.do_scroll_y = True
+        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))+ '0000'
 
     def create_row(self, row_data):
         if row_data['name']:
@@ -305,6 +397,7 @@ class ListFault(BoxLayout):
     def update_list(self, document):
         id = 'id_' + str(document['fullDocument']['name'])
         status = document['fullDocument']['status']
+
         if status == self.fault_value:
             self.create_row(document['fullDocument'])
             msg_color = 'error'
@@ -318,11 +411,16 @@ class ListFault(BoxLayout):
                     msg_text = 'Device ' + document['fullDocument']['name'] + ' NORMAL'
                     break
         self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
-
         if len(self.children) <= 11:
             self.parent.do_scroll_y = False
         else:
             self.parent.do_scroll_y = True
+        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))
+
+
+
+
+
 
 
 

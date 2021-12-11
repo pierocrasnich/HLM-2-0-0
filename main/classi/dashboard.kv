@@ -1,3 +1,92 @@
+<BtnSearch>:
+    dsc_obj_search_text: _dsc_obj_search_text
+    size_hint: None, None
+    size: 180, 30
+    cols: 2
+    canvas:
+        Color:
+            rgba: 47/255,50/255,57/255,1
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [0, ]
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: None, None
+        size: 150, 30
+        TextInput:
+            id: _dsc_obj_search_text
+            size_hint: None, None
+            size: 150, 30
+            text_size : self.size
+            font_size: 14
+            halign: 'left'
+            valign: 'center'
+            padding: 10, 7
+            background_color: 1, 1, 1, 0
+            cursor_color: 1, 1, 1, .8
+            foreground_color: 1, 1, 1, .8
+            on_text: root.searchInput()
+            canvas.after:
+                Color:
+                    rgba: 1, 1, 1, .1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [0, 0, 0 , 0 ]
+    Button:
+        text: ''
+        size_hint: None, None
+        size: 30, 30
+        background_normal: GV.DIR_ICONS + 'search.png'
+        background_down: GV.DIR_ICONS + 'search.png'
+        on_press: root.search()
+
+<SearchSelectMenu>
+    dsc_obj_search_list : _dsc_obj_search_list
+    size_hint: None, None
+    size: 150, 270
+    cols: 1
+    ScrollView:
+        size_hint: None, None
+        size: 150, 270
+        scroll_type: ['bars']
+        bar_width:10
+        GridLayout:
+            id: _dsc_obj_search_list
+            cols: 1
+            size_hint: 1, None
+            height: self.minimum_height
+            canvas:
+                Color:
+                    rgba: GV.RGBA_BG_LIGHT
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            canvas.after:
+                Color:
+                    rgba: 47/255,50/255,57/255,1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+
+<SearchSelectBtn>
+    size_hint: None, None
+    size: 140, 30
+    text_size: self.size
+    padding: 10, 0
+    size: 130, 30
+    font_size: 16
+    text: '???'
+    color: GV.RGBA_ORANGE
+    halign: 'left'
+    valign: 'center'
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    on_press: root.updateTextInput(self)
+
+
 <DeckMenu>:
     cols: 1
     size_hint: None, None

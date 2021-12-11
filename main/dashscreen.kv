@@ -6,6 +6,8 @@
     dsc_deck_scatter: _dsc_deck_scatter
     dsc_dk_label: _dsc_dk_label
     dsc_database_check: _dsc_database_check
+    dsc_obj_search: _dsc_obj_search
+    dsc_fault_number: _dsc_fault_number
     DashContainer:
         id: _ds_container
         Label:
@@ -15,6 +17,12 @@
             size_hint: None, None
             font_size: 50
             text_size: self.size
+        BtnSearch:
+            ds_container: _ds_container
+            dsc_deck_scatter: _dsc_deck_scatter
+            id: _dsc_obj_search
+            pos: 40, 940
+            multiline: False
         BoxLayout:
             orientation: 'horizontal'
             size: 1570, 30
@@ -173,8 +181,31 @@
             scroll_type: ['bars']
             ListFault:                              # ----------------- List Body ---------------------------------------- #
                 dsc_deck_scatter: _dsc_deck_scatter
+                dsc_fault_number: _dsc_fault_number
                 mccm_dash: _mccm_dash
                 id: _dsc_list_fault
                 orientation: 'vertical'
                 size_hint: 1, None
                 height: self.minimum_height
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, None
+            height: 40
+            pos: 37, 5
+            canvas.before:
+                Color:
+                    rgba: 47/255, 50/255, 57/255, 1
+                Line:
+                    points:37, 40, 1610, 40
+                    width: 1.5
+            Label:
+                id: _dsc_fault_number
+                size_hint: 1, 1
+                text: '???'
+                color: GV.RGBA_WHITE50
+                text_size: self.size
+                font_size: 16
+                halign: 'left'
+                valign: 'bottom'
+                padding: 0, 5
+
