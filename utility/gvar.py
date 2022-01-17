@@ -20,6 +20,7 @@ DB_PORT = 0
 DB_NAME = ''
 DB_CHECK_TIME = 0
 DB = None
+
 DB_INPUTLIST = None
 DB_INPUTCONFIG = None
 DB_OUTPUTLIST = None
@@ -99,6 +100,8 @@ RGBA_MOD_BORDER = []
 # ----- Thread Object ------------------------------------------------------------------------------------------------ #
 DB_STATUS = None
 PLC_MASTER_STATUS = None
+PLC_THREAD = None
+OBJ_CHANGE = None
 # ----- Module List -------------------------------------------------------------------------------------------------- #
 MODULE = []
 # ----- Global Var fot TCP Server ------------------------------------------------------------------------------------ #
