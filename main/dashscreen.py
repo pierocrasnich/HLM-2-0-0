@@ -36,8 +36,9 @@ class DashScreen(Screen):
     def __init__(self, **kwargs):
         super(DashScreen, self).__init__(**kwargs)
         Clock.schedule_interval(self.db_status, GV.PLC_ALIVE)
-        thread_change_status = threading.Timer(5, self.change_status)
-        thread_change_status.start()
+        GV.OBJ_CHANGE = threading.Timer(5, self.change_status)
+        GV.OBJ_CHANGE.setDaemon(True)
+        GV.OBJ_CHANGE.start()
 
     def on_enter(self, *args):
         self.dsc_deck_scatter.init_deck()

@@ -17,7 +17,10 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.spinner import Spinner, SpinnerOption
 from bson import ObjectId
 import json
+import signal
 
+# -- Import Personal Utility ------------------------------------------------------------------------------------------#
+import utility.gvar as GV
 
 Builder.load_file('main/classi/settings.kv')
 
@@ -40,6 +43,11 @@ class SettingsScreen(Screen):
     def exit():
         App.get_running_app().stop()
         Window.close()
+        #  Kill all Thread Object
+        signal.pthread_kill(GV.DB_STATUS.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.PLC_MASTER_STATUS.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.PLC_THREAD.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.OBJ_CHANGE.ident, signal.SIGKILL)
 
 
 # ----- Settings Container ------------------------------------------------------------------------------------------- #
