@@ -8,8 +8,10 @@ from kivy.uix.behaviors import DragBehavior
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.label import Label
 from kivy.clock import Clock
+from kivy.utils import get_color_from_hex
 
 from bson import ObjectId
+
 
 import utility.gvar as GV
 
@@ -19,13 +21,27 @@ class ObjPLCM(Button):
     obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
+    color_fill = ListProperty([])
     angle_obj = NumericProperty(0)
     tooltip_show = False
+    status_obj = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(ObjPLCM, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
         Clock.unschedule(self.close_tooltip)
+
+    def set_status(self, status):
+        self.status_obj = status
+
+        if self.status_obj['status'] == "":
+            self.color_fill = GV.OBJ_RGB_NO_DATA
+        elif self.status_obj['status'] == "0":
+            self.color_fill = GV.OBJ_RGB_NORMAL
+        elif self.status_obj['status'] == "1":
+            self.color_fill = GV.OBJ_RGB_FAULT
+        else:
+            self.color_fill = GV.OBJ_RGB_NO_DATA
 
     def on_press(self):
         self.scatter_obj.do_translation = (False, False)
@@ -78,13 +94,27 @@ class ObjPLCZ(Button):
     obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
+    color_fill = ListProperty([])
     angle_obj = NumericProperty(0)
     tooltip_show = False
+    status_obj = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(ObjPLCZ, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
         Clock.unschedule(self.close_tooltip)
+
+    def set_status(self, status):
+        self.status_obj = status
+
+        if self.status_obj['status'] == "":
+            self.color_fill = GV.OBJ_RGB_NO_DATA
+        elif self.status_obj['status'] == "0":
+            self.color_fill = GV.OBJ_RGB_NORMAL
+        elif self.status_obj['status'] == "1":
+            self.color_fill = GV.OBJ_RGB_FAULT
+        else:
+            self.color_fill = GV.OBJ_RGB_NO_DATA
 
     def on_press(self):
         self.scatter_obj.do_translation = (False, False)
@@ -138,16 +168,47 @@ class ObjHL(Button):
     obj_widget = ObjectProperty(None)
     obj_data = ObjectProperty(None)
     rotate_btn = ObjectProperty(None)
+    color_fill = ListProperty([])
+    color_fill_sx = ListProperty([])
+    color_fill_sx_off = NumericProperty()
+    color_fill_dx = ListProperty([])
+    color_fill_dx_off = NumericProperty()
     angle_obj = NumericProperty(0)
     tooltip_show = False
+    status_obj = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(ObjHL, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
         Clock.unschedule(self.close_tooltip)
 
+    def set_status(self, status):
+        self.status_obj = status
+        color_sx = str(self.status_obj['colorSX'])
+        color_dx = str(self.status_obj['colorDX'])
+
+        if color_sx == '000000' or not self.scatter_obj.show_RGB:
+            self.color_fill_sx_off = 0
+        else:
+            self.color_fill_sx_off = 1
+            self.color_fill_sx = get_color_from_hex('#' + color_sx)
+
+        if color_dx == '000000' or not self.scatter_obj.show_RGB:
+            self.color_fill_dx_off = 0
+        else:
+            self.color_fill_dx_off = 1
+            self.color_fill_dx = get_color_from_hex('#' + color_dx)
+
+        if self.status_obj['status'] == "":
+            self.color_fill = GV.OBJ_RGB_NO_DATA
+        elif self.status_obj['status'] == "0":
+            self.color_fill = GV.OBJ_RGB_NORMAL
+        elif self.status_obj['status'] == "1":
+            self.color_fill = GV.OBJ_RGB_FAULT
+        else:
+            self.color_fill = GV.OBJ_RGB_NO_DATA
+
     def on_press(self):
-        self.scatter_obj.do_translation = (False, False)
         if not self.tooltip_show:
             self.display_tooltip()
 
@@ -164,7 +225,6 @@ class ObjHL(Button):
             return
 
     def on_release(self):
-        self.scatter_obj.do_translation = (True, True)
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):

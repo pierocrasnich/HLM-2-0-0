@@ -29,15 +29,47 @@
     size_hint: None, None
     size: 50, 50
     color_fill: GV.OBJ_RGB_NO_DATA
+    color_fill_sx: GV.OBJ_RGB_NO_DATA
+    color_fill_sx_off: 0
+    color_fill_dx: GV.OBJ_RGB_NO_DATA
+    color_fill_dx_off: 0
     angle_obj: 0
     background_normal: ''
     background_down: ''
     background_color: 0, 0, 0, 0
     Image:
+        source: GV.DIR_OBJ + "hl_light_dx.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y + 15
+        color: self.parent.color_fill_dx
+        opacity: self.parent.color_fill_dx_off
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: self.parent.angle_obj
+                axis: 0, 0, 1
+                origin: root.center
+        canvas.after:
+            PopMatrix
+    Image:
         source: GV.DIR_OBJ + "hl.png"
         center_x: self.parent.center_x
         center_y: self.parent.center_y
         color: self.parent.color_fill
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: self.parent.angle_obj
+                axis: 0, 0, 1
+                origin: root.center
+        canvas.after:
+            PopMatrix
+    Image:
+        source: GV.DIR_OBJ + "hl_light_sx.png"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y - 20
+        color: self.parent.color_fill_sx
+        opacity: self.parent.color_fill_sx_off
         canvas.before:
             PushMatrix
             Rotate:

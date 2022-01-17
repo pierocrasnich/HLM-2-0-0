@@ -73,8 +73,8 @@ class DashScreen(Screen):
                 self.dsc_list_fault.update_list(document)
                 #  Change OBJECT status
                 for obj in self.dsc_deck_scatter.obj_widget.children:
-                    if obj.id == str(document['fullDocument']['_id']):
-                        obj.color_fill = self.set_obj_status(document['fullDocument']['status'])
+                    if obj.id == 'OBJ_' + str(document['fullDocument']['_id']):
+                        obj.set_status(document['fullDocument'])
                         break
         except PyMongoError:
             print(PyMongoError)
@@ -101,6 +101,7 @@ class DashScreen(Screen):
 class DeckStencilView(StencilView):
 
      def on_touch_down(self, touch):
+
          if not self.collide_point(touch.x, touch.y):
              return
          return super(DeckStencilView, self).on_touch_down(touch)
@@ -122,6 +123,7 @@ class DeckScatter(Scatter):
         self.delta_y = 75  # Scatter img scale 0.5 height 600 - 450 Stencil scale 0.5 view height / 2
         self.pos = (0 - self.delta_x, 0 - self.delta_y)
         self.deck_image = None
+        self.show_RGB = False
         Clock.schedule_once(self.init_obj)
 
     def init_deck(self):
@@ -151,11 +153,11 @@ class DeckScatter(Scatter):
                         obj = ObjHL()
                     obj.id = 'OBJ_' + str(obj_data['_id'])
                     obj.scatter_obj = self
-                    obj.obj_widget =  self.obj_widget
+                    obj.obj_widget = self.obj_widget
                     obj.rotate_btn = rotate_btn
                     obj.obj_data = obj_data
                     obj.angle_obj = obj_data['rotate']
-                    obj.color_fill = self.mccm_dash.set_obj_status(obj_data['status'])
+                    obj.set_status(obj_data)
                     # Set Default position
                     if obj_data['posX'] == 0 and obj_data['posY'] == 0:
                         posX = obj_data['posX'] + (self.delta_x * 2) + 10 + (50 * x_row_count)
@@ -168,7 +170,6 @@ class DeckScatter(Scatter):
                         # Save Default position
                         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(obj_data['_id'])},
                                                     {'$set': {'posX': posX, 'posY': posY}})
-
                     else:
                         posX = obj_data['posX']
                         posY = obj_data['posY']
@@ -225,9 +226,30 @@ class DeckScatter(Scatter):
             instance.color_fill = GV.RGBA_ORANGE
         self.init_obj(None)
 
+    def obj_RGB(self, instance):
+        if self.show_RGB:
+            self.show_RGB = False
+            instance.color_fill = GV.RGBA_BORDER
+        else:
+            self.show_RGB = True
+            instance.color_fill = GV.RGBA_ORANGE
+        self.init_obj(None)
+
     def default_zoom(self, instance):
         self.scale = 0.5
         self.pos = (0 - self.delta_x, 0 - self.delta_y)
+
+    def zoom_plus(self, instance):
+        if self.scale > 1.6:
+            return
+        else:
+            self.scale *= 1.05
+
+    def zoom_minus(self, instance):
+        if self.scale < .35:
+            return
+        else:
+            self.scale *= 0.95
 
 
 # Search OBJECT button
@@ -409,8 +431,9 @@ class ListFault(BoxLayout):
                     self.remove_widget(child)
                     msg_color = 'success'
                     msg_text = 'Device ' + document['fullDocument']['name'] + ' NORMAL'
+                    self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
                     break
-        self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
+
         if len(self.children) <= 11:
             self.parent.do_scroll_y = False
         else:

@@ -35,29 +35,66 @@
 #                Line:
 #                    width: 1
 #                    rectangle: self.x, self.y, self.width, self.height
+
             AnchorLayout:
                 anchor_x: 'right'
                 Button:
                     dsc_deck_scatter: _dsc_deck_scatter
-                    id: _dsc_dk_label
                     size_hint: None, None
-                    text_size: self.size
-                    padding: 10, 0
-                    size: 130, 30
-                    text: '???'
-                    color: GV.RGBA_ORANGE
-                    halign: 'left'
-                    valign: 'center'
-                    background_down: ''
+                    size: 30, 30
                     background_normal: ''
-                    background_color: (0, 0, 0, 0)
-                    on_press: self.dsc_deck_scatter.deck_select(self)
-                    canvas.before:
-                        Color:
-                            rgba: 47/255,50/255,57/255,1
-                        Rectangle:
-                            pos: self.x, self.y
-                            size: self.width, self.height
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    on_press: self.dsc_deck_scatter.zoom_plus(self)
+                    Image:
+                        source: GV.DIR_ICONS + "ZoomPlus.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                size_hint: None, None
+                size: 30, 30
+                background_normal: ''
+                background_down: ''
+                background_color: 0, 0, 0, 0
+                on_press: self.dsc_deck_scatter.zoom_minus(self)
+                Image:
+                    source: GV.DIR_ICONS + "ZoomMinus.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                size_hint: None, None
+                size: 30, 30
+                background_normal: ''
+                background_down: ''
+                background_color: 0, 0, 0, 0
+                on_press: self.dsc_deck_scatter.default_zoom(self)
+                Image:
+                    source: GV.DIR_ICONS + "DefaultZoom.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                id: _dsc_dk_label
+                size_hint: None, None
+                text_size: self.size
+                padding: 10, 0
+                size: 130, 30
+                text: '???'
+                color: GV.RGBA_ORANGE
+                halign: 'left'
+                valign: 'center'
+                background_down: ''
+                background_normal: ''
+                background_color: (0, 0, 0, 0)
+                on_press: self.dsc_deck_scatter.deck_select(self)
+                canvas.before:
+                    Color:
+                        rgba: 47/255,50/255,57/255,1
+                    Rectangle:
+                        pos: self.x, self.y
+                        size: self.width, self.height
 
             Button:
                 dsc_deck_scatter: _dsc_deck_scatter
@@ -116,59 +153,37 @@
             size_hint : None, None
             size: 1570, 30
             pos: 40, 440
-            Label:
-                size_hint: None, 1
-                width: 80
-                text: 'Database'
-                color: GV.RGBA_WHITE50
-                text_size: self.size
-                font_size: 16
-                halign: 'left'
-                valign: 'center'
-            BoxLayout:
-                color_fill: GV.RGBA_SUCCESS
-                id: _dsc_database_check
-                orientation: 'horizontal'
+            spacing: 10
+            AnchorLayout:
+                anchor_x: 'right'
+                Button:
+                    dsc_deck_scatter: _dsc_deck_scatter
+                    color_fill: GV.RGBA_BORDER
+                    size_hint: None, None
+                    size: 30, 30
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    on_press: self.dsc_deck_scatter.obj_RGB(self)
+                    Image:
+                        source: GV.DIR_ICONS + "ColorViewHL.png"
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                        color: self.parent.color_fill
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                color_fill: GV.RGBA_BORDER
                 size_hint: None, None
                 size: 30, 30
+                background_normal: ''
+                background_down: ''
+                background_color: 0, 0, 0, 0
+                on_press: self.dsc_deck_scatter.obj_modify(self)
                 Image:
-                    source: GV.DIR_ICONS + "Database.png"
+                    source: GV.DIR_ICONS + "ModifyObj.png"
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
                     color: self.parent.color_fill
-            AnchorLayout:
-                anchor_x: 'right'
-                BoxLayout:
-                    orientation: 'horizontal'
-                    size_hint: None, 1
-                    width: 70
-                    spacing: 10
-                    Button:
-                        dsc_deck_scatter: _dsc_deck_scatter
-                        size_hint: None, None
-                        size: 30, 30
-                        background_normal: ''
-                        background_down: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: self.dsc_deck_scatter.default_zoom(self)
-                        Image:
-                            source: GV.DIR_ICONS + "DefaultZoom.png"
-                            center_x: self.parent.center_x
-                            center_y: self.parent.center_y
-                    Button:
-                        dsc_deck_scatter: _dsc_deck_scatter
-                        color_fill: GV.RGBA_BORDER
-                        size_hint: None, None
-                        size: 30, 30
-                        background_normal: ''
-                        background_down: ''
-                        background_color: 0, 0, 0, 0
-                        on_press: self.dsc_deck_scatter.obj_modify(self)
-                        Image:
-                            source: GV.DIR_ICONS + "ModifyObj.png"
-                            center_x: self.parent.center_x
-                            center_y: self.parent.center_y
-                            color: self.parent.color_fill
         FaultListHeader:                        # -------------- List Header ----------------------------------------- #
             pos: 35, 380
         ScrollView:                             # -------------- List Container -------------------------------------- #
@@ -199,13 +214,37 @@
                     points:37, 40, 1610, 40
                     width: 1.5
             Label:
-                id: _dsc_fault_number
-                size_hint: 1, 1
-                text: '???'
+                size_hint: None, 1
+                width: 80
+                text: 'Database'
                 color: GV.RGBA_WHITE50
                 text_size: self.size
                 font_size: 16
                 halign: 'left'
                 valign: 'bottom'
                 padding: 0, 5
+            BoxLayout:
+                color_fill: GV.RGBA_SUCCESS
+                id: _dsc_database_check
+                orientation: 'horizontal'
+                size_hint: None, None
+                size: 30, 30
+                Image:
+                    source: GV.DIR_ICONS + "Database.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    color: self.parent.color_fill
+            AnchorLayout:
+                anchor_x: 'right'
+                Label:
+                    id: _dsc_fault_number
+                    size_hint: None, 1
+                    width: 280
+                    text: '???'
+                    color: GV.RGBA_WHITE50
+                    text_size: self.size
+                    font_size: 16
+                    halign: 'left'
+                    valign: 'bottom'
+                    padding: 0, 5
 

@@ -248,7 +248,9 @@ class CreateListButton (Button):
                                              'posX': 0,
                                              'posY': 0,
                                              'rotate': 0,
-                                             'status': ''})
+                                             'status': '',
+                                             'colorDX': '000000',
+                                             'colorSX': '000000'})
             #  Init OBJECTS - redraw objects
             self.parent.parent.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
 

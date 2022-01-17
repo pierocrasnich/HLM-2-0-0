@@ -54,6 +54,7 @@ DECK_CONF = [
 # ----- OBJECT Configuration ----------------------------------------------------------------------------------------- #
 OBJ_MODIFY = False
 OBJ_DEFAULT_DK = 0
+OBJ_RGB = False  # Default show handles color
 OBJ_RGB_NORMAL = [0, .8, 0, 1]
 OBJ_RGB_FAULT = [200/255, 220/255, 0/255, 1]
 OBJ_RGB_NO_DATA = [0, .2, 1, 1]
