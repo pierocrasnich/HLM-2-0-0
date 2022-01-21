@@ -212,6 +212,18 @@ class ObjHL(Button):
         if not self.tooltip_show:
             self.display_tooltip()
 
+    def close_tooltip(self, *args):
+        self.obj_widget.remove_widget(self.tooltip)
+        Clock.unschedule(self.close_tooltip)
+        self.tooltip_show = False
+
+    def display_tooltip(self, *args):
+        self.tooltip_show = True
+        self.obj_widget.add_widget(self.tooltip)
+        self.tooltip.pos = (self.x + 15, self.y + 55)
+        self.tooltip.text = self.obj_data['name']
+        Clock.schedule_once(self.close_tooltip, 3)
+
     def on_touch_move(self, touch):
         if GV.OBJ_MODIFY:
             if touch.grab_current is self:
@@ -240,17 +252,7 @@ class ObjHL(Button):
             self.angle_obj = 0
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'rotate': self.angle_obj}})
 
-    def close_tooltip(self, *args):
-        self.obj_widget.remove_widget(self.tooltip)
-        self.tooltip_show = False
-        Clock.unschedule(self.close_tooltip)
 
-    def display_tooltip(self, *args):
-        self.scatter_obj.remove_widget(self.tooltip)
-        self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = self.obj_data['name']
-        self.obj_widget.add_widget(self.tooltip)
-        Clock.schedule_once(self.close_tooltip, 3)
 
 
 class ObjBntRotate(Button):

@@ -397,8 +397,6 @@ class ContentScreenManager(ScreenManager):
         self.switch_to(self.mccm_dash)
 
 
-
-
 # ################################################ Main Application Start ############################################ #
 class HLMApp(App):
 

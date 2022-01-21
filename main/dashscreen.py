@@ -401,7 +401,7 @@ class ListFault(BoxLayout):
             self.parent.do_scroll_y = False
         else:
             self.parent.do_scroll_y = True
-        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))+ '0000'
+        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))
 
     def create_row(self, row_data):
         if row_data['name']:
