@@ -5,10 +5,11 @@ from kivy.properties import StringProperty, BooleanProperty, ObjectProperty, Num
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.storage.jsonstore import JsonStore
-from classi.jsoneditor import JsonEditorPopup
+from kivy.uix.modalview import ModalView
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-import utility.gvar as GV
+from threading import Thread
 from pymongo import MongoClient, errors, ASCENDING, DESCENDING
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -44,10 +45,11 @@ class SettingsScreen(Screen):
         App.get_running_app().stop()
         Window.close()
         #  Kill all Thread Object
-        signal.pthread_kill(GV.DB_STATUS.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.DB_STATUS_THREAD.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.CREATE_COLLECTION_THREAD.ident, signal.SIGKILL)
         signal.pthread_kill(GV.PLC_MASTER_STATUS.ident, signal.SIGKILL)
         signal.pthread_kill(GV.PLC_THREAD.ident, signal.SIGKILL)
-        signal.pthread_kill(GV.OBJ_CHANGE.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.OBJ_CHANGE_THREAD.ident, signal.SIGKILL)
 
 
 # ----- Settings Container ------------------------------------------------------------------------------------------- #
@@ -190,33 +192,64 @@ class PLCLabel(ButtonBehavior, Label):
 
 
 # ----- classe dei pulsanti che generano le collection all'interno del database -------------------------------------- #
+class LoaderCreateCollection(ModalView):
+    pass
+
+
 class CreateListButton (Button):
 
     def create_collection(self, cursor):
+        GV.CREATE_COLLECTION_THREAD = Thread(target=self.generate_collection(cursor))
+        GV.CREATE_COLLECTION_THREAD.setDaemon(True)
+        GV.CREATE_COLLECTION_THREAD.start()
+
+    def generate_collection(self, cursor):
+        loader = LoaderCreateCollection()
+        self.parent.add_widget(loader)
         cursor.drop()
         if cursor == GV.DB_INPUTLIST:
             collection_name = 'INPUT'
             list_input = GV.DB_INPUTCONFIG.find({})
+
             for item in list_input:
+                loader.ssc_loader_description.text = 'Generate INPUT collection'
+                loader.ssc_loader_progress_bar.max = item['registerNumber']
                 for i in range(item['registerNumber']):
+                    loader.ssc_loader_progress_bar.value += 1
+                    loader.ssc_loader_num.text = '[ ****  ' \
+                                                 + str(int(loader.ssc_loader_progress_bar.value)) \
+                                                 + ' / ' \
+                                                 + str(item['registerNumber']) \
+                                                 + '  **** ]'
+
                     GV.DB_INPUTLIST.insert_one({'register': (item['registerStart'] + i),
                                                 'bit': item['registerType'],
                                                 'system': item['name'],
                                                 'name': item['name'] + '_' + str(item['registerStart'] + i),
                                                 'description': ''})
+
         if cursor == GV.DB_OUTPUTLIST:
+            GV.DB_OBJECTLIST.drop()
             collection_name = 'OUTPUT'
+            loader.ssc_loader_description.text = 'Generate OBJECT collection'
+            loader.ssc_loader_progress_bar.max = GV.DOOR_NUMBER + 1
             for old_hl in GV.DB_OBJECTLIST.find({'system': 'HL'}):
                 GV.DB_OBJECTLIST.delete_one({'_id': ObjectId(old_hl['_id'])})
 
             for hl in range(1, GV.DOOR_NUMBER + 1, 1):
+                loader.ssc_loader_progress_bar.value += 1
+                loader.ssc_loader_num.text = '[ ****  ' \
+                                             + str(int(loader.ssc_loader_progress_bar.value)) \
+                                             + ' / ' \
+                                             + str(GV.DOOR_NUMBER) \
+                                             + '  **** ]'
+
                 GV.DB_OUTPUTLIST.insert_one({'system': 'HL',
                                              'address': str(hl).rjust(4, '0'),
                                              'plc': '',
                                              'port': '',
                                              'name': 'HL' + str(hl).rjust(4, '0'),
                                              'description': ''})
-            self.create_collection(GV.DB_OBJECTLIST)
 
         if cursor == GV.DB_CONNECTIONLIST:
             collection_name = 'CONNECTIONS'
@@ -224,6 +257,8 @@ class CreateListButton (Button):
 
         if cursor == GV.DB_OBJECTLIST:
             collection_name = 'OBJECT'
+            loader.ssc_loader_description.text = 'Generate OBJECT collection'
+            loader.ssc_loader_progress_bar.max = GV.DOOR_NUMBER - 1
             # Create PLC MASTER object
             plc_master_obj = JsonStore(GV.FILE_SETTINGS)
             plc_master_address = plc_master_obj['PLC_master']['plc_master']
@@ -249,6 +284,12 @@ class CreateListButton (Button):
             # Create Handles object
             hl_list = GV.DB_OUTPUTLIST.find({})
             for hl in hl_list:
+                loader.ssc_loader_progress_bar.value += 1
+                loader.ssc_loader_num.text = '[ ****  ' \
+                                             + str(int(loader.ssc_loader_progress_bar.value)) \
+                                             + ' / ' \
+                                             + str(GV.DOOR_NUMBER) \
+                                             + '  **** ]'
                 GV.DB_OBJECTLIST.insert_one({'system': 'HL',
                                              'address': hl['address'],
                                              'name': hl['name'],
@@ -265,6 +306,7 @@ class CreateListButton (Button):
         msg_color = 'success'
         msg_text = 'Reset ' + collection_name + ' collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.parent.remove_widget(loader)
 
 
 # ----- classe del layout per pallini dello stato delle collection --------------------------------------------------- #
@@ -501,6 +543,7 @@ class EditSettingsBtn(Button):
         self.ss_container.update_plc_zona()
 
     def edit_handles(self):
+
         if self.ssc_handles_num_ti.disabled:
             self.ssc_handles_num_ti.disabled = False
             self.ssc_handles_num_ti.opacity = 1
@@ -509,18 +552,30 @@ class EditSettingsBtn(Button):
             self.ssc_handles_num_ti.disabled = True
             self.ssc_handles_num_ti.opacity = 0
             self.ssc_handles_num.opacity = 1
-            self.update_door()
+            GV.CREATE_COLLECTION_THREAD = Thread(target=self.update_door)
+            GV.CREATE_COLLECTION_THREAD.setDaemon(True)
+            GV.CREATE_COLLECTION_THREAD.start()
 
     def update_door(self):
+        loader = LoaderCreateCollection()
+
+        self.parent.add_widget(loader)
+
         if int(self.ssc_handles_num_ti.text) == 0:
             self.ssc_handles_num_ti.text = str(GV.DOOR_NUMBER)
+            self.parent.remove_widget(loader)
             return
         elif int(self.ssc_handles_num_ti.text) == GV.DOOR_NUMBER:
+            self.parent.remove_widget(loader)
             return
         elif int(self.ssc_handles_num_ti.text) > 0 and int(self.ssc_handles_num_ti.text) > GV.DOOR_NUMBER:
+            loader.ssc_loader_description.text = 'Add Handler'
             document_add = int(self.ssc_handles_num_ti.text) - GV.DOOR_NUMBER
-            print('add', document_add)
+            loader.ssc_loader_progress_bar.max = document_add
+            # print('add', document_add)
             for hl in range(GV.DOOR_NUMBER + 1, GV.DOOR_NUMBER + 1 + document_add, 1):
+                loader.ssc_loader_progress_bar.value += 1
+                loader.ssc_loader_num.text = '[ ****  ' + str(int(loader.ssc_loader_progress_bar.value)) + ' / ' + str(document_add) + '  **** ]'
                 GV.DB_OUTPUTLIST.insert_one({'system': 'HL',
                                              'address': str(hl).rjust(4, '0'),
                                              'plc': '',
@@ -529,9 +584,13 @@ class EditSettingsBtn(Button):
                                              'description': ''})
                 self.mccm_settings.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
         elif int(self.ssc_handles_num_ti.text) < GV.DOOR_NUMBER:
+            loader.ssc_loader_description.text = 'Remove Handler'
             document_del = GV.DOOR_NUMBER - int(self.ssc_handles_num_ti.text)
+            loader.ssc_loader_progress_bar.max = document_del
             result = GV.DB_OUTPUTLIST.find({}).sort('_id', DESCENDING).limit(document_del)
             for count, item in enumerate(list(result)):
+                loader.ssc_loader_progress_bar.value += 1
+                loader.ssc_loader_num.text = '[ ****  ' + str(int(loader.ssc_loader_progress_bar.value)) + '/' + str(document_del) + '  **** ]'
                 # Remove Output from "outputList"
                 GV.DB_OUTPUTLIST.delete_one({'_id': item.get("_id")})
                 self.mccm_settings.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
@@ -552,6 +611,7 @@ class EditSettingsBtn(Button):
         msg_color = 'success'
         msg_text = 'Update HANDLES collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.parent.remove_widget(loader)
 
     def go_to_modulescreen(self):
         self.mccm_settings.mccm.switch_to(self.mccm_settings.mccm.mccm_module)

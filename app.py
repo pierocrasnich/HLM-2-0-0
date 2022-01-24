@@ -95,9 +95,9 @@ def init_db():
     GV.DB_NAME = json_store['DBName']
     GV.DB_CHECK_TIME = json_store['DBCheckTime']
     GV.DB_INPUTCONFIG = json_store['DBCollection']['inputConfig']
-    GV.DB_STATUS = Thread(target=db_status)
-    GV.DB_STATUS.setDaemon(True)
-    GV.DB_STATUS.start()
+    GV.DB_STATUS_THREAD = Thread(target=db_status)
+    GV.DB_STATUS_THREAD.setDaemon(True)
+    GV.DB_STATUS_THREAD.start()
 
 
 def db_status():

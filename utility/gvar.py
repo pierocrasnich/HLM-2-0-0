@@ -20,7 +20,6 @@ DB_PORT = 0
 DB_NAME = ''
 DB_CHECK_TIME = 0
 DB = None
-
 DB_INPUTLIST = None
 DB_INPUTCONFIG = None
 DB_OUTPUTLIST = None
@@ -42,8 +41,7 @@ DOOR_NUMBER = 0
 PLC_MASTER = ''
 PLC_ALIVE = 0
 PLC_MASTER_ONLINE = False
-PLC_MASTER_THREAD = None
-PLC_THREAD = None
+PLC_MASTER_STATUS = None
 PLC_ONLINE = []
 # ----- Deck Configuration ------------------------------------------------------------------------------------------- #
 # file dimension
@@ -98,10 +96,11 @@ RGBA_MOD_NORM = []
 RGBA_MOD_DOWN = []
 RGBA_MOD_BORDER = []
 # ----- Thread Object ------------------------------------------------------------------------------------------------ #
-DB_STATUS = None
-PLC_MASTER_STATUS = None
+DB_STATUS_THREAD = None
+CREATE_COLLECTION_THREAD = None
+PLC_MASTER_THREAD = None
 PLC_THREAD = None
-OBJ_CHANGE = None
+OBJ_CHANGE_THREAD = None
 # ----- Module List -------------------------------------------------------------------------------------------------- #
 MODULE = []
 # ----- Global Var fot TCP Server ------------------------------------------------------------------------------------ #
