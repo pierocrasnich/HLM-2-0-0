@@ -17,7 +17,6 @@ from datetime import datetime
 from kivy.uix.screenmanager import Screen
 from kivy.lang.builder import Builder
 from kivy.uix.behaviors import FocusBehavior
-from utility.TCPServer import create_server
 from utility.udpServer import create_server_udp
 import threading
 

@@ -1,18 +1,11 @@
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
 from kivy.uix.button import Button
-from kivy.graphics import Line, Rectangle, Ellipse, Color, Triangle, Rotate, Point, Bezier, Quad, Mesh
-from kivy.properties import StringProperty, ListProperty, ObjectProperty, BooleanProperty, NumericProperty
-from kivy.uix.behaviors import DragBehavior
-from kivy.uix.togglebutton import ToggleButton
+from kivy.properties import  ListProperty, ObjectProperty,  NumericProperty
 from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.utils import get_color_from_hex
 
 from bson import ObjectId
-
-
 import utility.gvar as GV
 
 
@@ -65,7 +58,7 @@ class ObjPLCM(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
-        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(instance.obj_data['_id'])})
+        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})
         angle_set = cursor['rotate']
         if angle_set == 0:
             self.angle_obj = 90
@@ -138,7 +131,7 @@ class ObjPLCZ(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
-        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(instance.obj_data['_id'])})
+        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})
         angle_set = cursor['rotate']
         if angle_set == 0:
             self.angle_obj = 90
@@ -181,19 +174,20 @@ class ObjHL(Button):
         super(ObjHL, self).__init__(**kwargs)
         self.tooltip = ObjTooltip()
         Clock.unschedule(self.close_tooltip)
+        self.show_rgb()
 
     def set_status(self, status):
         self.status_obj = status
         color_sx = str(self.status_obj['colorSX'])
         color_dx = str(self.status_obj['colorDX'])
 
-        if color_sx == '000000' or not self.scatter_obj.show_RGB:
+        if color_sx == '000000' or not GV.OBJ_RGB:
             self.color_fill_sx_off = 0
         else:
             self.color_fill_sx_off = 1
             self.color_fill_sx = get_color_from_hex('#' + color_sx)
 
-        if color_dx == '000000' or not self.scatter_obj.show_RGB:
+        if color_dx == '000000' or not GV.OBJ_RGB:
             self.color_fill_dx_off = 0
         else:
             self.color_fill_dx_off = 1
@@ -207,6 +201,14 @@ class ObjHL(Button):
             self.color_fill = GV.OBJ_RGB_FAULT
         else:
             self.color_fill = GV.OBJ_RGB_NO_DATA
+
+    def show_rgb(self):
+        if GV.OBJ_RGB:
+            self.color_fill_dx_off = 1
+            self.color_fill_sx_off = 1
+        else:
+            self.color_fill_dx_off = 0
+            self.color_fill_sx_off = 0
 
     def on_press(self):
         if not self.tooltip_show:
@@ -240,7 +242,7 @@ class ObjHL(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
-        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(instance.obj_data['_id'])})
+        cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})
         angle_set = cursor['rotate']
         if angle_set == 0:
             self.angle_obj = 90
@@ -253,13 +255,14 @@ class ObjHL(Button):
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'rotate': self.angle_obj}})
 
 
-
-
 class ObjBntRotate(Button):
     obj = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super(ObjBntRotate, self).__init__(**kwargs)
+
+    def rotate_obj(self):
+        self.obj.rotate_obj(self)
 
 
 class ObjTooltip(Label):

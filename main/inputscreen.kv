@@ -2,17 +2,19 @@
     id: _mccm_input
     name: 'Input List'
     is_container: _is_container
+    isc_search: _isc_search
     InputContainer:
         id: _is_container
         mccm_input: _mccm_input
         isc_list_table: _isc_list_table
         isc_edit_box: _isc_edit_box
         iscc_system_spn: _iscc_system_spn
+        isc_list_pageCount: _isc_list_pageCount
         SelectInputContainer:                # ----------- Input System Select -------------------------------------------- #
             id: _isc_select_system_container
             isc_list_table: _isc_list_table
             iscc_system_spn: _iscc_system_spn
-            pos: 1240, 800
+            pos: 950, 820
             size_hint: None, None
             size: 200, 50
             SelectSystemSpinner:
@@ -27,7 +29,7 @@
             isceb_plc: _isceb_plc
             isceb_name: _isceb_name
             isceb_descr: _isceb_descr
-            pos: 1240, 150
+            pos: 1240, 300
             size_hint: None, None
             size: 330, 500
             disabled: True
@@ -39,7 +41,13 @@
                 bold: True
                 pos: 10, 450
                 size_hint: None, None
-                size: self.texture_size
+                size: 330, 50
+                canvas.before:
+                    Color:
+                        rgba: (47/255, 50/255, 57/255, 1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
             Label:                          # -------------- Oggetto selezionato ----------------------------------------- #
                 id: _isceb_obj_id
                 text: '???'
@@ -129,7 +137,7 @@
                 text: ''
                 size_hint: None, None
                 pos: 10, 50
-                size: 310, 90
+                size: 330, 90
                 cursor_color: 1, 1, 1, 1
                 foreground_color: 1, 1, 1, 1
                 background_normal: ''
@@ -139,7 +147,7 @@
                 text: 'Save'
                 size_hint: None, None
                 size: 100, 50
-                pos: 100,  -40
+                pos: 120,  -40
                 color: 102/255, 179/255, 46/255, 1
                 on_press: self.is_container.update_name()
                 background_normal: ''
@@ -149,7 +157,7 @@
                 text: 'Cancel'
                 size_hint: None, None
                 size: 100, 50
-                pos: 220, -40
+                pos: 240, -40
                 color: 229/255, 36/255, 33/255, 1
                 on_press: self.is_container.cancel_update()
                 background_normal: ''
@@ -162,23 +170,32 @@
             font_size: 50
             text_size: self.size
         Label:
-            text: 'You can setting the Name and Description of Input Registers by ROW selection and modify in the EDITOR AREA. '
+            text: 'You can setting the Name and Description of Input Registers by ROW \nselection and modify in the EDITOR AREA. '
             color: 255/255, 255/255, 255/255, .5
-            pos: 50, 900
-            size: 1650, 50
+            pos: 50, 890
+            size: 1650, 60
             size_hint: None, None
             font_size: 21
             text_size: self.size
+        BtnSearchInput:
+            is_container: _is_container
+            isc_list_table: _isc_list_table
+            id: _isc_search
+            pos: 50, 810
+            multiline: False
         InputListHeader:                                 # -------------- List Header ----------------------------------------- #
             id: _isc_list_header
+            pos: 50, 750
         ScrollView:                                 # -------------- List Container -------------------------------------- #
-            pos: 50, 200
+            pos: 50, 150
             size_hint: None, None
             size: 1100, 600
-            bar_width: 10
-            bar_color: GV.RGBA_ORANGE
-            bar_inactive_color: 240/255, 149/255, 61/255, .1
-            scroll_type: ['bars']
+            do_scroll_x: False
+            do_scroll_y: False
+#            bar_width: 10
+#            bar_color: GV.RGBA_ORANGE
+#            bar_inactive_color: 240/255, 149/255, 61/255, .1
+#            scroll_type: ['bars']
             canvas:
                 Color:
                     rgba: (56/255, 60/255, 69/255, 1)
@@ -188,7 +205,57 @@
             ListInput:                              # ----------------- List Body ---------------------------------------- #
                 id: _isc_list_table
                 isc_edit_box: _isc_edit_box
+                isc_list_pageCount: _isc_list_pageCount
                 cols: 1
                 size_hint: 1, None
                 height: self.minimum_height
+        BoxLayout:
+            orientation: 'horizontal'
+            size: 1100, 50
+            size_hint: None, None
+            pos: 50, 80
+            canvas.after:
+                Color:
+                    rgba: 47/255, 50/255, 57/255, 1
+                Line:
+                    points: self.x, self.y + self.height, self.x + self.width, self.y + self.height
+                    width: 1.5
+            AnchorLayout:
+                anchor_x: 'right'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, 1
+                    width: 260
+                    Button:
+                        isc_list_table: _isc_list_table
+                        size_hint: None, None
+                        size: 30, 30
+                        background_down: ''
+                        background_normal: ''
+                        on_press: self.isc_list_table.get_list_prev()
+                        Image:
+                            source: GV.DIR_ICONS + "ListPrev.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Label:
+                        id: _isc_list_pageCount
+                        text:'???'
+                        color: 255/255, 255/255, 255/255, .5
+                        size: 200, 30
+                        size_hint: None, None
+                        font_size: 16
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                    Button:
+                        isc_list_table: _isc_list_table
+                        size_hint: None, None
+                        size: 30, 30
+                        background_down: ''
+                        background_normal: ''
+                        on_press: self.isc_list_table.get_list_next()
+                        Image:
+                            source: GV.DIR_ICONS + "ListNext.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
 

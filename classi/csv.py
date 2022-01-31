@@ -152,6 +152,41 @@ class ExportPdfButton(Button):
         self.usb_detect.find_usb(self.pdf_file_name, notification, logger)
 
 
+class ExportObjectButton(Button):
+    exportList = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(ExportObjectButton, self).__init__(**kwargs)
+        self.usb_detect = UsbFind()
+        self.output_file_name = 'ObjectList'
+
+    def export_csv(self):
+        self.parent.add_widget(self.usb_detect)
+        result = GV.DB_OBJECTLIST.find({})
+        self.output_file_name = datetime.now().strftime("%Y%m%d_%H%M") + '_' + self.exportList + 'List.csv'
+        with open(GV.DIR_BACKUP + self.output_file_name, 'w') as export_file:
+            # Object List export CSV ####################
+            if self.exportList == 'object':
+                fields = ['system', 'address', 'name', 'deck', 'posX', 'posY', 'rotate']
+                file = csv.DictWriter(export_file, fieldnames=fields)
+                file.writeheader()
+                for answers_module in result:
+                    file.writerow({'system': answers_module['system'],
+                                   'address': answers_module['address'],
+                                   'name': answers_module['name'],
+                                   'deck': answers_module['deck'],
+                                   'posX': answers_module['posX'],
+                                   'posY': answers_module['posY'],
+                                   'rotate': answers_module['rotate']
+                                   })
+        self.save_file()
+
+    def save_file(self):
+        notification = self.parent.parent.mccm.mm_notification
+        logger = self.parent.parent.mccm.mm_logger
+        self.usb_detect.find_usb(self.output_file_name, notification, logger)
+
+
 class ExportConnectButton(Button):
     exportList = StringProperty()
 
@@ -385,11 +420,26 @@ class ImportConnectButton(Button):
         file_chooser.open()
 
 
+class ImportObjectButton(Button):
+    importList = StringProperty()
+
+    def import_csv(self):
+        file_chooser = ImportDialog(self,
+                                    importList=self.importList,
+                                    notification=self.parent.parent.mccm.mm_notification,
+                                    logger=self.parent.parent.mccm.mm_logger,
+                                    # table_object=self.obsc_list_table,
+                                    )
+        file_chooser.table_object = self.obsc_list_table
+        file_chooser.open()
+
+
 class ImportDialog(ModalView):
     importList = StringProperty()
     logger = ObjectProperty()
     notification = ObjectProperty()
     folder_path = StringProperty()
+    table_object = ObjectProperty
 
     def __init__(self, instance, **kwargs):
         super(ImportDialog, self).__init__(**kwargs)
@@ -406,6 +456,8 @@ class ImportDialog(ModalView):
             self.collection_target = GV.DB_INPUTLIST
         elif self.importList == 'output':
             self.collection_target = GV.DB_OUTPUTLIST
+        elif self.importList == 'object':
+            self.collection_target = GV.DB_OBJECTLIST
         try:
             f = open(file, 'r')
             file_reader = csv.DictReader(f)
@@ -426,9 +478,10 @@ class ImportDialog(ModalView):
             os.system('rm ' + GV.DIR_BACKUP + str(name_file))
 
     def populate_DB(self,  file_reader):
-        self.collection_target.drop()
+
         headers = file_reader.fieldnames
         if self.importList == 'output':
+            self.collection_target.drop()
             GV.DB_OBJECTLIST.delete_many({'system': 'HL'})
             for each in file_reader:
                 row = {}
@@ -443,7 +496,15 @@ class ImportDialog(ModalView):
                                              'posY': 0,
                                              'rotate': 0,
                                              'status': ''})
+        elif self.importList == 'object':
+            for each in file_reader:
+                self.collection_target.update_one({'address': each['address']},
+                                                  {'$set': {'deck':  int(each['deck'])}})
+            self.table_object.draw_table()
+
+
         else:
+            self.collection_target.drop()
             for each in file_reader:
                 row = {}
                 for field in headers:

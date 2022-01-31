@@ -8,6 +8,16 @@
         center_x: self.parent.center_x
         center_y: self.parent.center_y
 
+<ExportObjectButton>:
+    size_hint: None, None
+    size: 150, 50
+    opacity: 1
+    text: 'Export CSV'
+    font_size: 16
+    color: GV.RGBA_INFO
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1)
 
 <ExportConnectButton>:
     size: 50, 28
@@ -22,6 +32,18 @@
         Line:
             width: 1
             rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
+
+
+<ImportObjectButton>:
+    size_hint: None, None
+    size: 150, 50
+    opacity: 1
+    text: 'Import CSV'
+    font_size: 16
+    color: GV.RGBA_INFO
+    background_down: ''
+    background_normal: ''
+    background_color: (47/255, 50/255, 57/255, 1)
 
 <ImportConnectButton>:
     size: 100, 28

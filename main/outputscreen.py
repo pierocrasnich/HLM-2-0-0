@@ -6,6 +6,8 @@ from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.clock import Clock
+
 from bson import ObjectId
 import utility.gvar as GV
 from classi.csv import ExportConnectButton, ImportConnectButton, ImportDialog
@@ -23,6 +25,7 @@ class OutputScreen(Screen):
 
     def on_pre_enter(self, *args):
         self.osc_list_table.get_list()
+        Clock.schedule_once(self.osc_search.init)
 
     def on_pre_leave(self, *args):
         self.osc_list_table.clear_list()
@@ -113,8 +116,10 @@ class ListOutput(GridLayout):
 
     def __init__(self, **kwargs):
         super(ListOutput, self).__init__(**kwargs)
-        self.list_output = None
-        self.list_plcZone = []
+        self.list_output = []
+        self.list_page_row = 20
+        self.list_page_min = 0
+        self.list_page_max = self.list_page_min + self.list_page_row
         self.layout = None
 
     def update_list(self):
@@ -124,23 +129,60 @@ class ListOutput(GridLayout):
     def clear_list(self):
         self.clear_widgets()
 
+    def get_list_next(self):
+        if self.list_page_max >= len(self.list_output):
+            return
+        else:
+            self.list_page_min += self.list_page_row
+            self.list_page_max += self.list_page_row
+            self.draw_table()
+
+    def get_list_prev(self):
+        if self.list_page_min - self.list_page_row <= 0:
+            self.list_page_min = 0
+            self.list_page_max = self.list_page_row
+            self.draw_table()
+        else:
+            self.list_page_min -= self.list_page_row
+            self.list_page_max -= self.list_page_row
+            self.draw_table()
+
     def get_list(self):
         errors = 0
-        hl_count = 1
+        self.list_output = []
         for hl in GV.DB_OUTPUTLIST.find({}).sort('address', ASCENDING):
             # errors compile check
             if hl['address'] == '0000':  # address is empty or already present
                 errors += 1
+            if hl['plc'] == '':  # PLC empty
+                errors += 1
+            if hl['port'] == '' or hl['port'] == '0':  # port com empty
+                errors += 1
+            self.list_output.append(hl)
+
+        self.osc_list_errors.text = 'Number of Errors: ' + str(errors)
+        self.draw_table()
+
+    def draw_table(self):
+        self.clear_list()
+        if self.list_page_min + self.list_page_row > len(self.list_output):
+            page_max = str(len(self.list_output))
+        else:
+            page_max = str(self.list_page_max)
+        page_min = str(self.list_page_min)
+        page_tot = str(len(self.list_output))
+        self.osc_list_pageCount.text = 'from ' + page_min + ' to ' + page_max + ' of ' + page_tot
+        hl_count = self.list_page_min + 1
+        for hl in self.list_output[self.list_page_min:self.list_page_max]:
+            if hl['address'] == '0000':  # address is empty or already present
                 add_c = GV.RGBA_ERROR
             else:
                 add_c = 1, 1, 1, 0
             if hl['plc'] == '':  # PLC empty
-                errors += 1
                 plc_c = GV.RGBA_ERROR
             else:
                 plc_c = 1, 1, 1, 0
             if hl['port'] == '' or hl['port'] == '0':  # port com empty
-                errors += 1
                 port_c = GV.RGBA_ERROR
             else:
                 port_c = 1, 1, 1, 0
@@ -161,7 +203,6 @@ class ListOutput(GridLayout):
             self.layout.add_widget(LabelOutput(text=str(hl['description']), size=(400, 30), obj=hl))
             self.add_widget(self.layout)
             hl_count += 1
-        self.osc_list_errors.text = 'Number of Errors: ' + str(errors)
 
 
 # ----- Classe Label Output ------------------------------------------------------------------------------------------ #
@@ -222,3 +263,66 @@ class OutputPLCSpinner(Spinner):
 
 class OutputPLCSpinnerOption(SpinnerOption):
     pass
+
+
+# Search OBJECT button
+class SearchSelectMenuOutput(GridLayout):
+    pass
+
+
+class SearchSelectBtnOutput(Button):
+    container = ObjectProperty(None)
+    search_btn = ObjectProperty(None)
+
+    def updateTextInput(self, instance):
+        instance.search_btn.osc_search_text.text = instance.text
+        self.container.clear_widgets()
+
+
+class BtnSearchOutput(GridLayout):
+
+    def __init__(self, **kwargs):
+        super(BtnSearchOutput, self).__init__(**kwargs)
+        self.list_data = []
+        self.new_list_search = []
+        self.search_menu = SearchSelectMenuOutput()
+        self.search_menu.pos = (self.x, self.y - 270)
+
+    def init(self, instance):
+        for dataRow in self.osc_list_table.list_output:
+            self.list_data.append(dataRow)
+        self.new_list_search = list(map(lambda x: x['name'], self.list_data))
+
+    def search(self):
+        if self.osc_search_text.text != '':
+            index_element = self.new_list_search.index(self.osc_search_text.text)
+            self.osc_list_table.list_page_min = index_element
+            self.osc_list_table.list_page_max = self.osc_list_table.list_page_min + self.osc_list_table.list_page_row
+            self.osc_list_table.draw_table()
+            self.osc_search_text.text = ''
+        else:
+            return
+
+    def searchInput(self):
+        self.search_menu.osc_search_list.clear_widgets()
+        self.os_container.remove_widget(self.search_menu)
+        text_search = self.osc_search_text.text
+        name_result = []
+
+        for word in self.new_list_search:
+            name_find = word.find(text_search)
+            if name_find == 0:
+                name_result.append(word)
+        name_result = list(dict.fromkeys(name_result))
+
+        if len(name_result) != 0 and text_search != '':
+            for name_value in name_result:
+                search_select = SearchSelectBtnOutput()
+                search_select.text = name_value
+                search_select.size = 250, 30
+                search_select.search_btn = self
+                search_select.container = self.search_menu.osc_search_list
+                self.search_menu.osc_search_list.add_widget(search_select)
+
+        self.search_menu.pos = (self.x + 10, self.y - 290)
+        self.os_container.add_widget(self.search_menu)

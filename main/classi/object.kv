@@ -1,3 +1,4 @@
+
 # ----- Style Header list -------------------------------------------------------------------------------------------- #
 <ListHeaderObject@GridLayout>:
     cols: 8
@@ -120,7 +121,13 @@
     obsc_row_rotate: _obsc_row_rotate
     orientation: 'horizontal'
     size_hint: 1, None
-    height: 40
+    height: 30
+    canvas:
+        Color:
+            rgba: ( 83/255, 88/255, 99/255, 1)
+        Rectangle:
+            pos: self.x + 1, self.y + 1
+            size: self.width - 2, self.height - 1
     Label:
         id: _obsc_row_count
         size_hint: None, 1
@@ -131,12 +138,6 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
     Label:
         id: _obsc_row_system
         size_hint: None, 1
@@ -147,12 +148,12 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
     Label:
         id: _obsc_row_name
         size_hint: None, 1
@@ -163,12 +164,12 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
     Label:
         id: _obsc_row_address
         size_hint: None, 1
@@ -179,12 +180,12 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
     Button:
         id: _obsc_row_deck
         size_hint: None, 1
@@ -200,10 +201,10 @@
         on_parent:  _obsc_row_deck_dropdown.dismiss()
         canvas.before:
             Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
+                rgba: ( 56/255, 60/255, 69/255, 1)
             Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+                pos: self.x + 1, self.y + 2
+                size: self.width - 2, self.height - 3
     DropDown:
         obsc_row_deck: _obsc_row_deck
         id: _obsc_row_deck_dropdown
@@ -224,12 +225,12 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
     Label:
         id: _obsc_row_posy
         size_hint: None, 1
@@ -240,12 +241,12 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
     Label:
         id: _obsc_row_rotate
         size_hint: None, 1
@@ -256,11 +257,11 @@
         halign: 'center'
         valign: 'middle'
         padding: 0, 0
-        canvas.before:
-            Color:
-                rgba: ( 83/255, 88/255, 99/255, 1)
-            Rectangle:
-                pos: self.x + 4, self.y + 4
-                size: self.width - 8, self.height - 8
+#        canvas.before:
+#            Color:
+#                rgba: ( 83/255, 88/255, 99/255, 1)
+#            Rectangle:
+#                pos: self.x + 4, self.y + 4
+#                size: self.width - 8, self.height - 8
 
 

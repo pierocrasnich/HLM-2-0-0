@@ -10,6 +10,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from threading import Thread
+from multiprocessing import Process
 from pymongo import MongoClient, errors, ASCENDING, DESCENDING
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -197,116 +198,162 @@ class LoaderCreateCollection(ModalView):
 
 
 class CreateListButton (Button):
+    cursor = ObjectProperty()
+    loader = ObjectProperty()
 
     def create_collection(self, cursor):
-        GV.CREATE_COLLECTION_THREAD = Thread(target=self.generate_collection(cursor))
-        GV.CREATE_COLLECTION_THREAD.setDaemon(True)
-        GV.CREATE_COLLECTION_THREAD.start()
+        self.cursor = cursor
+        if cursor == GV.DB_INPUTLIST:
+            GV.CREATE_COLLECTION_THREAD = Thread(target=self.generate_collection_input(), daemon=True)
+            GV.CREATE_COLLECTION_THREAD.start()
+            GV.CREATE_COLLECTION_THREAD.join()
+        elif cursor == GV.DB_OUTPUTLIST:
+            GV.CREATE_COLLECTION_THREAD = Thread(target=self.generate_collection_output(), daemon=True)
+            GV.CREATE_COLLECTION_THREAD.start()
+            GV.CREATE_COLLECTION_THREAD.join()
+        elif cursor == GV.DB_CONNECTIONLIST:
+            GV.CREATE_COLLECTION_THREAD = Thread(target=self.generate_collection_connection(), daemon=True)
+            GV.CREATE_COLLECTION_THREAD.start()
+            GV.CREATE_COLLECTION_THREAD.join()
+        elif cursor == GV.DB_OBJECTLIST:
+            self.loader = ModalView(size_hint=(None, None), size=(400, 100), pos_hint={'center_x': .5, 'center_y': .35})
+            self.loader.add_widget(Label(text='Generate Object ...'))
+            Clock.schedule_once(self.generate_collection_object, .5)
+            self.parent.add_widget(self.loader)
 
-    def generate_collection(self, cursor):
+    def generate_collection_input(self):
         loader = LoaderCreateCollection()
         self.parent.add_widget(loader)
-        cursor.drop()
-        if cursor == GV.DB_INPUTLIST:
-            collection_name = 'INPUT'
-            list_input = GV.DB_INPUTCONFIG.find({})
-
-            for item in list_input:
-                loader.ssc_loader_description.text = 'Generate INPUT collection'
-                loader.ssc_loader_progress_bar.max = item['registerNumber']
-                for i in range(item['registerNumber']):
-                    loader.ssc_loader_progress_bar.value += 1
-                    loader.ssc_loader_num.text = '[ ****  ' \
-                                                 + str(int(loader.ssc_loader_progress_bar.value)) \
-                                                 + ' / ' \
-                                                 + str(item['registerNumber']) \
-                                                 + '  **** ]'
-
-                    GV.DB_INPUTLIST.insert_one({'register': (item['registerStart'] + i),
-                                                'bit': item['registerType'],
-                                                'system': item['name'],
-                                                'name': item['name'] + '_' + str(item['registerStart'] + i),
-                                                'description': ''})
-
-        if cursor == GV.DB_OUTPUTLIST:
-            GV.DB_OBJECTLIST.drop()
-            collection_name = 'OUTPUT'
-            loader.ssc_loader_description.text = 'Generate OBJECT collection'
-            loader.ssc_loader_progress_bar.max = GV.DOOR_NUMBER + 1
-            for old_hl in GV.DB_OBJECTLIST.find({'system': 'HL'}):
-                GV.DB_OBJECTLIST.delete_one({'_id': ObjectId(old_hl['_id'])})
-
-            for hl in range(1, GV.DOOR_NUMBER + 1, 1):
+        self.cursor.drop()
+        list_input = GV.DB_INPUTCONFIG.find({})
+        for item in list_input:
+            loader.ssc_loader_description.text = 'Generate INPUT collection'
+            loader.ssc_loader_progress_bar.max = item['registerNumber']
+            for i in range(item['registerNumber']):
                 loader.ssc_loader_progress_bar.value += 1
                 loader.ssc_loader_num.text = '[ ****  ' \
                                              + str(int(loader.ssc_loader_progress_bar.value)) \
                                              + ' / ' \
-                                             + str(GV.DOOR_NUMBER) \
+                                             + str(item['registerNumber']) \
                                              + '  **** ]'
 
-                GV.DB_OUTPUTLIST.insert_one({'system': 'HL',
-                                             'address': str(hl).rjust(4, '0'),
-                                             'plc': '',
-                                             'port': '',
-                                             'name': 'HL' + str(hl).rjust(4, '0'),
-                                             'description': ''})
-
-        if cursor == GV.DB_CONNECTIONLIST:
-            collection_name = 'CONNECTIONS'
-            GV.DB['connectionList']
-
-        if cursor == GV.DB_OBJECTLIST:
-            collection_name = 'OBJECT'
-            loader.ssc_loader_description.text = 'Generate OBJECT collection'
-            loader.ssc_loader_progress_bar.max = GV.DOOR_NUMBER - 1
-            # Create PLC MASTER object
-            plc_master_obj = JsonStore(GV.FILE_SETTINGS)
-            plc_master_address = plc_master_obj['PLC_master']['plc_master']
-            GV.DB_OBJECTLIST.insert_one({'system': 'PLCM',
-                                         'address': str(plc_master_address),
-                                         'name': 'PLC Master',
-                                         'deck': GV.OBJ_DEFAULT_DK,
-                                         'posX': 0,
-                                         'posY': 0,
-                                         'rotate': 0,
-                                         'status': ''})
-            # Create PLC ZONE object
-            plc_zone_obj = list(GV.DB_PLCZONECONFIG.find({}))
-            for plcZone in plc_zone_obj:
-                GV.DB_OBJECTLIST.insert_one({'system': 'PLCZ',
-                                             'address': str(plc_master_address[:-3]) + str(plcZone['address']),
-                                             'name': plcZone['name'],
-                                             'deck': GV.OBJ_DEFAULT_DK,
-                                             'posX': 0,
-                                             'posY': 0,
-                                             'rotate': 0,
-                                             'status': ''})
-            # Create Handles object
-            hl_list = GV.DB_OUTPUTLIST.find({})
-            for hl in hl_list:
-                loader.ssc_loader_progress_bar.value += 1
-                loader.ssc_loader_num.text = '[ ****  ' \
-                                             + str(int(loader.ssc_loader_progress_bar.value)) \
-                                             + ' / ' \
-                                             + str(GV.DOOR_NUMBER) \
-                                             + '  **** ]'
-                GV.DB_OBJECTLIST.insert_one({'system': 'HL',
-                                             'address': hl['address'],
-                                             'name': hl['name'],
-                                             'deck': GV.OBJ_DEFAULT_DK,
-                                             'posX': 0,
-                                             'posY': 0,
-                                             'rotate': 0,
-                                             'status': '',
-                                             'colorDX': '000000',
-                                             'colorSX': '000000'})
-            #  Init OBJECTS - redraw objects
-            self.parent.parent.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
-
+                GV.DB_INPUTLIST.insert_one({'register': (item['registerStart'] + i),
+                                            'bit': item['registerType'],
+                                            'system': item['name'],
+                                            'name': item['name'] + '_' + str(item['registerStart'] + i),
+                                            'description': ''})
         msg_color = 'success'
-        msg_text = 'Reset ' + collection_name + ' collection'
+        msg_text = 'Reset INPUT collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
         self.parent.remove_widget(loader)
+
+    def generate_collection_output(self):
+        loader = LoaderCreateCollection()
+        self.parent.add_widget(loader)
+        loader.ssc_loader_description.text = 'Generate INPUT collection'
+        loader.ssc_loader_progress_bar.max = GV.DOOR_NUMBER + 1
+        self.cursor.drop()
+        # Clear old OBJECT
+        scatter_obj = self.parent.parent.mccm.mccm_dash.dsc_deck_scatter
+        scatter_obj.clear_obj()
+        GV.DB_OBJECTLIST.drop()
+        for hl in range(1, GV.DOOR_NUMBER + 1, 1):
+            loader.ssc_loader_progress_bar.value += 1
+            loader.ssc_loader_num.text = '[ ****  ' \
+                                         + str(int(loader.ssc_loader_progress_bar.value)) \
+                                         + ' / ' \
+                                         + str(GV.DOOR_NUMBER) \
+                                         + '  **** ]'
+
+            GV.DB_OUTPUTLIST.insert_one({'system': 'HL',
+                                         'address': str(hl).rjust(4, '0'),
+                                         'plc': '',
+                                         'port': '',
+                                         'name': 'HL' + str(hl).rjust(4, '0'),
+                                         'description': ''})
+        msg_color = 'success'
+        msg_text = 'Reset OUTPUT collection'
+        self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.parent.remove_widget(loader)
+
+    def generate_collection_connection(self):
+        loader = LoaderCreateCollection()
+        self.parent.add_widget(loader)
+        loader.ssc_loader_description.text = 'Generate CONNECTIONS collection'
+        loader.ssc_loader_progress_bar.max = 0
+        self.cursor.drop()
+        GV.DB['connectionList']
+        msg_color = 'success'
+        msg_text = 'Reset CONNECTIONS collection'
+        self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.parent.remove_widget(loader)
+
+    def generate_collection_object(self, dt):
+        scatter_obj = self.parent.parent.mccm.mccm_dash.dsc_deck_scatter
+        scatter_obj.clear_obj()
+        self.cursor.drop()
+        # Clear OBJECT and MODIFY container
+        for child in scatter_obj.obj_containers:
+            child.clear_widgets()
+        for child in scatter_obj.modify_containers:
+            child.clear_widgets()
+
+        deck_positioning = 0
+        deck_pos_row_count = 0
+        deck_pos_col_count = 0
+        # Create PLC MASTER object
+        plc_master_obj = JsonStore(GV.FILE_SETTINGS)
+        plc_master_address = plc_master_obj['PLC_master']['plc_master']
+        plc_master_data = {'system': 'PLCM',
+                                     'address': str(plc_master_address),
+                                     'name': 'PLC Master',
+                                     'deck': deck_positioning,
+                                     'posX': 10 + (60 * deck_pos_col_count),
+                                     'posY': 10 + (60 * deck_pos_row_count),
+                                     'rotate': 0,
+                                     'status': ''}
+        GV.DB_OBJECTLIST.insert_one(plc_master_data)
+        deck_pos_col_count += 1
+        # Create PLC ZONE object
+        plc_zone_obj = list(GV.DB_PLCZONECONFIG.find({}))
+        for plcZone in plc_zone_obj:
+            plcZone_data = {'system': 'PLCZ',
+                            'address': str(plc_master_address[:-3]) + str(plcZone['address']),
+                            'name': plcZone['name'],
+                            'deck': deck_positioning,
+                            'posX': 10 + (60 * deck_pos_col_count),
+                            'posY': 10 + (60 * deck_pos_row_count),
+                            'rotate': 0,
+                            'status': ''}
+            GV.DB_OBJECTLIST.insert_one(plcZone_data)
+            deck_pos_col_count += 1
+        # Create Handles object
+        hl_list = GV.DB_OUTPUTLIST.find({})
+        for hl in hl_list:
+            if deck_pos_col_count == 75:
+                deck_pos_col_count = 0
+                deck_pos_row_count += 1
+            if deck_pos_row_count == 15:
+                deck_positioning += 1
+                deck_pos_col_count = 0
+                deck_pos_row_count = 0
+            hl_data = {'system': 'HL',
+                       'address': hl['address'],
+                       'name': hl['name'],
+                       'deck': deck_positioning,
+                       'posX': 10 + (60 * deck_pos_col_count),
+                       'posY': 10 + (60 * deck_pos_row_count),
+                       'rotate': 0,
+                       'status': '',
+                       'colorDX': '000000',
+                       'colorSX': '000000'}
+            GV.DB_OBJECTLIST.insert_one(hl_data)
+            deck_pos_col_count += 1
+        msg_color = 'success'
+        msg_text = 'Reset OBJECT collection'
+        self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.parent.remove_widget(self.loader)
+        scatter_obj.generate_obj()
 
 
 # ----- classe del layout per pallini dello stato delle collection --------------------------------------------------- #
@@ -315,7 +362,6 @@ class StatusObject(BoxLayout):
 
 
 class DBStatusObject(StatusObject):
-
     def __init__(self, **kwargs):
         super(DBStatusObject, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -329,7 +375,6 @@ class DBStatusObject(StatusObject):
 
 # ----- Classe per il pallino dello status PLC Master ---------------------------------------------------------------- #
 class PLCMasterStatusObject(StatusObject):
-
     def __init__(self, **kwargs):
         super(PLCMasterStatusObject, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -343,7 +388,6 @@ class PLCMasterStatusObject(StatusObject):
 
 # ----- classe del per il pallino status INPUT collection ------------------------------------------------------------ #
 class InputCollectionStatus(StatusObject):
-
     def __init__(self, **kwargs):
         super(InputCollectionStatus, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -359,7 +403,6 @@ class InputCollectionStatus(StatusObject):
 
 # ----- classe del per il pallino status OUTPUT collection ----------------------------------------------------------- #
 class OutputCollectionStatus(StatusObject):
-
     def __init__(self, **kwargs):
         super(OutputCollectionStatus, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -375,7 +418,6 @@ class OutputCollectionStatus(StatusObject):
 
 # ----- classe del per il pallino status MODULE collection ----------------------------------------------------------- #
 class ModuleCollectionStatus(StatusObject):
-
     def __init__(self, **kwargs):
         super(ModuleCollectionStatus, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -391,7 +433,6 @@ class ModuleCollectionStatus(StatusObject):
 
 # ----- classe del per il pallino status CONNECTION collection ------------------------------------------------------- #
 class ListConnectionStatus(StatusObject):
-
     def __init__(self, **kwargs):
         super(ListConnectionStatus, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -407,7 +448,6 @@ class ListConnectionStatus(StatusObject):
 
 # ----- classe del per il pallino status CONNECTION collection ------------------------------------------------------- #
 class ListObjectStatus(StatusObject):
-
     def __init__(self, **kwargs):
         super(ListObjectStatus, self).__init__(**kwargs)
         self.status = Clock.schedule_interval(self.check_status, 5)
@@ -423,7 +463,6 @@ class ListObjectStatus(StatusObject):
 
 # ----- classe pulsante per la visualizzazione dei collegamenti registrati ------------------------------------------- #
 class ListConnectButton(Button):
-
     def update(self):
         if 'connectionList' in GV.DB.list_collection_names():
             self.disabled = False
@@ -572,17 +611,19 @@ class EditSettingsBtn(Button):
             loader.ssc_loader_description.text = 'Add Handler'
             document_add = int(self.ssc_handles_num_ti.text) - GV.DOOR_NUMBER
             loader.ssc_loader_progress_bar.max = document_add
-            # print('add', document_add)
             for hl in range(GV.DOOR_NUMBER + 1, GV.DOOR_NUMBER + 1 + document_add, 1):
                 loader.ssc_loader_progress_bar.value += 1
-                loader.ssc_loader_num.text = '[ ****  ' + str(int(loader.ssc_loader_progress_bar.value)) + ' / ' + str(document_add) + '  **** ]'
+                loader.ssc_loader_num.text = '[ ****  ' \
+                                             + str(int(loader.ssc_loader_progress_bar.value)) \
+                                             + ' / ' \
+                                             + str(document_add) \
+                                             + '  **** ]'
                 GV.DB_OUTPUTLIST.insert_one({'system': 'HL',
                                              'address': str(hl).rjust(4, '0'),
                                              'plc': '',
                                              'port': '',
                                              'name': 'HL' + str(hl).rjust(4, '0'),
                                              'description': ''})
-                self.mccm_settings.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
         elif int(self.ssc_handles_num_ti.text) < GV.DOOR_NUMBER:
             loader.ssc_loader_description.text = 'Remove Handler'
             document_del = GV.DOOR_NUMBER - int(self.ssc_handles_num_ti.text)
@@ -590,10 +631,13 @@ class EditSettingsBtn(Button):
             result = GV.DB_OUTPUTLIST.find({}).sort('_id', DESCENDING).limit(document_del)
             for count, item in enumerate(list(result)):
                 loader.ssc_loader_progress_bar.value += 1
-                loader.ssc_loader_num.text = '[ ****  ' + str(int(loader.ssc_loader_progress_bar.value)) + '/' + str(document_del) + '  **** ]'
+                loader.ssc_loader_num.text = '[ ****  ' \
+                                             + str(int(loader.ssc_loader_progress_bar.value)) \
+                                             + '/' \
+                                             + str(document_del) \
+                                             + '  **** ]'
                 # Remove Output from "outputList"
                 GV.DB_OUTPUTLIST.delete_one({'_id': item.get("_id")})
-                self.mccm_settings.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
                 # Remove doors from array "OutputList" of "connectionList"
                 for outList in GV.DB_CONNECTIONLIST.find({}):
                     GV.DB_CONNECTIONLIST.update({"_id": outList['_id']},
@@ -611,6 +655,7 @@ class EditSettingsBtn(Button):
         msg_color = 'success'
         msg_text = 'Update HANDLES collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        # self.mccm_settings.mccm.mccm_dash.dsc_deck_scatter.init_obj(None)
         self.parent.remove_widget(loader)
 
     def go_to_modulescreen(self):

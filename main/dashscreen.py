@@ -13,12 +13,14 @@ from kivy.uix.stencilview import StencilView
 from kivy.uix.scatter import Scatter
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
 
 from bson import ObjectId
 from datetime import datetime
 from pymongo import ASCENDING
 from pymongo.errors import PyMongoError
-import threading
+from threading import Thread, Timer
+from bson import ObjectId
 
 import utility.gvar as GV
 
@@ -28,6 +30,8 @@ Builder.load_file('main/classi/dashboard.kv')
 from object.objectLibrary import ObjPLCM, ObjPLCZ, ObjHL, ObjBntRotate
 Builder.load_file('object/objectLibrary.kv')
 
+from main.settingscreen import LoaderCreateCollection
+
 
 # ----- DashScreen Main Class ---------------------------------------------------------------------------------------- #
 class DashScreen(Screen):
@@ -36,7 +40,7 @@ class DashScreen(Screen):
     def __init__(self, **kwargs):
         super(DashScreen, self).__init__(**kwargs)
         Clock.schedule_interval(self.db_status, GV.PLC_ALIVE)
-        GV.OBJ_CHANGE_THREAD = threading.Timer(5, self.change_status)
+        GV.OBJ_CHANGE_THREAD = Timer(5, self.change_status)
         GV.OBJ_CHANGE_THREAD.setDaemon(True)
         GV.OBJ_CHANGE_THREAD.start()
 
@@ -64,8 +68,7 @@ class DashScreen(Screen):
     def change_status(self):
         pipeline = [
             {'$match': {
-                'operationType': 'replace',
-
+                'operationType': 'replace'
             }},
         ]
         try:
@@ -73,8 +76,8 @@ class DashScreen(Screen):
                 #  Update FAULT list status
                 self.dsc_list_fault.update_list(document)
                 #  Change OBJECT status
-                for obj in self.dsc_deck_scatter.obj_widget.children:
-                    if obj.id == 'OBJ_' + str(document['fullDocument']['_id']):
+                for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
+                    if obj.id == ObjectId(document['fullDocument']['_id']):
                         obj.set_status(document['fullDocument'])
                         break
         except PyMongoError:
@@ -102,7 +105,6 @@ class DashScreen(Screen):
 class DeckStencilView(StencilView):
 
      def on_touch_down(self, touch):
-
          if not self.collide_point(touch.x, touch.y):
              return
          return super(DeckStencilView, self).on_touch_down(touch)
@@ -117,70 +119,17 @@ class DeckScatter(Scatter):
         self.deck_name = ''
         self.deck_file = ''
         self.deck_number = len(GV.DECK_CONF)
-        self.obj_widget = RelativeLayout(size_hint=(1, 1))
-        self.add_widget(self.obj_widget)
         self.scale = 0.5
         self.delta_x = 340  # Scatter img scale 0.5 width 2250 - 1570 Stencil scale 0.5 view width / 2
         self.delta_y = 75  # Scatter img scale 0.5 height 600 - 450 Stencil scale 0.5 view height / 2
         self.pos = (0 - self.delta_x, 0 - self.delta_y)
         self.deck_image = None
         self.show_RGB = False
+        self.loader_bar = None
+        self.loader_bar_setting = None
+        self.obj_containers = []
+        self.modify_containers = []
         Clock.schedule_once(self.init_obj)
-
-    def init_deck(self):
-        self.deck_name = GV.DECK_CONF[self.deck_show]['name']
-        self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
-        self.remove_widget(self.deck_image)
-        self.deck_image = Image(source=self.deck_file,
-                                size_hint=(None, None),
-                                size=(4500, 1200),
-                                allow_stretch=True)
-        self.add_widget(self.deck_image, canvas='before')
-        self.dsc_dk_label.text = self.deck_name
-
-    def init_obj(self, instance):
-        if 'objectList' in GV.DB.list_collection_names():
-            self.obj_widget.clear_widgets()
-            x_row_count = 0
-            y_row_count = 0
-            for obj_data in list(GV.DB_OBJECTLIST.find({})):
-                if int(obj_data['deck']) == self.deck_show:
-                    rotate_btn = ObjBntRotate()
-                    if obj_data['system'] == 'PLCM':
-                        obj = ObjPLCM()
-                    elif obj_data['system'] == 'PLCZ':
-                        obj = ObjPLCZ()
-                    else:
-                        obj = ObjHL()
-                    obj.id = 'OBJ_' + str(obj_data['_id'])
-                    obj.scatter_obj = self
-                    obj.obj_widget = self.obj_widget
-                    obj.rotate_btn = rotate_btn
-                    obj.obj_data = obj_data
-                    obj.angle_obj = obj_data['rotate']
-                    obj.set_status(obj_data)
-                    # Set Default position
-                    if obj_data['posX'] == 0 and obj_data['posY'] == 0:
-                        posX = obj_data['posX'] + (self.delta_x * 2) + 10 + (50 * x_row_count)
-                        x_row_count += 1
-                        if posX > 3100:
-                            y_row_count += 1
-                            x_row_count = 0
-                        posY = obj_data['posY'] + (self.delta_y * 2) + 10 + (50 * y_row_count)
-                        obj.pos = (posX, posY)
-                        # Save Default position
-                        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(obj_data['_id'])},
-                                                    {'$set': {'posX': posX, 'posY': posY}})
-                    else:
-                        posX = obj_data['posX']
-                        posY = obj_data['posY']
-                        obj.pos = (posX,  posY)
-                    self.obj_widget.add_widget(obj)
-                    if GV.OBJ_MODIFY:
-                        rotate_btn.obj_data = obj_data
-                        rotate_btn.pos = (posX + 50, posY + 40)
-                        rotate_btn.bind(on_press=obj.rotate_obj)
-                        self.obj_widget.add_widget(rotate_btn)
 
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:
@@ -193,14 +142,31 @@ class DeckScatter(Scatter):
         else:
             super(DeckScatter, self).on_touch_down(touch)
 
+    # Deck
+    def init_deck(self):
+        self.deck_name = GV.DECK_CONF[self.deck_show]['name']
+        self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
+        self.remove_widget(self.deck_image)
+        self.deck_image = Image(source=self.deck_file,
+                                size_hint=(None, None),
+                                size=(4500, 1200),
+                                allow_stretch=True)
+        self.deck_image.id = 'Image_dwg'
+        self.add_widget(self.deck_image, canvas='before')
+        self.dsc_dk_label.text = self.deck_name
+
     def deck_up(self):
         if self.deck_show == self.deck_number - 1:
             return
         else:
             self.deck_show += 1
             self.dsc_dk_label.text = self.deck_name
+            for child in self.children:
+                if child.id == 'Obj_container_' + str(self.deck_show) or child.id == 'Modify_container_' + str(self.deck_show):
+                    child.pos = (0, 0)
+                else:
+                    child.pos = (10000, 0)
             self.init_deck()
-            self.init_obj(None)
 
     def deck_down(self):
         if self.deck_show == 0:
@@ -208,8 +174,12 @@ class DeckScatter(Scatter):
         else:
             self.deck_show -= 1
             self.dsc_dk_label.text = self.deck_name
+            for child in self.children:
+                if child.id == 'Obj_container_' + str(self.deck_show):
+                    child.pos = (0, 0)
+                else:
+                    child.pos = (10000, 0)
             self.init_deck()
-            self.init_obj(None)
 
     def deck_select(self, instance):
         deck_menu = DeckMenu()
@@ -217,24 +187,6 @@ class DeckScatter(Scatter):
         deck_menu.init()
         self.mccm_dash.ds_container.add_widget(deck_menu)
         self.mccm_dash.dsc_dk_label.disabled = True
-
-    def obj_modify(self, instance):
-        if GV.OBJ_MODIFY:
-            GV.OBJ_MODIFY = False
-            instance.color_fill = GV.RGBA_BORDER
-        else:
-            GV.OBJ_MODIFY = True
-            instance.color_fill = GV.RGBA_ORANGE
-        self.init_obj(None)
-
-    def obj_RGB(self, instance):
-        if self.show_RGB:
-            self.show_RGB = False
-            instance.color_fill = GV.RGBA_BORDER
-        else:
-            self.show_RGB = True
-            instance.color_fill = GV.RGBA_ORANGE
-        self.init_obj(None)
 
     def default_zoom(self, instance):
         self.scale = 0.5
@@ -252,6 +204,106 @@ class DeckScatter(Scatter):
         else:
             self.scale *= 0.95
 
+    # OBJECT
+    def init_obj(self, instance):
+
+        for count, dk in enumerate(GV.DECK_CONF):
+            obj_container = RelativeLayout(size_hint=(1, 1))
+            obj_container.id = 'Obj_container_' + str(count)
+            self.obj_containers.append(obj_container)
+            self.add_widget(obj_container)
+            modify_container = RelativeLayout(size_hint=(1, 1))
+            modify_container.id = 'Modify_container_' + str(count)
+            modify_container.pos = (10000, 0)
+            self.modify_containers.append(modify_container)
+            self.add_widget(modify_container)
+            if count != self.deck_show:
+                obj_container.pos = (10000, 0)
+            else:
+                obj_container.pos = (0, 0)
+        self.generate_obj()
+
+    def generate_obj(self):
+        if 'objectList' in GV.DB.list_collection_names():
+            obj_list = list(GV.DB_OBJECTLIST.find({}))
+        else:
+            return
+        for obj_data in obj_list:
+            self.update_obj(obj_data)
+
+    def update_obj_deck(self, obj_data, old_deck):
+        for child in self.obj_containers[old_deck].children:
+            if child.id == obj_data['_id']:
+                self.obj_containers[old_deck].remove_widget(child)
+                break
+        for child in self.modify_containers[old_deck].children:
+            if child.id == 'Mod_' + str(obj_data['_id']):
+                self.modify_containers[old_deck].remove_widget(child)
+                break
+        self.update_obj(obj_data)
+
+    def update_obj(self, obj_data):
+        if obj_data['system'] == 'PLCM':
+            obj = ObjPLCM()
+            obj.id = ObjectId(obj_data['_id'])
+        elif obj_data['system'] == 'PLCZ':
+            obj = ObjPLCZ()
+            obj.id = ObjectId(obj_data['_id'])
+        else:
+            obj = ObjHL()
+            obj.id = ObjectId(obj_data['_id'])
+        rotate_btn = ObjBntRotate()
+        rotate_btn.id = 'Mod_' + str(obj_data['_id'])
+        rotate_btn.obj = obj
+        rotate_btn.pos = (obj_data['posX'] + 35, obj_data['posY'] + 30)
+        #  Object
+        obj.scatter_obj = self
+        obj.rotate_btn = rotate_btn
+        obj.obj_data = obj_data
+        obj.angle_obj = obj_data['rotate']
+        obj.set_status(obj_data)
+        obj.pos = (obj_data['posX'], obj_data['posY'])
+        obj.obj_widget = self.obj_containers[obj_data['deck']]
+        self.obj_containers[obj_data['deck']].remove_widget(obj)
+        self.obj_containers[obj_data['deck']].add_widget(obj)
+        self.modify_containers[obj_data['deck']].add_widget(rotate_btn)
+
+    def obj_modify(self, instance):
+        if GV.OBJ_MODIFY:
+            GV.OBJ_MODIFY = False
+            instance.color_fill = GV.RGBA_BORDER
+        else:
+            GV.OBJ_MODIFY = True
+            instance.color_fill = GV.RGBA_ORANGE
+        for child in self.children:
+            if GV.OBJ_MODIFY:
+                if child.id == 'Modify_container_' + str(self.deck_show):
+                    child.pos = (0, 0)
+                elif child.id == 'Obj_container_' + str(self.deck_show):
+                    child.pos = (0, 0)
+                elif child.id == 'Image_dwg':
+                    child.pos = (0, 0)
+            else:
+                if child.id == 'Modify_container_' + str(self.deck_show):
+                    child.pos = (10000, 0)
+
+    def obj_RGB(self, instance):
+        if GV.OBJ_RGB:
+            GV.OBJ_RGB = False
+            instance.color_fill = GV.RGBA_BORDER
+        else:
+            GV.OBJ_RGB = True
+            instance.color_fill = GV.RGBA_ORANGE
+        for container in self.obj_containers:
+            for obj in container.children:
+                if obj.obj_data['system'] == 'HL':
+                    obj.show_rgb()
+
+    def clear_obj(self):
+        for elm in self.children:
+            if elm.id != 'Image_dwg':
+                elm.clear_widgets()
+
 
 # Search OBJECT button
 class SearchSelectMenu(GridLayout):
@@ -267,10 +319,10 @@ class SearchSelectBtn(Button):
         self.container.clear_widgets()
 
 
-class BtnSearch(GridLayout):
+class BtnSearchObject(GridLayout):
 
     def __init__(self, **kwargs):
-        super(BtnSearch, self).__init__(**kwargs)
+        super(BtnSearchObject, self).__init__(**kwargs)
         self.list_data = []
         self.new_list_search = []
         self.search_menu = SearchSelectMenu()

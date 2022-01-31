@@ -6,9 +6,11 @@
     ObjectContainer:
         id: _obs_container
         obsc_list_table: _obsc_list_table
+        obsc_list_pageCount: _obsc_list_pageCount
+        mccm_object: _mccm_object
         Button:
-            id: _obsc_close_btn
             mccm_object: _mccm_object
+            id: _obsc_close_btn
             pos: 1550, 1000
             size_hint: None, None
             size: 32, 32
@@ -31,17 +33,31 @@
             font_size: 21
             text_size: self.size
             color: GV.RGBA_WHITE50
+        ImportObjectButton:
+            obsc_list_table: _obsc_list_table
+            importList: 'object'
+            pos: 1150, 860
+            on_press: self.import_csv()
+        ExportObjectButton:
+            exportList: 'object'
+            pos: 1350, 860
+            on_press: self.export_csv()
         ListHeaderObject:
+            id: _obsc_list_header
             pos: 50, 860
         ScrollView:
-            pos: 50, 60
+            pos: 50, 260
             size_hint: None, None
-            size: 950, 800
-            bar_width: 10
-            bar_color: GV.RGBA_ORANGE
-            bar_inactive_color: 240/255, 149/255, 61/255, .1
-            scroll_type: ['bars']
-            GridLayout:
+            size: 950, 600
+            do_scroll_x: False
+            do_scroll_y: False
+#            bar_width: 10
+#            bar_color: GV.RGBA_ORANGE
+#            bar_inactive_color: 240/255, 149/255, 61/255, .1
+#            scroll_type: ['bars']
+            ListObject:
+                mccm_object: _mccm_object
+                obsc_list_pageCount: _obsc_list_pageCount
                 id: _obsc_list_table
                 cols: 1
                 size_hint: 1, None
@@ -52,3 +68,52 @@
 #                    Rectangle:
 #                        pos: self.x + 1, self.y + 1
 #                        size: self.width - 1, self.height - 1
+        BoxLayout:
+            orientation: 'horizontal'
+            size: 950, 50
+            size_hint: None, None
+            pos: 50, 180
+            canvas.after:
+                Color:
+                    rgba: 47/255, 50/255, 57/255, 1
+                Line:
+                    points: self.x, self.y + self.height, self.x + self.width, self.y + self.height
+                    width: 1.5
+            AnchorLayout:
+                anchor_x: 'right'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint: None, 1
+                    width: 260
+                    Button:
+                        obsc_list_table: _obsc_list_table
+                        size_hint: None, None
+                        size: 30, 30
+                        background_down: ''
+                        background_normal: ''
+                        on_press: self.obsc_list_table.get_list_prev()
+                        Image:
+                            source: GV.DIR_ICONS + "ListPrev.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
+                    Label:
+                        id: _obsc_list_pageCount
+                        text:'???'
+                        color: 255/255, 255/255, 255/255, .5
+                        size: 200, 30
+                        size_hint: None, None
+                        font_size: 16
+                        text_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                    Button:
+                        obsc_list_table: _obsc_list_table
+                        size_hint: None, None
+                        size: 30, 30
+                        background_down: ''
+                        background_normal: ''
+                        on_press: self.obsc_list_table.get_list_next()
+                        Image:
+                            source: GV.DIR_ICONS + "ListNext.png"
+                            center_x: self.parent.center_x
+                            center_y: self.parent.center_y
