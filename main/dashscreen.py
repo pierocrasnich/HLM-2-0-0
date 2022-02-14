@@ -13,13 +13,11 @@ from kivy.uix.stencilview import StencilView
 from kivy.uix.scatter import Scatter
 from kivy.uix.image import Image
 from kivy.clock import Clock
-from kivy.uix.modalview import ModalView
 
-from bson import ObjectId
 from datetime import datetime
 from pymongo import ASCENDING
 from pymongo.errors import PyMongoError
-from threading import Thread, Timer
+from threading import Timer
 from bson import ObjectId
 
 import utility.gvar as GV
@@ -29,8 +27,6 @@ Builder.load_file('main/classi/dashboard.kv')
 # -- Load OBJECT Library --------------------------------------------------------------------------------------------- #
 from object.objectLibrary import ObjPLCM, ObjPLCZ, ObjHL, ObjBntRotate
 Builder.load_file('object/objectLibrary.kv')
-
-from main.settingscreen import LoaderCreateCollection
 
 
 # ----- DashScreen Main Class ---------------------------------------------------------------------------------------- #
@@ -50,20 +46,6 @@ class DashScreen(Screen):
 
     def on_leave(self, *args):
         pass
-
-    def set_obj_status(self, status):
-        if status == "":
-            # print ('nodata')
-            color_fill = GV.OBJ_RGB_NO_DATA
-        elif status == "0":
-            color_fill = GV.OBJ_RGB_NORMAL
-            # print('normal')
-        elif status == "1":
-            color_fill = GV.OBJ_RGB_FAULT
-            # print('fault')
-        else:
-            color_fill = GV.OBJ_RGB_NO_DATA
-        return color_fill
 
     def change_status(self):
         pipeline = [
@@ -125,6 +107,8 @@ class DeckScatter(Scatter):
         self.pos = (0 - self.delta_x, 0 - self.delta_y)
         self.deck_image = None
         self.show_RGB = False
+        self.show_legend = False
+        self.legend = LegendModal()
         self.loader_bar = None
         self.loader_bar_setting = None
         self.obj_containers = []
@@ -144,6 +128,7 @@ class DeckScatter(Scatter):
 
     # Deck
     def init_deck(self):
+
         self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
         self.remove_widget(self.deck_image)
@@ -155,17 +140,26 @@ class DeckScatter(Scatter):
         self.add_widget(self.deck_image, canvas='before')
         self.dsc_dk_label.text = self.deck_name
 
+        for child in self.children:
+
+            if child.id == 'Modify_container_' + str(self.deck_show):
+                if GV.OBJ_MODIFY:
+                    child.pos = (0, 0)
+                else:
+                    child.pos = (10000, 0)
+            elif child.id == 'Obj_container_' + str(self.deck_show):
+                child.pos = (0, 0)
+            elif child.id == 'Image_dwg':
+                child.pos = (0, 0)
+            else:
+                child.pos = (10000, 0)
+
     def deck_up(self):
         if self.deck_show == self.deck_number - 1:
             return
         else:
             self.deck_show += 1
             self.dsc_dk_label.text = self.deck_name
-            for child in self.children:
-                if child.id == 'Obj_container_' + str(self.deck_show) or child.id == 'Modify_container_' + str(self.deck_show):
-                    child.pos = (0, 0)
-                else:
-                    child.pos = (10000, 0)
             self.init_deck()
 
     def deck_down(self):
@@ -174,11 +168,6 @@ class DeckScatter(Scatter):
         else:
             self.deck_show -= 1
             self.dsc_dk_label.text = self.deck_name
-            for child in self.children:
-                if child.id == 'Obj_container_' + str(self.deck_show):
-                    child.pos = (0, 0)
-                else:
-                    child.pos = (10000, 0)
             self.init_deck()
 
     def deck_select(self, instance):
@@ -261,9 +250,9 @@ class DeckScatter(Scatter):
         obj.rotate_btn = rotate_btn
         obj.obj_data = obj_data
         obj.angle_obj = obj_data['rotate']
-        obj.set_status(obj_data)
         obj.pos = (obj_data['posX'], obj_data['posY'])
         obj.obj_widget = self.obj_containers[obj_data['deck']]
+        obj.set_status(obj_data)
         self.obj_containers[obj_data['deck']].remove_widget(obj)
         self.obj_containers[obj_data['deck']].add_widget(obj)
         self.modify_containers[obj_data['deck']].add_widget(rotate_btn)
@@ -275,17 +264,7 @@ class DeckScatter(Scatter):
         else:
             GV.OBJ_MODIFY = True
             instance.color_fill = GV.RGBA_ORANGE
-        for child in self.children:
-            if GV.OBJ_MODIFY:
-                if child.id == 'Modify_container_' + str(self.deck_show):
-                    child.pos = (0, 0)
-                elif child.id == 'Obj_container_' + str(self.deck_show):
-                    child.pos = (0, 0)
-                elif child.id == 'Image_dwg':
-                    child.pos = (0, 0)
-            else:
-                if child.id == 'Modify_container_' + str(self.deck_show):
-                    child.pos = (10000, 0)
+        self.init_deck()
 
     def obj_RGB(self, instance):
         if GV.OBJ_RGB:
@@ -299,10 +278,26 @@ class DeckScatter(Scatter):
                 if obj.obj_data['system'] == 'HL':
                     obj.show_rgb()
 
+    def legend_show(self, instance):
+        if self.show_legend:
+            instance.color_fill = GV.RGBA_BORDER
+            self.show_legend = False
+            self.parent.remove_widget(self.legend)
+        else:
+            instance.color_fill = GV.RGBA_ORANGE
+            self.parent.add_widget(self.legend)
+
+            self.show_legend = True
+
     def clear_obj(self):
         for elm in self.children:
             if elm.id != 'Image_dwg':
                 elm.clear_widgets()
+
+
+# Legend Popup
+class LegendModal(BoxLayout):
+    pass
 
 
 # Search OBJECT button
@@ -342,11 +337,10 @@ class BtnSearchObject(GridLayout):
             self.dsc_deck_scatter.pos = (785 - obj['posX'], 225 - obj['posY'])
             self.dsc_deck_scatter.init_deck()
             self.dsc_deck_scatter.init_obj(None)
-            for child in self.dsc_deck_scatter.obj_widget.children:
-                if child.id == 'OBJ_' + str(obj['_id']):
+            for child in self.dsc_deck_scatter.obj_containers[int(obj['deck'])].children:
+                if child.id == ObjectId(str(obj['_id'])):
                     child.display_tooltip()
                     break
-
             self.dsc_obj_search_text.text = ''
         else:
             return
@@ -427,8 +421,9 @@ class FaultListRow(ToggleButtonBehavior, BoxLayout):
         self.scatter_obj.pos = (785 - self.row_data['posX'], 225 - self.row_data['posY'])
         self.scatter_obj.init_deck()
         self.scatter_obj.init_obj(None)
-        for child in self.scatter_obj.obj_widget.children:
-            if child.id == 'OBJ_' + str(self.row_data['_id']):
+
+        for child in self.scatter_obj.obj_containers[int(self.row_data['deck'])].children:
+            if child.id == ObjectId(self.row_data['_id']):
                 child.display_tooltip()
                 break
 

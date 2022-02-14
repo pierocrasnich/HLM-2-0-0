@@ -164,12 +164,26 @@
                     background_normal: ''
                     background_down: ''
                     background_color: 0, 0, 0, 0
-                    on_press: self.dsc_deck_scatter.obj_RGB(self)
+                    on_press: self.dsc_deck_scatter.legend_show(self)
                     Image:
-                        source: GV.DIR_ICONS + "ColorViewHL.png"
+                        source: GV.DIR_ICONS + "Legend.png"
                         center_x: self.parent.center_x
                         center_y: self.parent.center_y
                         color: self.parent.color_fill
+            Button:
+                dsc_deck_scatter: _dsc_deck_scatter
+                color_fill: GV.RGBA_BORDER
+                size_hint: None, None
+                size: 30, 30
+                background_normal: ''
+                background_down: ''
+                background_color: 0, 0, 0, 0
+                on_press: self.dsc_deck_scatter.obj_RGB(self)
+                Image:
+                    source: GV.DIR_ICONS + "ColorViewHL.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    color: self.parent.color_fill
             Button:
                 dsc_deck_scatter: _dsc_deck_scatter
                 color_fill: GV.RGBA_BORDER

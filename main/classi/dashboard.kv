@@ -87,6 +87,30 @@
     on_press: root.updateTextInput(self)
 
 
+<LegendModal>
+    orientation: 'horizontal'
+    size_hint: None, None
+    size: 500, 300
+    pos: 1050, 20
+    canvas:
+        Color:
+            rgba: GV.RGBA_BG_LIGHT
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    canvas.after:
+        Color:
+            rgba: 47/255,50/255,57/255,1
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+    Image:
+        source: GV.DIR_IMAGES + "legend.jpg"
+        center_x: self.parent.center_x
+        center_y: self.parent.center_y
+
+
+
 <DeckMenu>:
     cols: 1
     size_hint: None, None

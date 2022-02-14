@@ -1,5 +1,5 @@
 {
-    "door_number": 220,
+    "door_number": 30,
     "door_default": "0000",
     "door_broadcast": "9999",
     "begin": "@",

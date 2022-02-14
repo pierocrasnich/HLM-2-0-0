@@ -1,3 +1,5 @@
+import time
+
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.properties import  ListProperty, ObjectProperty,  NumericProperty
@@ -75,6 +77,7 @@ class ObjPLCM(Button):
         self.tooltip_show = False
 
     def display_tooltip(self, *args):
+        time.sleep(.5)
         self.tooltip_show = True
         self.tooltip.pos = (self.x + 7, self.y + 55)
         self.tooltip.text = self.obj_data['name']
@@ -149,6 +152,7 @@ class ObjPLCZ(Button):
         Clock.unschedule(self.close_tooltip)
 
     def display_tooltip(self, *args):
+        time.sleep(.5)
         self.tooltip_show = True
         self.tooltip.pos = (self.x + 7, self.y + 55)
         self.tooltip.text = self.obj_data['name']
@@ -180,18 +184,18 @@ class ObjHL(Button):
         self.status_obj = status
         color_sx = str(self.status_obj['colorSX'])
         color_dx = str(self.status_obj['colorDX'])
+        self.color_fill_sx = get_color_from_hex('#' + color_sx)
+        self.color_fill_dx = get_color_from_hex('#' + color_dx)
 
-        if color_sx == '000000' or not GV.OBJ_RGB:
-            self.color_fill_sx_off = 0
-        else:
-            self.color_fill_sx_off = 1
-            self.color_fill_sx = get_color_from_hex('#' + color_sx)
-
-        if color_dx == '000000' or not GV.OBJ_RGB:
-            self.color_fill_dx_off = 0
-        else:
-            self.color_fill_dx_off = 1
-            self.color_fill_dx = get_color_from_hex('#' + color_dx)
+        if GV.OBJ_RGB:
+            if color_sx == '000000':
+                self.color_fill_sx_off = 0
+            else:
+                self.color_fill_sx_off = 1
+            if color_dx == '000000':
+                self.color_fill_dx_off = 0
+            else:
+                self.color_fill_dx_off = 1
 
         if self.status_obj['status'] == "":
             self.color_fill = GV.OBJ_RGB_NO_DATA
@@ -204,8 +208,10 @@ class ObjHL(Button):
 
     def show_rgb(self):
         if GV.OBJ_RGB:
-            self.color_fill_dx_off = 1
-            self.color_fill_sx_off = 1
+            if str(self.status_obj['colorDX']) != '000000':
+                self.color_fill_dx_off = 1
+            if str(self.status_obj['colorSX']) != '000000':
+                self.color_fill_sx_off = 1
         else:
             self.color_fill_dx_off = 0
             self.color_fill_sx_off = 0
@@ -220,6 +226,7 @@ class ObjHL(Button):
         self.tooltip_show = False
 
     def display_tooltip(self, *args):
+        time.sleep(.5)
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)

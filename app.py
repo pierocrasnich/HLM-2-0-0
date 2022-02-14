@@ -89,7 +89,7 @@ def init_db():
     json_store = JsonStore(GV.DIR_JSON + GV.FILE_DB)
     GV.DB_SERVER = json_store['DBConfig']
     for server in GV.DB_SERVER:
-        GV.DB_IP.append(server['server']+':'+server['port'])
+        GV.DB_IP.append(server['server'] + ':' + server['port'])
     # GV.DB_IP = json_store['DBConfig']['server']
     # GV.DB_PORT = json_store['DBConfig']['port']
     GV.DB_NAME = json_store['DBName']
@@ -397,7 +397,6 @@ class ContentScreenManager(ScreenManager):
         self.switch_to(self.mccm_dash)
 
 
-
 # ################################################ Main Application Start ############################################ #
 class HLMApp(App):
 
@@ -413,7 +412,6 @@ if __name__ == '__main__':
     Window.size = (1920, 1080)
     Window.left = 50
     Window.top = 50
-    # Window.borderless = True
     Window.borderless = False
     Config.set('kivy', 'exit_on_escape', '0')  # Disable ESC button
     HLMApp().run()
