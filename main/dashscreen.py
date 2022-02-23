@@ -179,7 +179,7 @@ class DeckScatter(Scatter):
         self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
         self.remove_widget(self.deck_image)
-        self.deck_image = Image(source=self.deck_file, size_hint=(None, None), size=self.size, allow_stretch=True)
+        self.deck_image = Image(source=self.deck_file, size_hint=(None, None), size=(6280, 1800), allow_stretch=True)
         self.deck_image.id = 'Image_dwg'
         self.add_widget(self.deck_image, canvas='before')
         self.dsc_dk_label.text = self.deck_name
