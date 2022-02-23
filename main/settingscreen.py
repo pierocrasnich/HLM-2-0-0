@@ -327,6 +327,8 @@ class CreateListButton (Button):
                             'status': ''}
             GV.DB_OBJECTLIST.insert_one(plcZone_data)
             deck_pos_col_count += 1
+        # Create System Link object
+        # system_link = list_input = GV.DB_INPUTCONFIG.find({})
         # Create Handles object
         hl_list = GV.DB_OUTPUTLIST.find({})
         for hl in hl_list:

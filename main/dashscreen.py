@@ -13,10 +13,10 @@ from kivy.uix.stencilview import StencilView
 from kivy.uix.scatter import Scatter
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.graphics.transformation import Matrix
 
 from datetime import datetime
-from pymongo import ASCENDING
-from pymongo.errors import PyMongoError
+from pymongo import MongoClient, ASCENDING
 from threading import Timer
 from bson import ObjectId
 
@@ -48,22 +48,25 @@ class DashScreen(Screen):
         pass
 
     def change_status(self):
-        pipeline = [
-            {'$match': {
-                'operationType': 'replace'
-            }},
-        ]
+
+        cursor = MongoClient(host='127.0.0.1', port=27017, replicaset='rs0')
+        collections = cursor['HLM']['objectList']
+
+        pipeline = [{'$match': {'operationType': 'update'}}]
         try:
-            for document in GV.DB.objectList.watch(pipeline=pipeline, full_document='updateLookup'):
-                #  Update FAULT list status
-                self.dsc_list_fault.update_list(document)
-                #  Change OBJECT status
-                for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
-                    if obj.id == ObjectId(document['fullDocument']['_id']):
-                        obj.set_status(document['fullDocument'])
-                        break
-        except PyMongoError:
-            print(PyMongoError)
+            with collections.watch(pipeline=pipeline, full_document='updateLookup') as change_stream:
+                for document in change_stream:
+                    #  Update FAULT list status
+                    self.dsc_list_fault.update_list(document)
+                    #  Change OBJECT status
+                    for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
+                        if obj.id == ObjectId(document['fullDocument']['_id']):
+                            obj.set_status(document['fullDocument'])
+                            print('change stream ---> ', document['fullDocument'])
+        except KeyboardInterrupt:
+            cursor.close()
+        except Exception as e:
+            print(e)
 
     def db_status(self, istance):
         if GV.DB is None:
@@ -84,12 +87,8 @@ class DashScreen(Screen):
 
 # ----- Dashboard Deck Layout ----------------------------------------------------------------------------------- #
 # Deck Stencil View Class Container
-class DeckStencilView(StencilView):
-
-     def on_touch_down(self, touch):
-         if not self.collide_point(touch.x, touch.y):
-             return
-         return super(DeckStencilView, self).on_touch_down(touch)
+class DeckStencilView(BoxLayout, StencilView):
+    pass
 
 
 #  Deck Scatter Object 3140x1100 dimension
@@ -101,10 +100,13 @@ class DeckScatter(Scatter):
         self.deck_name = ''
         self.deck_file = ''
         self.deck_number = len(GV.DECK_CONF)
-        self.scale = 0.5
-        self.delta_x = 340  # Scatter img scale 0.5 width 2250 - 1570 Stencil scale 0.5 view width / 2
-        self.delta_y = 75  # Scatter img scale 0.5 height 600 - 450 Stencil scale 0.5 view height / 2
-        self.pos = (0 - self.delta_x, 0 - self.delta_y)
+        self.scale = .25
+        self.scale_min = .25
+        self.scale_max = 1
+        self.delta_x = 0  # Scatter img scale 0.5 width 6280 * 0.5 - 1570 Stencil
+        self.delta_y = 0  # Scatter img scale 0.5 height 1800 * 0.5 - 450 Stencil
+        self.pos = (0, 0)
+
         self.deck_image = None
         self.show_RGB = False
         self.show_legend = False
@@ -118,30 +120,72 @@ class DeckScatter(Scatter):
     def on_touch_down(self, touch):
         if touch.is_mouse_scrolling:
             if touch.button == 'scrolldown':
-                if self.scale < 1.6:
-                    self.scale *= 1.05
+                if self.scale + 0.05 < self.scale_max:
+                    self.scale += 0.05
+                else:
+                    self.scale = self.scale_max
             elif touch.button == 'scrollup':
-                if self.scale > .35:
-                    self.scale *= 0.95
+                if self.scale - 0.05 > self.scale_min:
+                    self.scale -= 0.05
+                else:
+                    self.scale = self.scale_min
+            self.check_limit()
         else:
-            super(DeckScatter, self).on_touch_down(touch)
+            return super(DeckScatter, self).on_touch_down(touch)
+
+    def on_touch_move(self, touch):
+        if round(self.scale, 2) <= self.scale_min or not self.parent.collide_point(*touch.pos):
+            self.do_translation_x = False
+            self.do_translation_y = False
+        else:
+            self.do_translation_x = True
+            self.do_translation_y = True
+            self.apply_transform(Matrix().translate(touch.dx, touch.dy, 0), anchor=touch.pos)
+            self.check_limit()
+        super(DeckScatter, self).on_touch_move(touch)
+
+    def check_limit(self):
+        self.delta_x = 6280 * self.scale - self.width
+        self.delta_y = 1800 * self.scale - self.height
+        if self.bbox[0][0] > 0:
+            self.x = 0
+        if self.bbox[0][1] > 0:
+            self.y = 0
+        if self.delta_x + self.bbox[0][0] < 0:
+            self.x = - self.delta_x
+        if self.delta_y + self.bbox[0][1] < 0:
+            self.y = - self.delta_y
+
+    def default_zoom(self, instance):
+        self.scale = self.scale_min
+        self.pos = (0, 0)
+
+    def zoom_plus(self, instance):
+        if self.scale + 0.05 < self.scale_max:
+            self.scale += 0.05
+        else:
+            self.scale = self.scale_max
+        self.check_limit()
+
+    def zoom_minus(self, instance):
+        if self.scale - 0.05 > self.scale_min:
+            self.scale -= 0.05
+        else:
+            self.scale = self.scale_min
+        self.check_limit()
 
     # Deck
     def init_deck(self):
-
         self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
         self.remove_widget(self.deck_image)
-        self.deck_image = Image(source=self.deck_file,
-                                size_hint=(None, None),
-                                size=(4500, 1200),
-                                allow_stretch=True)
+        self.deck_image = Image(source=self.deck_file, size_hint=(None, None), size=self.size, allow_stretch=True)
         self.deck_image.id = 'Image_dwg'
         self.add_widget(self.deck_image, canvas='before')
         self.dsc_dk_label.text = self.deck_name
 
+        # Show select Deck
         for child in self.children:
-
             if child.id == 'Modify_container_' + str(self.deck_show):
                 if GV.OBJ_MODIFY:
                     child.pos = (0, 0)
@@ -176,22 +220,6 @@ class DeckScatter(Scatter):
         deck_menu.init()
         self.mccm_dash.ds_container.add_widget(deck_menu)
         self.mccm_dash.dsc_dk_label.disabled = True
-
-    def default_zoom(self, instance):
-        self.scale = 0.5
-        self.pos = (0 - self.delta_x, 0 - self.delta_y)
-
-    def zoom_plus(self, instance):
-        if self.scale > 1.6:
-            return
-        else:
-            self.scale *= 1.05
-
-    def zoom_minus(self, instance):
-        if self.scale < .35:
-            return
-        else:
-            self.scale *= 0.95
 
     # OBJECT
     def init_obj(self, instance):
