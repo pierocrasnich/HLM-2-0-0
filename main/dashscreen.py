@@ -48,10 +48,8 @@ class DashScreen(Screen):
         pass
 
     def change_status(self):
-
         cursor = MongoClient(host='127.0.0.1', port=27017, replicaset='rs0')
         collections = cursor['HLM']['objectList']
-
         pipeline = [{'$match': {'operationType': 'update'}}]
         try:
             with collections.watch(pipeline=pipeline, full_document='updateLookup') as change_stream:
@@ -62,7 +60,6 @@ class DashScreen(Screen):
                     for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
                         if obj.id == ObjectId(document['fullDocument']['_id']):
                             obj.set_status(document['fullDocument'])
-                            print('change stream ---> ', document['fullDocument'])
         except KeyboardInterrupt:
             cursor.close()
         except Exception as e:
@@ -88,10 +85,14 @@ class DashScreen(Screen):
 # ----- Dashboard Deck Layout ----------------------------------------------------------------------------------- #
 # Deck Stencil View Class Container
 class DeckStencilView(BoxLayout, StencilView):
-    pass
+
+    def on_touch_down(self, touch):
+        if not self.collide_point(touch.x, touch.y):
+            return
+        return super(DeckStencilView, self).on_touch_down(touch)
 
 
-#  Deck Scatter Object 3140x1100 dimension
+#  Deck Scatter Object 6280x1800 dimension
 class DeckScatter(Scatter):
 
     def __init__(self, **kwargs):
@@ -100,6 +101,8 @@ class DeckScatter(Scatter):
         self.deck_name = ''
         self.deck_file = ''
         self.deck_number = len(GV.DECK_CONF)
+        self.width = 6280
+        self.height = 1800
         self.scale = .25
         self.scale_min = .25
         self.scale_max = 1
@@ -113,6 +116,7 @@ class DeckScatter(Scatter):
         self.legend = LegendModal()
         self.loader_bar = None
         self.loader_bar_setting = None
+        self.deck_images = []
         self.obj_containers = []
         self.modify_containers = []
         Clock.schedule_once(self.init_obj)
@@ -135,18 +139,15 @@ class DeckScatter(Scatter):
 
     def on_touch_move(self, touch):
         if round(self.scale, 2) <= self.scale_min or not self.parent.collide_point(*touch.pos):
-            self.do_translation_x = False
-            self.do_translation_y = False
+            return
         else:
-            self.do_translation_x = True
-            self.do_translation_y = True
             self.apply_transform(Matrix().translate(touch.dx, touch.dy, 0), anchor=touch.pos)
             self.check_limit()
         super(DeckScatter, self).on_touch_move(touch)
 
     def check_limit(self):
-        self.delta_x = 6280 * self.scale - self.width
-        self.delta_y = 1800 * self.scale - self.height
+        self.delta_x = 6280 * self.scale - self.parent.width
+        self.delta_y = 1800 * self.scale - self.parent.height
         if self.bbox[0][0] > 0:
             self.x = 0
         if self.bbox[0][1] > 0:
@@ -178,12 +179,16 @@ class DeckScatter(Scatter):
     def init_deck(self):
         self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
-        self.remove_widget(self.deck_image)
-        self.deck_image = Image(source=self.deck_file, size_hint=(None, None), size=(6280, 1800), allow_stretch=True)
-        self.deck_image.id = 'Image_dwg'
-        self.add_widget(self.deck_image, canvas='before')
-        self.dsc_dk_label.text = self.deck_name
+        for count, dk in enumerate(GV.DECK_CONF):
+            print(dk['file'])
+            img = GV.DIR_DECKS + dk['file']
+            deck_img = Image(source=img, size_hint=(None, None), size=self.size, allow_stretch=True)
+            deck_img.id = 'Deck_container_' + str(count)
+            self.add_widget(deck_img, canvas='before', index=0)
+            self.deck_images.append(deck_img)
+        self.show_deck()
 
+    def show_deck(self):
         # Show select Deck
         for child in self.children:
             if child.id == 'Modify_container_' + str(self.deck_show):
@@ -193,26 +198,25 @@ class DeckScatter(Scatter):
                     child.pos = (10000, 0)
             elif child.id == 'Obj_container_' + str(self.deck_show):
                 child.pos = (0, 0)
-            elif child.id == 'Image_dwg':
+            elif child.id == 'Deck_container_' + str(self.deck_show):
                 child.pos = (0, 0)
             else:
                 child.pos = (10000, 0)
+        self.dsc_dk_label.text = self.deck_name
 
     def deck_up(self):
         if self.deck_show == self.deck_number - 1:
             return
         else:
             self.deck_show += 1
-            self.dsc_dk_label.text = self.deck_name
-            self.init_deck()
+            self.show_deck()
 
     def deck_down(self):
         if self.deck_show == 0:
             return
         else:
             self.deck_show -= 1
-            self.dsc_dk_label.text = self.deck_name
-            self.init_deck()
+            self.show_deck()
 
     def deck_select(self, instance):
         deck_menu = DeckMenu()
@@ -223,10 +227,10 @@ class DeckScatter(Scatter):
 
     # OBJECT
     def init_obj(self, instance):
-
         for count, dk in enumerate(GV.DECK_CONF):
             obj_container = RelativeLayout(size_hint=(1, 1))
             obj_container.id = 'Obj_container_' + str(count)
+
             self.obj_containers.append(obj_container)
             self.add_widget(obj_container)
             modify_container = RelativeLayout(size_hint=(1, 1))
@@ -242,7 +246,18 @@ class DeckScatter(Scatter):
 
     def generate_obj(self):
         if 'objectList' in GV.DB.list_collection_names():
-            obj_list = list(GV.DB_OBJECTLIST.find({}))
+            aggregate_obj_info = [{'$lookup': {
+                'from': "outputList",
+                'localField': "address",
+                'foreignField': "address",
+                'as': "description"}
+            },
+                {'$set': {
+                    'description': {'$arrayElemAt': ["$description.description", 0]},
+                },
+                }
+            ]
+            obj_list = list(GV.DB_OBJECTLIST.aggregate(aggregate_obj_info))
         else:
             return
         for obj_data in obj_list:
@@ -272,7 +287,7 @@ class DeckScatter(Scatter):
         rotate_btn = ObjBntRotate()
         rotate_btn.id = 'Mod_' + str(obj_data['_id'])
         rotate_btn.obj = obj
-        rotate_btn.pos = (obj_data['posX'] + 35, obj_data['posY'] + 30)
+        rotate_btn.pos = (obj_data['posX'] + 45, obj_data['posY'] + 40)
         #  Object
         obj.scatter_obj = self
         obj.rotate_btn = rotate_btn
@@ -292,7 +307,7 @@ class DeckScatter(Scatter):
         else:
             GV.OBJ_MODIFY = True
             instance.color_fill = GV.RGBA_ORANGE
-        self.init_deck()
+        self.show_deck()
 
     def obj_RGB(self, instance):
         if GV.OBJ_RGB:
@@ -363,8 +378,9 @@ class BtnSearchObject(GridLayout):
             self.dsc_deck_scatter.deck_show = int(obj['deck'])
             self.dsc_deck_scatter.scale = 1
             self.dsc_deck_scatter.pos = (785 - obj['posX'], 225 - obj['posY'])
-            self.dsc_deck_scatter.init_deck()
-            self.dsc_deck_scatter.init_obj(None)
+            self.dsc_deck_scatter.deck_show = int(obj['deck'])
+            self.dsc_deck_scatter.show_deck()
+            self.dsc_deck_scatter.check_limit()
             for child in self.dsc_deck_scatter.obj_containers[int(obj['deck'])].children:
                 if child.id == ObjectId(str(obj['_id'])):
                     child.display_tooltip()
@@ -410,6 +426,7 @@ class DeckMenu(GridLayout):
         for decks in GV.DECK_CONF:
             deck_sel = DeckMenuSelect(text=decks['name'])
             deck_sel.deck_index = count - 1
+            deck_sel.deck_name = decks['name']
             deck_sel.scatter_obj = self.scatter_obj
             self.add_widget(deck_sel)
             count += 1
@@ -429,8 +446,8 @@ class DeckMenuSelect(Button):
 
     def deck_set(self):
         self.scatter_obj.deck_show = self.deck_index
-        self.scatter_obj.init_deck()
-        self.scatter_obj.init_obj(None)
+        self.scatter_obj.deck_name = self.deck_name
+        self.scatter_obj.show_deck()
         self.parent.close(None)
 
 
@@ -456,22 +473,24 @@ class FaultListRow(ToggleButtonBehavior, BoxLayout):
                 break
 
 
-class ListFault(BoxLayout):
+class ListFault(GridLayout):
 
     def __init__(self, **kwargs):
         super(ListFault, self).__init__(**kwargs)
         self.fault_value = '1'
         self.normal_value = '0'
+        self.list_fault = []
 
         Clock.schedule_once(self.init)
 
     def init(self, instance):
-        list_fault = GV.DB_OBJECTLIST.find({'status': self.fault_value})
-        for row_data in list(list_fault):
+        obj_fault = GV.DB_OBJECTLIST.find({'status': self.fault_value})
+        for row_data in list(obj_fault):
             self.create_row(row_data)
             msg_color = 'error'
             msg_text = 'Device ' + row_data['name'] + ' in FAULT'
             self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
+        self.create_row_empty()
         if len(self.children) <= 10:
             self.parent.do_scroll_y = False
         else:
@@ -486,16 +505,17 @@ class ListFault(BoxLayout):
             timestamp = ''
         list_row = FaultListRow()
         list_row.id = 'id_' + row_data['name']
+        list_row.empty = False
         list_row.row_data = row_data
         list_row.scatter_obj = self.dsc_deck_scatter
         list_row.add_widget(FaultListLabel(text=str(timestamp), size=(298, 30)))
         list_row.add_widget(FaultListLabel(text=row_data['name'], size=(1282, 30)))
-        self.add_widget(list_row, len(self.children))
+        self.add_widget(list_row, 11)
+        self.list_fault.append(list_row)
 
     def update_list(self, document):
         id = 'id_' + str(document['fullDocument']['name'])
         status = document['fullDocument']['status']
-
         if status == self.fault_value:
             self.create_row(document['fullDocument'])
             msg_color = 'error'
@@ -505,19 +525,31 @@ class ListFault(BoxLayout):
             for child in self.children:
                 if child.id == id:
                     self.remove_widget(child)
+                    self.list_fault.remove(child)
                     msg_color = 'success'
                     msg_text = 'Device ' + document['fullDocument']['name'] + ' NORMAL'
                     self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
-                    break
-
-        if len(self.children) <= 11:
-            self.parent.do_scroll_y = False
-        else:
-            self.parent.do_scroll_y = True
+        self.create_row_empty()
         self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))
 
+    def create_row_empty(self):
+        for child in self.children:
+            if child.empty:
+                self.remove_widget(child)
 
-
+        er_n = 11 - len(self.children)
+        if len(self.children) <= 11:
+            self.parent.do_scroll_y = False
+            for elm in range(er_n):
+                list_row = FaultListRow()
+                list_row.id = 'er_' + str(elm + 1)
+                list_row.empty = True
+                list_row.scatter_obj = self.dsc_deck_scatter
+                list_row.add_widget(FaultListLabel(text='', size=(298, 30)))
+                list_row.add_widget(FaultListLabel(text='', size=(1282, 30)))
+                self.add_widget(list_row, 0)
+        else:
+            self.parent.do_scroll_y = True
 
 
 

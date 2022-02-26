@@ -127,6 +127,7 @@
             size_hint: None, None
             DeckStencilView:
                 id: _dsc_stencil_view
+                dsc_deck_scatter: _dsc_deck_scatter
                 size_hint: None, None
                 size: 1570, 450
                 canvas.before:
@@ -146,9 +147,11 @@
                     dsc_stencil_view: _dsc_stencil_view
                     dsc_dk_label: _dsc_dk_label
                     id: _dsc_deck_scatter
-                    auto_bring_to_front: False
+#                    auto_bring_to_front: False
                     do_rotation: False
-                    #size: 4500, 1200
+                    do_translation_x: False
+                    do_translation_y: False
+                    size_hint: None, None
                     size: 6280, 1800
         BoxLayout:
             orientation: 'horizontal'
@@ -215,7 +218,7 @@
                 dsc_fault_number: _dsc_fault_number
                 mccm_dash: _mccm_dash
                 id: _dsc_list_fault
-                orientation: 'vertical'
+                cols: 1
                 size_hint: 1, None
                 height: self.minimum_height
         BoxLayout:
@@ -228,7 +231,7 @@
                 Color:
                     rgba: 47/255, 50/255, 57/255, 1
                 Line:
-                    points:37, 45, 1577, 45
+                    points:37, 45, 1614, 45
                     width: 1.5
             Label:
                 size_hint: None, 1

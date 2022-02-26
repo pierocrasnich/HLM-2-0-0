@@ -46,9 +46,16 @@ PLC_ONLINE = []
 # ----- Deck Configuration ------------------------------------------------------------------------------------------- #
 # file dimension
 DECK_CONF = [
-    {"name": "Deck 01", "file": "01.png"},
-    {"name": "Deck 02", "file": "02.png"},
-    {"name": "Deck 03", "file": "03.png"},
+    {"name": "Deck 02", "file": "Deck02.png"},
+    {"name": "Deck 03", "file": "Deck03.png"},
+    {"name": "Deck 04", "file": "Deck04.png"},
+    {"name": "Deck 05", "file": "Deck05.png"},
+    {"name": "Deck 06", "file": "Deck06.png"},
+    {"name": "Deck 07", "file": "Deck07.png"},
+    {"name": "Deck 08", "file": "Deck08.png"},
+    {"name": "Deck 09", "file": "Deck09.png"},
+    {"name": "Deck 10", "file": "Deck10.png"},
+    {"name": "Deck 11", "file": "Deck11.png"}
     ]
 # ----- OBJECT Configuration ----------------------------------------------------------------------------------------- #
 OBJ_MODIFY = False
