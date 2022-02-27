@@ -109,6 +109,7 @@ class DeckScatter(Scatter):
         self.delta_x = 0  # Scatter img scale 0.5 width 6280 * 0.5 - 1570 Stencil
         self.delta_y = 0  # Scatter img scale 0.5 height 1800 * 0.5 - 450 Stencil
         self.pos = (0, 0)
+        self.move = True
 
         self.deck_image = None
         self.show_RGB = False
@@ -138,7 +139,7 @@ class DeckScatter(Scatter):
             return super(DeckScatter, self).on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        if round(self.scale, 2) <= self.scale_min or not self.parent.collide_point(*touch.pos):
+        if round(self.scale, 2) <= self.scale_min or not self.parent.collide_point(*touch.pos) or not self.move:
             return
         else:
             self.apply_transform(Matrix().translate(touch.dx, touch.dy, 0), anchor=touch.pos)
@@ -180,7 +181,6 @@ class DeckScatter(Scatter):
         self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         self.deck_file = GV.DIR_DECKS + GV.DECK_CONF[self.deck_show]['file']
         for count, dk in enumerate(GV.DECK_CONF):
-            print(dk['file'])
             img = GV.DIR_DECKS + dk['file']
             deck_img = Image(source=img, size_hint=(None, None), size=self.size, allow_stretch=True)
             deck_img.id = 'Deck_container_' + str(count)
@@ -189,6 +189,7 @@ class DeckScatter(Scatter):
         self.show_deck()
 
     def show_deck(self):
+        self.deck_name = GV.DECK_CONF[self.deck_show]['name']
         # Show select Deck
         for child in self.children:
             if child.id == 'Modify_container_' + str(self.deck_show):
@@ -446,7 +447,7 @@ class DeckMenuSelect(Button):
 
     def deck_set(self):
         self.scatter_obj.deck_show = self.deck_index
-        self.scatter_obj.deck_name = self.deck_name
+
         self.scatter_obj.show_deck()
         self.parent.close(None)
 
@@ -464,13 +465,11 @@ class FaultListRow(ToggleButtonBehavior, BoxLayout):
         self.scatter_obj.deck_show = int(self.row_data['deck'])
         self.scatter_obj.scale = 1
         self.scatter_obj.pos = (785 - self.row_data['posX'], 225 - self.row_data['posY'])
-        self.scatter_obj.init_deck()
-        self.scatter_obj.init_obj(None)
-
+        self.scatter_obj.show_deck()
         for child in self.scatter_obj.obj_containers[int(self.row_data['deck'])].children:
             if child.id == ObjectId(self.row_data['_id']):
                 child.display_tooltip()
-                break
+                return
 
 
 class ListFault(GridLayout):

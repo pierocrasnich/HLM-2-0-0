@@ -38,7 +38,7 @@ class ObjPLCM(Button):
             self.color_fill = GV.OBJ_RGB_NO_DATA
 
     def on_press(self):
-        self.scatter_obj.do_translation = (False, False)
+        self.scatter_obj.move = False
         if not self.tooltip_show:
             self.display_tooltip()
 
@@ -55,7 +55,7 @@ class ObjPLCM(Button):
             return
 
     def on_release(self):
-        self.scatter_obj.do_translation = (True, True)
+        self.scatter_obj.move = True
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
@@ -76,12 +76,10 @@ class ObjPLCM(Button):
         self.tooltip_show = False
 
     def display_tooltip(self, *args):
-        print(self.obj_data)
-        time.sleep(.5)
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = self.obj_data['name']
+        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]"
         Clock.schedule_once(self.close_tooltip, 3)
 
 
@@ -112,7 +110,7 @@ class ObjPLCZ(Button):
             self.color_fill = GV.OBJ_RGB_NO_DATA
 
     def on_press(self):
-        self.scatter_obj.do_translation = (False, False)
+        self.scatter_obj.move = False
         if not self.tooltip_show:
             self.display_tooltip()
 
@@ -129,7 +127,7 @@ class ObjPLCZ(Button):
             return
 
     def on_release(self):
-        self.scatter_obj.do_translation = (True, True)
+        self.scatter_obj.move = True
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
@@ -151,12 +149,10 @@ class ObjPLCZ(Button):
         Clock.unschedule(self.close_tooltip)
 
     def display_tooltip(self, *args):
-        print(self.obj_data)
-        time.sleep(.5)
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = self.obj_data['name']
+        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]"
         Clock.schedule_once(self.close_tooltip, 3)
 
 
@@ -219,6 +215,7 @@ class ObjHL(Button):
             self.color_fill_sx_off = 0
 
     def on_press(self):
+        self.scatter_obj.move = False
         if not self.tooltip_show:
             self.display_tooltip()
 
@@ -228,12 +225,10 @@ class ObjHL(Button):
         self.tooltip_show = False
 
     def display_tooltip(self, *args):
-        print(self.obj_data)
-        time.sleep(.5)
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = self.obj_data['name'] + "\n" + self.obj_data['description']
+        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]\n" + self.obj_data['description']
         Clock.schedule_once(self.close_tooltip, 3)
 
     def on_touch_move(self, touch):
@@ -249,7 +244,7 @@ class ObjHL(Button):
             return
 
     def on_release(self):
-
+        self.scatter_obj.move = True
         GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
 
     def rotate_obj(self, instance):
