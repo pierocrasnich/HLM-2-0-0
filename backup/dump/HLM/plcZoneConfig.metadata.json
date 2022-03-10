@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"52f0c936fa4d49c7a282f8682460ef18","collectionName":"plcZoneConfig","type":"collection"}

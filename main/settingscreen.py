@@ -241,7 +241,7 @@ class CreateListButton (Button):
                                             'bit': item['registerType'],
                                             'system': item['name'],
                                             'name': item['name'] + '_' + str(item['registerStart'] + i),
-                                            'description': ''})
+                                            'description': ' '})
         msg_color = 'success'
         msg_text = 'Reset INPUT collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
@@ -270,7 +270,7 @@ class CreateListButton (Button):
                                          'plc': '',
                                          'port': '',
                                          'name': 'HL' + str(hl).rjust(4, '0'),
-                                         'description': ''})
+                                         'description': ' '})
         msg_color = 'success'
         msg_text = 'Reset OUTPUT collection'
         self.parent.parent.mccm.mm_notification.notification_msg(msg_color, msg_text)
@@ -292,6 +292,7 @@ class CreateListButton (Button):
         scatter_obj = self.parent.parent.mccm.mccm_dash.dsc_deck_scatter
         scatter_obj.clear_obj()
         self.cursor.drop()
+
         # Clear OBJECT and MODIFY container
         for child in scatter_obj.obj_containers:
             child.clear_widgets()
@@ -305,13 +306,13 @@ class CreateListButton (Button):
         plc_master_obj = JsonStore(GV.FILE_SETTINGS)
         plc_master_address = plc_master_obj['PLC_master']['plc_master']
         plc_master_data = {'system': 'PLCM',
-                                     'address': str(plc_master_address),
-                                     'name': 'PLC Master',
-                                     'deck': deck_positioning,
-                                     'posX': 10 + (60 * deck_pos_col_count),
-                                     'posY': 10 + (60 * deck_pos_row_count),
-                                     'rotate': 0,
-                                     'status': ''}
+                           'address': str(plc_master_address),
+                           'name': 'PLC Master',
+                           'deck': deck_positioning,
+                           'posX': 10 + (60 * deck_pos_col_count),
+                           'posY': 10 + (60 * deck_pos_row_count),
+                           'rotate': 0,
+                           'status': '' }
         GV.DB_OBJECTLIST.insert_one(plc_master_data)
         deck_pos_col_count += 1
         # Create PLC ZONE object
@@ -330,7 +331,18 @@ class CreateListButton (Button):
         # Create System Link object
         # system_link = list_input = GV.DB_INPUTCONFIG.find({})
         # Create Handles object
-        hl_list = GV.DB_OUTPUTLIST.find({})
+        # aggregate_obj_info = [{'$lookup': {
+        #     'from': "outputList",
+        #     'localField': "address",
+        #     'foreignField': "address",
+        #     'as': "description"}
+        # },
+        #     {'$set': {
+        #         'description': {'$arrayElemAt': ["$description.description", 0]},
+        #     },
+        #     }
+        # ]
+        hl_list = list(GV.DB_OUTPUTLIST.find({}))
         for hl in hl_list:
             if deck_pos_col_count == 75:
                 deck_pos_col_count = 0
@@ -625,7 +637,7 @@ class EditSettingsBtn(Button):
                                              'plc': '',
                                              'port': '',
                                              'name': 'HL' + str(hl).rjust(4, '0'),
-                                             'description': ''})
+                                             'description': ' '})
         elif int(self.ssc_handles_num_ti.text) < GV.DOOR_NUMBER:
             loader.ssc_loader_description.text = 'Remove Handler'
             document_del = GV.DOOR_NUMBER - int(self.ssc_handles_num_ti.text)
@@ -748,7 +760,7 @@ class AddSettingsBtn(Button):
                                                                 'bit': bit,
                                                                 'system': system,
                                                                 'name': name,
-                                                                'description': ''})
+                                                                'description': ' '})
                                 self.ssc_input_container.disable_input_zone()
                                 self.ssc_input_container.init_container()
                                 msg_color = 'success'

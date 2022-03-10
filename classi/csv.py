@@ -217,6 +217,8 @@ class ExportConnectButton(Button):
             result = GV.DB_INPUTLIST.find({})
         elif self.exportList == 'output':
             result = GV.DB_OUTPUTLIST.find({})
+        elif self.exportList == 'object':
+            result = GV.DB_OBJECTLIST.find({})
 
         self.output_file_name = datetime.now().strftime("%Y%m%d_%H%M") + '_' + self.exportList + 'List.csv'
         with open(GV.DIR_BACKUP + self.output_file_name, 'w') as export_file:
@@ -244,6 +246,20 @@ class ExportConnectButton(Button):
                                    'port': answers_module['port'],
                                    'name': answers_module['name'],
                                    'description': answers_module['description']
+                                   })
+            # Object List export CSV ####################
+            elif self.exportList == 'object':
+                fields = ['system', 'address', 'plc', 'port', 'name', 'description']
+                file = csv.DictWriter(export_file, fieldnames=fields)
+                file.writeheader()
+                for answers_module in result:
+                    file.writerow({'system': answers_module['system'],
+                                   'name': answers_module['name'],
+                                   'address': answers_module['address'],
+                                   'deck': answers_module['deck'],
+                                   'posX': answers_module['posX'],
+                                   'posY': answers_module['posY'],
+                                   'rotate': answers_module['rotate']
                                    })
         self.save_file()
 
@@ -395,9 +411,7 @@ class ExportConnectButton(Button):
                 self.pdf.cell(self.pdf.table_size[2], 5, ' ', fill=True, ln=0, align='C')
                 self.pdf.cell(self.pdf.table_size[3], 5, ' ', fill=True, ln=0, align='C')
                 self.pdf.cell(self.pdf.table_size[4], 5, format(output['name']), fill=True, ln=1, align='C')
-
             line_no += 1
-
         self.save_file()
 
     def save_file(self):
@@ -472,37 +486,30 @@ class ImportDialog(ModalView):
             msg_text = "OS error: {0}".format(err)
         except:
             msg_color = 'error'
-            msg_text = "Unexpected error:" + str(exc_info()[0])
+            msg_text = "Unexpected error:" + str(exc_info())
+            # print(str(exc_info()))
         finally:
             self.notification.notification_msg(msg_color, msg_text)
-            os.system('rm ' + GV.DIR_BACKUP + str(name_file))
+            # os.system('rm ' + GV.DIR_BACKUP + str(name_file))
 
     def populate_DB(self,  file_reader):
-
         headers = file_reader.fieldnames
         if self.importList == 'output':
             self.collection_target.drop()
-            GV.DB_OBJECTLIST.delete_many({'system': 'HL'})
             for each in file_reader:
                 row = {}
                 for field in headers:
                     row[field] = each[field]
                 self.collection_target.insert_one(row)
-                GV.DB_OBJECTLIST.insert_one({'system': 'HL',
-                                             'address': each['address'],
-                                             'name': each['name'],
-                                             'deck': GV.OBJ_DEFAULT_DK,
-                                             'posX': 0,
-                                             'posY': 0,
-                                             'rotate': 0,
-                                             'status': ''})
         elif self.importList == 'object':
             for each in file_reader:
-                self.collection_target.update_one({'address': each['address']},
-                                                  {'$set': {'deck':  int(each['deck'])}})
+                self.collection_target.update_one({'address': str(each['address'])},
+                                                  {'$set': {'deck':  int(each['deck']),
+                                                            'posX': float(each['posX']),
+                                                            'posY': float(each['posY']),
+                                                            'rotate': int(each['rotate']),
+                                                            }})
             self.table_object.draw_table()
-
-
         else:
             self.collection_target.drop()
             for each in file_reader:

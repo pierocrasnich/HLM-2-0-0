@@ -56,7 +56,8 @@ class ObjPLCM(Button):
 
     def on_release(self):
         self.scatter_obj.move = True
-        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
+        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])},
+                                    {'$set': {'posX': round(self.x, 2), 'posY': round(self.y, 2)}})
 
     def rotate_obj(self, instance):
         cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})
@@ -79,7 +80,10 @@ class ObjPLCM(Button):
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]"
+        tooltip = GV.DB_OBJECTLIST.find_one({'name': self.obj_data['name']})
+        self.tooltip.text = "[b]" + tooltip['name'] + "[/b]"
+        self.tooltip.text += "\n" + "PLC Primary"
+        self.tooltip.text += "\n" + "[b]Address: [/b]" + str(tooltip['address'])
         Clock.schedule_once(self.close_tooltip, 3)
 
 
@@ -128,7 +132,8 @@ class ObjPLCZ(Button):
 
     def on_release(self):
         self.scatter_obj.move = True
-        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
+        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])},
+                                    {'$set': {'posX': round(self.x, 2), 'posY': round(self.y, 2)}})
 
     def rotate_obj(self, instance):
         cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})
@@ -152,7 +157,11 @@ class ObjPLCZ(Button):
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]"
+        tooltip = GV.DB_PLCZONECONFIG.find_one({'name': self.obj_data['name']})
+        address = GV.DB_OBJECTLIST.find_one({'name': self.obj_data['name']})
+        self.tooltip.text = "[b]" + tooltip['name'] + "[/b]"
+        self.tooltip.text += "\n" + tooltip['info']
+        self.tooltip.text += "\n" + "[b]Address: [/b]" + str(address['address'])
         Clock.schedule_once(self.close_tooltip, 3)
 
 
@@ -228,7 +237,11 @@ class ObjHL(Button):
         self.tooltip_show = True
         self.obj_widget.add_widget(self.tooltip)
         self.tooltip.pos = (self.x + 15, self.y + 55)
-        self.tooltip.text = "[b]" + self.obj_data['name'] + "[/b]\n" + self.obj_data['description']
+        tooltip = GV.DB_OUTPUTLIST.find_one({'name': self.obj_data['name']})
+        self.tooltip.text = "[b]" + tooltip['name'] + "[/b]"
+        self.tooltip.text += "\n" + tooltip['description']
+        self.tooltip.text += "\n" + "[b]PLC: [/b]" + str(tooltip['plc'])
+        self.tooltip.text += " [b]Port: [/b]" + str(tooltip['port'])
         Clock.schedule_once(self.close_tooltip, 3)
 
     def on_touch_move(self, touch):
@@ -245,7 +258,8 @@ class ObjHL(Button):
 
     def on_release(self):
         self.scatter_obj.move = True
-        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])}, {'$set': {'posX': self.x, 'posY': self.y}})
+        GV.DB_OBJECTLIST.update_one({'_id': ObjectId(self.obj_data['_id'])},
+                                    {'$set': {'posX': round(self.x, 2), 'posY': round(self.y, 2)}})
 
     def rotate_obj(self, instance):
         cursor = GV.DB_OBJECTLIST.find_one({'_id': ObjectId(self.obj_data['_id'])})

@@ -32,3 +32,12 @@ Command:
 
     Start database: sh /cfg/start_DB.sh
     Stop database: sh /cfg/stop_DB.sh
+
+DB Backup:
+
+      $ mongodump --host="rs0/127.0.0.1:27017,127.0.0.1:27018" 
+
+DB Restore:
+
+      $ mongorestore --host="rs0/127.0.0.1:27017,127.0.0.1:27018" dump/
+

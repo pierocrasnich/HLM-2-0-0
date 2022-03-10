@@ -57,6 +57,7 @@ class DashScreen(Screen):
                     #  Update FAULT list status
                     self.dsc_list_fault.update_list(document)
                     #  Change OBJECT status
+                    # print(document)
                     for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
                         if obj.id == ObjectId(document['fullDocument']['_id']):
                             obj.set_status(document['fullDocument'])
@@ -247,18 +248,7 @@ class DeckScatter(Scatter):
 
     def generate_obj(self):
         if 'objectList' in GV.DB.list_collection_names():
-            aggregate_obj_info = [{'$lookup': {
-                'from': "outputList",
-                'localField': "address",
-                'foreignField': "address",
-                'as': "description"}
-            },
-                {'$set': {
-                    'description': {'$arrayElemAt': ["$description.description", 0]},
-                },
-                }
-            ]
-            obj_list = list(GV.DB_OBJECTLIST.aggregate(aggregate_obj_info))
+            obj_list = list(GV.DB_OBJECTLIST.find({}))
         else:
             return
         for obj_data in obj_list:
@@ -468,7 +458,7 @@ class FaultListRow(ToggleButtonBehavior, BoxLayout):
         self.scatter_obj.show_deck()
         for child in self.scatter_obj.obj_containers[int(self.row_data['deck'])].children:
             if child.id == ObjectId(self.row_data['_id']):
-                child.display_tooltip()
+                child.display_tooltip(None)
                 return
 
 
@@ -479,7 +469,6 @@ class ListFault(GridLayout):
         self.fault_value = '1'
         self.normal_value = '0'
         self.list_fault = []
-
         Clock.schedule_once(self.init)
 
     def init(self, instance):
@@ -494,23 +483,10 @@ class ListFault(GridLayout):
             self.parent.do_scroll_y = False
         else:
             self.parent.do_scroll_y = True
-        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))
+        self.count_faults()
 
-    def create_row(self, row_data):
-        if row_data['name']:
-            date_now = datetime.now()
-            timestamp = date_now.strftime("%d/%m/%Y - %H:%M:%S")
-        else:
-            timestamp = ''
-        list_row = FaultListRow()
-        list_row.id = 'id_' + row_data['name']
-        list_row.empty = False
-        list_row.row_data = row_data
-        list_row.scatter_obj = self.dsc_deck_scatter
-        list_row.add_widget(FaultListLabel(text=str(timestamp), size=(298, 30)))
-        list_row.add_widget(FaultListLabel(text=row_data['name'], size=(1282, 30)))
-        self.add_widget(list_row, 11)
-        self.list_fault.append(list_row)
+    def count_faults(self):
+        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.list_fault))
 
     def update_list(self, document):
         id = 'id_' + str(document['fullDocument']['name'])
@@ -528,8 +504,25 @@ class ListFault(GridLayout):
                     msg_color = 'success'
                     msg_text = 'Device ' + document['fullDocument']['name'] + ' NORMAL'
                     self.mccm_dash.mccm.mm_notification.notification_msg(msg_color, msg_text)
+                    self.create_row_empty()
+
+    def create_row(self, row_data):
+        if row_data['name']:
+            date_now = datetime.now()
+            timestamp = date_now.strftime("%d/%m/%Y - %H:%M:%S")
+        else:
+            timestamp = ''
+        list_row = FaultListRow()
+        list_row.id = 'id_' + row_data['name']
+        list_row.empty = False
+        list_row.row_data = row_data
+        list_row.scatter_obj = self.dsc_deck_scatter
+        list_row.add_widget(FaultListLabel(text=str(timestamp), size=(298, 30)))
+        list_row.add_widget(FaultListLabel(text=row_data['name'], size=(1282, 30)))
+        self.add_widget(list_row, 11)
+        self.list_fault.append(list_row)
+        self.count_faults()
         self.create_row_empty()
-        self.dsc_fault_number.text = 'Total faults: ' + str(len(self.children))
 
     def create_row_empty(self):
         for child in self.children:
