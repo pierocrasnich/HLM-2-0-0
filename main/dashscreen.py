@@ -36,9 +36,12 @@ class DashScreen(Screen):
     def __init__(self, **kwargs):
         super(DashScreen, self).__init__(**kwargs)
         Clock.schedule_interval(self.db_status, GV.PLC_ALIVE)
-        GV.OBJ_CHANGE_THREAD = Timer(5, self.change_status)
-        GV.OBJ_CHANGE_THREAD.setDaemon(True)
-        GV.OBJ_CHANGE_THREAD.start()
+        GV.OBJ_CHANGE_STATUS_THREAD = Timer(5, self.change_status)
+        GV.OBJ_CHANGE_STATUS_THREAD.setDaemon(True)
+        GV.OBJ_CHANGE_STATUS_THREAD.start()
+        GV.OBJ_CHANGE_COLOR_THREAD = Timer(5, self.change_color)
+        GV.OBJ_CHANGE_COLOR_THREAD.setDaemon(True)
+        GV.OBJ_CHANGE_COLOR_THREAD.start()
 
     def on_enter(self, *args):
         self.dsc_deck_scatter.init_deck()
@@ -50,14 +53,40 @@ class DashScreen(Screen):
     def change_status(self):
         cursor = MongoClient(host='127.0.0.1', port=27017, replicaset='rs0')
         collections = cursor['HLM']['objectList']
-        pipeline = [{'$match': {'operationType': 'update'}}]
+        pipeline = [{'$match': {
+            '$and': [
+                {"updateDescription.updatedFields.status": {'$exists': True}},
+                {'operationType': 'update'}
+            ]
+        }}]
         try:
             with collections.watch(pipeline=pipeline, full_document='updateLookup') as change_stream:
                 for document in change_stream:
                     #  Update FAULT list status
                     self.dsc_list_fault.update_list(document)
-                    #  Change OBJECT status
-                    # print(document)
+                    #  Change OBJECT color status
+                    for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
+                        if obj.id == ObjectId(document['fullDocument']['_id']):
+                            obj.set_status(document['fullDocument'])
+        except KeyboardInterrupt:
+            cursor.close()
+        except Exception as e:
+            print(e)
+
+    def change_color(self):
+        cursor = MongoClient(host='127.0.0.1', port=27017, replicaset='rs0')
+        collections = cursor['HLM']['objectList']
+        pipeline = [{'$match': {
+            '$and': [
+                {"updateDescription.updatedFields.colorDX": {'$exists': True}},
+                {"updateDescription.updatedFields.colorSX": {'$exists': True}},
+                {'operationType': 'update'}
+            ]
+        }}]
+        try:
+            with collections.watch(pipeline=pipeline, full_document='updateLookup') as change_stream:
+                for document in change_stream:
+                    #  Change OBJECT color status
                     for obj in self.dsc_deck_scatter.obj_containers[document['fullDocument']['deck']].children:
                         if obj.id == ObjectId(document['fullDocument']['_id']):
                             obj.set_status(document['fullDocument'])
@@ -542,10 +571,4 @@ class ListFault(GridLayout):
                 self.add_widget(list_row, 0)
         else:
             self.parent.do_scroll_y = True
-
-
-
-
-
-
-
+        self.count_faults()

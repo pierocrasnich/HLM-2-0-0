@@ -107,7 +107,8 @@ DB_STATUS_THREAD = None
 CREATE_COLLECTION_THREAD = None
 PLC_MASTER_THREAD = None
 PLC_THREAD = None
-OBJ_CHANGE_THREAD = None
+OBJ_CHANGE_STATUS_THREAD = None
+OBJ_CHANGE_COLOR_THREAD = None
 # ----- Module List -------------------------------------------------------------------------------------------------- #
 MODULE = []
 # ----- Global Var fot TCP Server ------------------------------------------------------------------------------------ #

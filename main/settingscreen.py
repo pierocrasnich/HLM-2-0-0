@@ -50,7 +50,8 @@ class SettingsScreen(Screen):
         signal.pthread_kill(GV.CREATE_COLLECTION_THREAD.ident, signal.SIGKILL)
         signal.pthread_kill(GV.PLC_MASTER_STATUS.ident, signal.SIGKILL)
         signal.pthread_kill(GV.PLC_THREAD.ident, signal.SIGKILL)
-        signal.pthread_kill(GV.OBJ_CHANGE_THREAD.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.OBJ_CHANGE_STATUS_THREAD.ident, signal.SIGKILL)
+        signal.pthread_kill(GV.OBJ_CHANGE_COLOR_THREAD.ident, signal.SIGKILL)
 
 
 # ----- Settings Container ------------------------------------------------------------------------------------------- #
